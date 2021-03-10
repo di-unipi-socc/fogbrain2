@@ -7,7 +7,7 @@ reasoningStep(App, Placement, AllocHW, AllocBW, Context, NewPlacement) :-
 toUpdate(App, Placement, Context, ToRemove, ToAdd, ToUpdate, ToMigrate) :-
     toUpdateDueToRequirementsChanges(App, Placement, Context, ToRemove, ToAdd, ToUpdate, ToMigrate1),
     toUpdateDueToInfrastructureChanges(Placement, ToMigrate2), 
-    merge(ToMigrate1, ToMigrate2, ToMigrate).
+    union(ToMigrate1, ToMigrate2, ToMigrate).
 
 cleanDeployment(Placement, AllocHW, AllocBW, ToRemove, _, ToMigrate, PPlacement, PAllocHW, PAllocBW) :-
     append(ToRemove,ToMigrate,ToClean),
@@ -16,7 +16,7 @@ cleanDeployment(Placement, AllocHW, AllocBW, ToRemove, _, ToMigrate, PPlacement,
 servicesToPlace(ToMigrate, ToAdd, ToPlace) :-
     findall(S, member((S,_,_),ToMigrate), ToPlace1),
     findall(S, member((S,_,_),ToAdd), ToPlace2),
-    merge(ToPlace1, ToPlace2, ToPlace).
+    union(ToPlace1, ToPlace2, ToPlace).
 
 removeServices(ToRemove, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW) :-
     freeHWAllocation(AllocHW, PAllocHW, ToRemove),
@@ -27,9 +27,28 @@ toUpdateDueToRequirementsChanges(App, Placement, Context, ToRemove, ToAdd, ToUpd
     Context=(ContextServices,_),
     findall((S,N,HWReqs), removedService(App, S, N, HWReqs, Placement, ContextServices), ToRemove),
     findall((S,_,HWReqs), addedService(App, S, HWReqs, Placement), ToAdd),
-    ToUpdate = [],
-    ToMigrate = [].
-    %changedRequirements.
+    findall((S,N,HWReqs), changedServiceToMigrate(S, N, HWReqs, Placement, ContextServices), ToMigrate),
+    findall((S,N,HWReqs), changedServiceToUpdate(S, N, HWReqs, Placement, ContextServices), ToUpdate).
+
+changedServiceToMigrate(S, N, HWReqs, Placement, ContextServices) :-
+    member(on(S,N), Placement),
+    serviceDiff(S, HWReqs, SWDiff, HWDiff, TDiff, ContextServices),
+    node(N, SWCaps, HWCaps, TCaps),
+    hwTh(T), \+ (swReqsOK(SWDiff, SWCaps), HWCaps > HWDiff + T, thingReqsOK(TDiff, TCaps)).
+
+changedServiceToUpdate(S, N, HWReqs, Placement, ContextServices) :-
+    member(on(S,N), Placement),
+    serviceDiff(S, HWReqs, SWDiff, HWDiff, TDiff, ContextServices),
+    (dif(SWDiff,[]); dif(HWDiff,0); dif(TDiff,[])),
+    node(N, SWCaps, HWCaps, TCaps),
+    swReqsOK(SWDiff, SWCaps), hwTh(T), HWCaps > HWDiff + T, thingReqsOK(TDiff, TCaps).
+
+serviceDiff(S, HWReqsOld, SWDiff, HWDiff, TDiff, ContextServices) :-
+    member(service(S, SWReqsOld, HWReqsOld, TReqsOld),ContextServices),
+    service(S, SWReqs, HWReqs, TReqs),
+    HWDiff is HWReqs - HWReqsOld,
+    listDiff(SWReqsOld, SWReqs, SWDiff),
+    listDiff(TReqsOld, TReqs, TDiff).
 
 removedService(App,S,N,HWReqs,Placement,ContextServices) :-
     member(on(S,N),Placement),
@@ -40,10 +59,6 @@ addedService(App,S,HWReqs,Placement) :-
     application(App,Services), member(S,Services),
     \+member(on(S,_),Placement),
     service(S,_,HWReqs,_).
-
-% changedRequirements :-
-%    changedServicesRequirements
-%    changedS2SRequirements.
 
 toUpdateDueToInfrastructureChanges(Placement, ServicesToMigrate) :-
     findall((S,N,HWReqs), onSufferingNode(S,N,HWReqs,Placement), ServiceDescr1),
@@ -142,3 +157,7 @@ sumLinkBWToFree([B|Bs],V) :- sumLinkBWToFree(Bs,TempV), V is B+TempV.
 
 assemble2((_,_,AllocatedBW), L, L) :- AllocatedBW =:= 0.
 assemble2((N1,N2,AllocatedBW), L, [(N1,N2,AllocatedBW)|L]) :- AllocatedBW>0.
+
+listDiff(_,[],[]).
+listDiff(L1,[L|Ls],Add) :- member(L,L1), listDiff(L1,Ls,Add).
+listDiff(L1,[L|Ls],[L|Add]) :- \+ member(L,L1), listDiff(L1,Ls,Add).
