@@ -10,7 +10,7 @@ toUpdate(App, Placement, Context, ToRemove, ToAdd, ToUpdate, ToMigrate) :-
     union(ToMigrate1, ToMigrate2, ToMigrate).
 
 cleanDeployment(Placement, AllocHW, AllocBW, ToRemove, _, ToMigrate, PPlacement, PAllocHW, PAllocBW) :-
-    append(ToRemove,ToMigrate,ToClean),
+    union(ToRemove,ToMigrate,ToClean),
     removeServices(ToClean, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW).
 
 servicesToPlace(ToMigrate, ToAdd, ToPlace) :-
