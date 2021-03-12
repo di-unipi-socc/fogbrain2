@@ -1,6 +1,6 @@
 reasoningStep(App, Placement, AllocHW, AllocBW, Context, NewPlacement) :-
     toUpdate(App, Placement, Context, ToRemove, ToAdd, ToUpdate, ToMigrate),
-    cleanDeployment(Placement, AllocHW, AllocBW, ToRemove, ToUpdate, ToMigrate, PPlacement, PAllocHW, PAllocBW),
+    cleanDeployment(Placement, AllocHW, AllocBW, ToRemove, ToUpdate, ToMigrate, PPlacement, PAllocHW, PAllocBW, Context),
     servicesToPlace(ToMigrate, ToAdd, ToPlace),
     replacement(App, ToPlace, PPlacement, PAllocHW, PAllocBW, NewPlacement).
 
@@ -9,26 +9,29 @@ toUpdate(App, Placement, Context, ToRemove, ToAdd, ToUpdate, ToMigrate) :-
     toUpdateDueToInfrastructureChanges(Placement, ToMigrate2), 
     union(ToMigrate1, ToMigrate2, ToMigrate).
 
-cleanDeployment(Placement, AllocHW, AllocBW, ToRemove, _, ToMigrate, PPlacement, PAllocHW, PAllocBW) :-
+cleanDeployment(Placement, AllocHW, AllocBW, ToRemove, _, ToMigrate, PPlacement, PAllocHW, PAllocBW, Context) :-
     union(ToRemove,ToMigrate,ToClean),
-    removeServices(ToClean, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW).
+    removeServices(ToClean, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW, Context).
 
 servicesToPlace(ToMigrate, ToAdd, ToPlace) :-
     findall(S, member((S,_,_),ToMigrate), ToPlace1),
     findall(S, member((S,_,_),ToAdd), ToPlace2),
     union(ToPlace1, ToPlace2, ToPlace).
 
-removeServices(ToRemove, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW) :-
+removeServices(ToRemove, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW, Context) :-
     freeHWAllocation(AllocHW, PAllocHW, ToRemove),
-    freeBWAllocation(AllocBW, PAllocBW, ToRemove, Placement),
+    Context=(_,ContextS2S), freeBWAllocation(AllocBW, PAllocBW, ToRemove, Placement, ContextS2S),
     partialPlacement(Placement, ToRemove, PPlacement).
 
 toUpdateDueToRequirementsChanges(App, Placement, Context, ToRemove, ToAdd, ToUpdate, ToMigrate) :-
-    Context=(ContextServices,_),
+    Context=(ContextServices,ContextS2S),
     findall((S,N,HWReqs), removedService(App, S, N, HWReqs, Placement, ContextServices), ToRemove),
     findall((S,_,HWReqs), addedService(App, S, HWReqs, Placement), ToAdd),
-    findall((S,N,HWReqs), changedServiceToMigrate(S, N, HWReqs, Placement, ContextServices), ToMigrate),
-    findall((S,N,HWReqs), changedServiceToUpdate(S, N, HWReqs, Placement, ContextServices), ToUpdate).
+    findall((S,N,HWReqs), changedServiceToMigrate(S, N, HWReqs, Placement, ContextServices), ToMigrate1),
+    findall((S,N,HWReqs), changedServiceToUpdate(S, N, HWReqs, Placement, ContextServices), ToUpdate1),
+    findall((SD1,SD2), changedS2SToMigrate(SD1, SD2, Placement, ContextS2S, ContextServices), ToMigrate2),
+    findall((SD1,SD2), changedS2SToUpdate(SD1, SD2, Placement, ContextS2S, ContextServices), ToUpdate2),
+    merge(ToMigrate2, ToMigrate1, ToMigrate), merge(ToUpdate2, ToUpdate1, ToUpdate).
 
 changedServiceToMigrate(S, N, HWReqs, Placement, ContextServices) :-
     member(on(S,N), Placement),
@@ -49,6 +52,29 @@ serviceDiff(S, HWReqsOld, SWDiff, HWDiff, TDiff, ContextServices) :-
     HWDiff is HWReqs - HWReqsOld,
     listDiff(SWReqsOld, SWReqs, SWDiff),
     listDiff(TReqsOld, TReqs, TDiff).
+
+changedS2SToMigrate((S1,N1,HWReqs1), (S2,N2,HWReqs2), Placement, ContextS2S, ContextServices) :-
+    member(on(S1,N1),Placement), member(on(S2,N2),Placement),
+    dif(N1,N2), 
+    s2sDiff((S1,HWReqs1), (S2,HWReqs2), (_, ReqLat), BWDiff, ContextS2S, ContextServices),
+    link(N1, N2, FeatLat, FeatBW),
+    bwTh(T), \+ (ReqLat >= FeatLat, FeatBW > BWDiff + T).
+
+changedS2SToUpdate((S1,N1,HWReqs1), (S2,N2,HWReqs2), Placement, ContextS2S, ContextServices) :-
+    member(on(S1,N1),Placement), member(on(S2,N2),Placement), 
+    dif(N1,N2),
+    s2sDiff((S1,HWReqs1), (S2,HWReqs2), (LatDiff,ReqLat), BWDiff, ContextS2S, ContextServices),
+    (dif(LatDiff,0); dif(BWDiff,0)),
+    link(N1, N2, FeatLat, FeatBW),
+    ReqLat >= FeatLat, bwTh(T), FeatBW > BWDiff + T.
+
+s2sDiff((S1,HWReqs1Old), (S2,HWReqs2Old), (LatDiff,ReqLat), BWDiff, ContextS2S, ContextServices) :-
+    member(s2s(S1, S2, ReqLatOld, ReqBWOld),ContextS2S),
+    s2s(S1, S2, ReqLat, ReqBW),
+    BWDiff is ReqBW - ReqBWOld,
+    LatDiff is ReqLat -ReqLatOld,
+    member(service(S1, _, HWReqs1Old, _),ContextServices),
+    member(service(S2, _, HWReqs2Old, _),ContextServices).
 
 removedService(App,S,N,HWReqs,Placement,ContextServices) :-
     member(on(S,N),Placement),
@@ -76,7 +102,7 @@ nodeProblem(N, SWReqs, TReqs) :-
 nodeProblem(N, _, _) :- 
     \+ node(N, _, _, _).
 
-onSufferingLink((S1,N1,-HWReqs1,migrate),(S2,N2,-HWReqs2,migrate),Placement) :-
+onSufferingLink((S1,N1,HWReqs1),(S2,N2,HWReqs2),Placement) :-
     member(on(S1,N1), Placement), member(on(S2,N2), Placement), N1 \== N2,
     s2s(S1, S2, ReqLat, _),
     communicationProblem(N1, N2, ReqLat),
@@ -98,10 +124,10 @@ merge2(D1, [D2|L], [D2|NewL]) :- D1 \== D2, merge2(D1, L, NewL).
 replacement(A, [], Placement, AllocHW, AllocBW, Placement) :-
     application(A, Services),
     findall(service(S, SW, HW, TH), (member(S,Services), service(S, SW, HW, TH)), ContextServices),
-	findall(s2s(S, S2, LA, BW), (member(S,Services), s2s(S, S2, LA, BW)), ContextS2Ss),
+	findall(s2s(S, S2, LA, BW), (member(S,Services), s2s(S, S2, LA, BW)), ContextS2S),
     writeln('ciao1'),
     retract(deployment(A, _, _, _, _)),
-	assert(deployment(A, Placement, AllocHW, AllocBW, (ContextServices, ContextS2Ss))).
+	assert(deployment(A, Placement, AllocHW, AllocBW, (ContextServices, ContextS2S))).
 
 replacement(A, ServicesToPlace, Placement, AllocHW, AllocBW, NewPlacement) :-
     ServicesToPlace \== [],
@@ -109,10 +135,10 @@ replacement(A, ServicesToPlace, Placement, AllocHW, AllocBW, NewPlacement) :-
     
     application(A, Services),
     findall(service(S, SW, HW, TH), (member(S,Services), service(S, SW, HW, TH)), ContextServices),
-	findall(s2s(S, S2, LA, BW), (member(S,Services), s2s(S, S2, LA, BW)), ContextS2Ss),
+	findall(s2s(S, S2, LA, BW), (member(S,Services), s2s(S, S2, LA, BW)), ContextS2S),
     writeln('ciao2'),
     retract(deployment(A, _, _, _, _)),
-	assert(deployment(A, NewPlacement, NewAllocHW, NewAllocBW, (ContextServices, ContextS2Ss))).
+	assert(deployment(A, NewPlacement, NewAllocHW, NewAllocBW, (ContextServices, ContextS2S))).
 
 
 partialPlacement([],_,[]).
@@ -135,22 +161,22 @@ sumNodeHWToFree(N, [(_,N1,_)|STMs], H) :- N \== N1, sumNodeHWToFree(N, STMs, H).
 assemble((_,NewAllocHW), L, L) :- NewAllocHW=:=0.
 assemble((N, NewAllocHW), L, [(N,NewAllocHW)|L]) :- NewAllocHW>0.
  
-freeBWAllocation([],[],_,_).
-freeBWAllocation([(N1,N2,AllocBW)|L], NewL, Services, Placement) :-
-   findall(BW, toFree(N1,N2,BW,Services,Placement), BWs),
+freeBWAllocation([],[],_,_,_).
+freeBWAllocation([(N1,N2,AllocBW)|L], NewL, Services, Placement, ContextS2S) :-
+   findall(BW, toFree(N1,N2,BW,Services,Placement, ContextS2S), BWs),
    sumLinkBWToFree(BWs,V), NewAllocBW is AllocBW-V,
-   freeBWAllocation(L, TempL, Services, Placement),
+   freeBWAllocation(L, TempL, Services, Placement, ContextS2S),
    assemble2((N1,N2,NewAllocBW), TempL, NewL).
 
-toFree(N1,N2,B,Services,_) :- 
+toFree(N1,N2,B,Services,_,ContextS2S) :- 
     member((S1,N1,_),Services), 
-    s2s(S1,S2,_,B), member((S2,N2,_),Services). 
-toFree(N1,N2,B,Services,P) :- 
-    member((S1,N1,_),Services), s2s(S1,S2,_,B), 
+    member(s2s(S1, S2, _, B),ContextS2S), member((S2,N2,_),Services). 
+toFree(N1,N2,B,Services,P, ContextS2S) :- 
+    member((S1,N1,_),Services), member(s2s(S1, S2, _, B),ContextS2S),
     \+member((S2,N2,_),Services), member(on(S2,N2),P). 
-toFree(N1,N2,B,Services,P) :- 
+toFree(N1,N2,B,Services,P, ContextS2S) :- 
     member(on(S1,N1),P), 
-    \+member((S1,N1,_),Services), s2s(S1,S2,_,B), member((S2,N2,_),Services).
+    \+member((S1,N1,_),Services), member(s2s(S1, S2, _, B),ContextS2S), member((S2,N2,_),Services).
  
 sumLinkBWToFree([],0).
 sumLinkBWToFree([B|Bs],V) :- sumLinkBWToFree(Bs,TempV), V is B+TempV.
