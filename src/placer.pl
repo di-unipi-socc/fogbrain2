@@ -2,9 +2,7 @@ placement(App, Placement) :-
 	application(App, Services),
 	write('Placing '), write(App), write(' with Services '), writeln(Services),
 	placement(Services, [], AllocHW, [], AllocBW, [], Placement),
-	findall(service(S, SW, HW, TH), (member(S,Services), service(S, SW, HW, TH)), ContextServices),
-	findall(s2s(S, S2, LA, BW), (member(S,Services), s2s(S, S2, LA, BW)), ContextS2Ss),
-	assert(deployment(App, Placement, AllocHW, AllocBW, (ContextServices, ContextS2Ss))).
+	deploy(App, Placement, AllocHW, AllocBW).
 
 placement([], AllocHW, AllocHW, AllocBW, AllocBW, Placement, Placement).
 placement([S|Ss], AllocHW, NewAllocHW, AllocBW, NewAllocBW, Placement, NewPlacement) :-
@@ -53,3 +51,9 @@ bwOK(N1, N2, ReqBW, FeatBW, [(N1,N2,AllocBW)|L], [(N1,N2,NewAllocBW)|L]):-
 	NewAllocBW is ReqBW + AllocBW, bwTh(T), FeatBW >= NewAllocBW + T.
 bwOK(N1, N2, ReqBW, FeatBW, [(N3,N4,AllocBW)|L], [(N3,N4,AllocBW)|NewL]):-
 	\+ (N1 == N3, N2 == N4), bwOK(N1,N2,ReqBW,FeatBW,L,NewL).
+
+deploy(App, Placement, AllocHW, AllocBW) :-
+	application(App, Services),
+	findall(service(S, SW, HW, TH), (member(S,Services), service(S, SW, HW, TH)), ContextServices),
+	findall(s2s(S1, S2, LA, BW), (member(S1,Services), member(S2,Services), s2s(S1, S2, LA, BW)), ContextS2S),
+	assert(deployment(App, Placement, AllocHW, AllocBW, (ContextServices, ContextS2S))).
