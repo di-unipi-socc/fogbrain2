@@ -1,8 +1,8 @@
 reasoningStep(App, Placement, AllocHW, AllocBW, Context, NewPlacement) :-
     appDiff(App, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate),
     cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW),
-    writeln(ToAdd), writeln(ToRemove), writeln(ToUpdate), writeln(S2SToUpdate),
-    writeln(Placement), writeln(PPlacement), writeln(AllocHW), writeln(PAllocHW), writeln(AllocBW), writeln(PAllocBW),
+    %writeln(ToAdd), writeln(ToRemove), writeln(ToUpdate), writeln(S2SToUpdate),
+    %writeln(Placement), writeln(PPlacement), writeln(AllocHW), writeln(PAllocHW), writeln(AllocBW), writeln(PAllocBW),
     replacement(App, ToAdd, PPlacement, PAllocHW, PAllocBW, NewPlacement).
 
 cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW) :-
@@ -197,10 +197,11 @@ changeBWAllocation([(N1,N2,AllocBW)|L], NewL, S2S) :-
 
 sumLinkBWDiff(_, _, [], 0).
 sumLinkBWDiff(N1, N2, [diff(_,N1,_,N2,(_,BWDiff))|STMs], Tot) :- sumLinkBWDiff(N1, N2, STMs, BB), Tot is BWDiff+BB.
-sumLinkBWDiff(N1, N2, [diff(_,N2,_,N1,(_,BWDiff))|STMs], Tot) :- sumLinkBWDiff(N1, N2, STMs, BB), Tot is BWDiff+BB.
+%DOUBLECHECK THIS CLAUSE BELOW
+sumLinkBWDiff(N1, N2, [diff(_,N2,_,N1,(_,BWDiff))|STMs], Tot) :- sumLinkBWDiff(N1, N2, STMs, BB), Tot is BWDiff+BB. % serve ... ?
 sumLinkBWDiff(N1, N2, [diff(_,N3,_,N4,_)|STMs], B) :- (dif(N1,N3);dif(N2,N4)), sumLinkBWDiff(N1, N2, STMs, B).
 
-assembleBW((_,_,AllocatedBW), L, L) :- AllocatedBW = 0.
+assembleBW((_,_,AllocatedBW), L, L) :- AllocatedBW =:= 0.
 assembleBW((N1,N2,AllocatedBW), L, [(N1,N2,AllocatedBW)|L]) :- AllocatedBW>0.
 
 listDiff(_,[],[]).
