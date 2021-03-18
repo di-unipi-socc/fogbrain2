@@ -1,4 +1,5 @@
-0. Testare che gestiamo tutti i casi di cambiamento dell'infrastruttura e dell'applicazione. 
+0. Capire come (se è necessario) "ripulire" la KB dal descrittore dell'applicazione.
+   Testare che gestiamo tutti i casi di cambiamento dell'infrastruttura e dell'applicazione. 
    Testare che se il reasoning fallisce, FB2.0 ricomincia la ricerca completa. 
 
 1. Generare due versioni:

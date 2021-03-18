@@ -1,10 +1,13 @@
+:-dynamic deployment/5.
+:-dynamic application/2.
+:-dynamic service/4.
+:-dynamic s2s/4.
 :-qcompile('infra.pl').
 :-qcompile('app.pl').
-:-qcompile('utils.pl')
+:-qcompile('utils.pl').
 :-qcompile('./src/placer.pl').
 :-qcompile('./src/reasoning.pl').
 :-use_module(library(lists)).
-:-dynamic deployment/5.
 
 %%%% Thresholds to identify overloaded nodes and saturated e2e links%%%%
 hwTh(0.5).
