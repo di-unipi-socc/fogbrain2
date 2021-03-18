@@ -1,6 +1,5 @@
 placement(App, Placement) :-
 	application(App, Services),
-	write('Placing '), write(App), write(' with Services '), writeln(Services),
 	placement(Services, [], AllocHW, [], AllocBW, [], Placement),
 	deploy(App, Placement, AllocHW, AllocBW).
 

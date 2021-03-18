@@ -1,11 +1,14 @@
-reasoningStep(App, Placement, AllocHW, AllocBW, Context, NewPlacement) :-
-    appDiff(App, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate),
+% reasoningStep(+AppId, +Placement, +AllocHW, +AllocBW, +Context, -NewPlacement)
+% Given an AppId, its current Placement and the associated AllocHW and AllocBW, 
+% and its deployment Context, it determines a NewPlacement via continuous reasoning.
+reasoningStep(AppId, Placement, AllocHW, AllocBW, Context, NewPlacement) :-
+    appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate),
     cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW),
-    replacement(App, ToAdd, PPlacement, PAllocHW, PAllocBW, NewPlacement).
+    replacement(AppId, ToAdd, PPlacement, PAllocHW, PAllocBW, NewPlacement).
 
-appDiff(App, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate) :-
+appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate) :-
     Context=(CtxServices,CtxS2S),
-    serviceDiffs(App,Placement, CtxServices, ToAdd1, ToUpdate, ToRemove1),
+    serviceDiffs(AppId,Placement, CtxServices, ToAdd1, ToUpdate, ToRemove1),
     s2sDiffs(Placement, CtxServices, CtxS2S, ToAdd2, ToRemove1, ToRemove2, S2SToUpdate), 
     union(ToAdd1,ToAdd2,ToAdd), union(ToRemove1,ToRemove2,ToRemove).
 
@@ -15,16 +18,14 @@ cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, 
     partialPlacement(Placement, ToRemoveSIDs, PPlacement).
 
 replacement(A, [], Placement, AllocHW, AllocBW, Placement) :-
-    retract(deployment(A, _, _, _, _)),
-    deploy(A, Placement, AllocHW, AllocBW).
+    retract(deployment(A, _, _, _, _)), deploy(A, Placement, AllocHW, AllocBW).
 replacement(A, ServicesToPlace, Placement, AllocHW, AllocBW, NewPlacement) :-
-    dif(ServicesToPlace,[]),
+    dif(ServicesToPlace,[]), retract(deployment(A, _, _, _, _)),
     placement(ServicesToPlace, AllocHW, NewAllocHW, AllocBW, NewAllocBW, Placement, NewPlacement),
-    retract(deployment(A, _, _, _, _)),
     deploy(A, NewPlacement, NewAllocHW, NewAllocBW).
 
-serviceDiffs(App,Placement, CtxServices, ToAdd, ToUpdate, ToRemove) :-
-    application(App, Services),
+serviceDiffs(AppId,Placement, CtxServices, ToAdd, ToUpdate, ToRemove) :-
+    application(AppId, Services),
     changedServices(Services, Placement, CtxServices, ToAdd, ToUpdate, ToRemove).
 
 changedServices([], Placement, CtxServices, [], [], ToRemove) :-
@@ -64,13 +65,6 @@ sortService(diff(_,N,([],0,[])), _, ToAdd, ToUpdate, ToRemove, ToAdd, ToUpdate, 
 
 toMigrate(S,N,Diff) :- (requirementsProblem(N,Diff); nodeProblem(S,N)).
 
-toUpdate(N,(SWDiff,HWDiff,TDiff)) :-
-    (dif(SWDiff,[]); dif(HWDiff,0); dif(TDiff,[])),
-    node(N, SWCaps, HWCaps, TCaps),
-    swReqsOK(SWDiff, SWCaps), 
-    hwTh(T), HWCaps > HWDiff + T, 
-    thingReqsOK(TDiff, TCaps).
-
 requirementsProblem(N,(SWDiff,HWDiff,TDiff)) :-
     (dif(SWDiff,[]); dif(HWDiff,0); dif(TDiff,[])),
     node(N, SWCaps, HWCaps, TCaps), 
@@ -82,6 +76,13 @@ nodeProblem(S, N) :-
     hwTh(T), \+ (swReqsOK(SWReqs,SWCaps), HWCaps > T, thingReqsOK(TReqs,TCaps)).
 nodeProblem(_, N) :- 
     \+ node(N, _, _, _).
+
+toUpdate(N,(SWDiff,HWDiff,TDiff)) :-
+    (dif(SWDiff,[]); dif(HWDiff,0); dif(TDiff,[])),
+    node(N, SWCaps, HWCaps, TCaps),
+    swReqsOK(SWDiff, SWCaps), 
+    hwTh(T), HWCaps > HWDiff + T, 
+    thingReqsOK(TDiff, TCaps).
 
 s2sDiffs(Placement, CtxServices, CtxS2S, SToAdd, ToRemove1, SToRemove, S2SToUpdate):-
     appS2S(S2Ss), 
@@ -133,7 +134,7 @@ toUpdate(N1,N2,((ReqLat, LatDiff),BWDiff)):-
     link(N1,N2,FeatLat,FeatBW),
     FeatLat =< ReqLat, bwTh(T), FeatBW >= T + BWDiff.
 
-toReplace(N1,N2,((ReqLat, _),BWDiff)):-
+toReplace(N1,N2,((ReqLat, _),BWDiff)):- 
     %(dif(LatDiff,0); dif(BWDiff,0)),
     link(N1,N2,FeatLat,FeatBW),
     FeatLat > ReqLat, bwTh(T), FeatBW < T + BWDiff.
@@ -152,22 +153,6 @@ changeHWAllocation([(N,AllocHW)|L], NewL, Services) :-
     changeHWAllocation(L, TempL, Services),
     assembleHW((N,NewAllocHW), TempL, NewL).
 
-getServiceIDs(List, Services) :- findall(S, (member(diff(S,_,_),List)), Services).
-
-partialPlacement(P,[],P).
-partialPlacement([],_,[]).
-partialPlacement([on(S,_)|P],Services,PPlacement) :-
-    member(S,Services), partialPlacement(P,Services,PPlacement).
-partialPlacement([on(S,N)|P],Services,[on(S,N)|PPlacement]) :-
-    \+member(S,Services), partialPlacement(P,Services,PPlacement).
-
-sumNodeHWDiff(_, [], 0).
-sumNodeHWDiff(N, [diff(_,N,(_,HWDiff,_))|STMs], Tot) :- sumNodeHWDiff(N, STMs, HH), Tot is HWDiff+HH.
-sumNodeHWDiff(N, [diff(_,N1,_)|STMs], H) :- dif(N,N1), sumNodeHWDiff(N, STMs, H).
- 
-assembleHW((_,NewAllocHW), L, L) :- NewAllocHW=:=0.
-assembleHW((N, NewAllocHW), L, [(N,NewAllocHW)|L]) :- NewAllocHW>0.
- 
 changeBWAllocation(A, A, []). 
 changeBWAllocation([],[], _).
 changeBWAllocation([(N1,N2,AllocBW)|L], NewL, S2S) :-
@@ -176,6 +161,22 @@ changeBWAllocation([(N1,N2,AllocBW)|L], NewL, S2S) :-
    changeBWAllocation(L, TempL, S2S),
    assembleBW((N1,N2,NewAllocBW), TempL, NewL).
 
+partialPlacement(P,[],P).
+partialPlacement([],_,[]).
+partialPlacement([on(S,_)|P],Services,PPlacement) :-
+    member(S,Services), partialPlacement(P,Services,PPlacement).
+partialPlacement([on(S,N)|P],Services,[on(S,N)|PPlacement]) :-
+    \+member(S,Services), partialPlacement(P,Services,PPlacement).
+
+getServiceIDs(List, Services) :- findall(S, (member(diff(S,_,_),List)), Services).
+
+sumNodeHWDiff(_, [], 0).
+sumNodeHWDiff(N, [diff(_,N,(_,HWDiff,_))|STMs], Tot) :- sumNodeHWDiff(N, STMs, HH), Tot is HWDiff+HH.
+sumNodeHWDiff(N, [diff(_,N1,_)|STMs], H) :- dif(N,N1), sumNodeHWDiff(N, STMs, H).
+ 
+assembleHW((_,NewAllocHW), L, L) :- NewAllocHW=:=0.
+assembleHW((N, NewAllocHW), L, [(N,NewAllocHW)|L]) :- NewAllocHW>0.
+ 
 sumLinkBWDiff(_, _, [], 0).
 sumLinkBWDiff(N1, N2, [diff(_,N1,_,N2,(_,BWDiff))|STMs], Tot) :- sumLinkBWDiff(N1, N2, STMs, BB), Tot is BWDiff+BB.
 % TODO: DOUBLECHECK THE CLAUSE BELOW: not sure it is needed here
