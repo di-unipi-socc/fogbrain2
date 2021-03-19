@@ -66,7 +66,7 @@ sortService(diff(_,N,([],0,[])), _, ToAdd, ToUpdate, ToRemove, ToAdd, ToUpdate, 
 toMigrate(S,N,Diff) :- (requirementsProblem(N,Diff); nodeProblem(S,N)).
 
 requirementsProblem(N,(SWDiff,HWDiff,TDiff)) :-
-    (dif(SWDiff,[]); dif(HWDiff,0); dif(TDiff,[])),
+    (dif(SWDiff,[]); HWDiff =\= 0; dif(TDiff,[])),
     node(N, SWCaps, HWCaps, TCaps), 
     hwTh(T), \+ (swReqsOK(SWDiff, SWCaps), HWCaps > HWDiff + T, thingReqsOK(TDiff, TCaps)).
 
@@ -78,7 +78,7 @@ nodeProblem(_, N) :-
     \+ node(N, _, _, _).
 
 toUpdate(N,(SWDiff,HWDiff,TDiff)) :-
-    (dif(SWDiff,[]); dif(HWDiff,0); dif(TDiff,[])),
+    (dif(SWDiff,[]); HWDiff =\= 0; dif(TDiff,[])),
     node(N, SWCaps, HWCaps, TCaps),
     swReqsOK(SWDiff, SWCaps), 
     hwTh(T), HWCaps > HWDiff + T, 
