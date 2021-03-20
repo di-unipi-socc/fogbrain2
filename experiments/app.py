@@ -54,14 +54,16 @@ class App:
         with open(self._file,"w") as f:
             f.write(str(self))
 
-app = App('vrApp',"app.pl")
-#app.addService("videoStorage", ["mySQL", "ubuntu"], 16, [])
-app.addService("sceneSelector", ["ubuntu"], 2, [])
-app.addService("vrDriver", ["gcc", "make"], 2, ["vrViewer"])
+if __name__ == "__main__":
 
-#app.addS2S("videoStorage", "sceneSelector", 150, 101)
-#app.addS2S("sceneSelector", "videoStorage", 150, 0.5)
-app.addS2S("sceneSelector", "vrDriver", 20, 8)
-app.addS2S("vrDriver", "sceneSelector", 20, 1)
+    app = App('vrApp',"app.pl")
+    #app.addService("videoStorage", ["mySQL", "ubuntu"], 16, [])
+    app.addService("sceneSelector", ["ubuntu"], 2, [])
+    app.addService("vrDriver", ["gcc", "make"], 2, ["vrViewer"])
 
-app.upload()
+    #app.addS2S("videoStorage", "sceneSelector", 150, 101)
+    #app.addS2S("sceneSelector", "videoStorage", 150, 0.5)
+    app.addS2S("sceneSelector", "vrDriver", 20, 8)
+    app.addS2S("vrDriver", "sceneSelector", 20, 1)
+
+    app.upload()
