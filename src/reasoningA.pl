@@ -1,10 +1,10 @@
 % reasoningStep(+AppId, +Placement, +AllocHW, +AllocBW, +Context, -NewPlacement)
 % Given an AppId, its current Placement and the associated AllocHW and AllocBW, 
 % and its deployment Context, it determines a NewPlacement via continuous reasoning.
-reasoningStep(AppId, Placement, AllocHW, AllocBW, Context, NewPlacement) :-
+reasoningStep(AppId, Placement, Alloc, Context, NewPlacement) :-
     appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate),
-    cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW),
-    replacement(AppId, ToAdd, PPlacement, PAllocHW, PAllocBW, NewPlacement).
+    cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, Alloc, PAlloc),
+    replacement(AppId, ToAdd, PPlacement, PAlloc, NewPlacement).
 
 appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate) :-
     Context=(CtxServices,CtxS2S),
@@ -12,18 +12,18 @@ appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate) :-
     s2sDiffs(Placement, CtxServices, CtxS2S, ToAdd2, ToRemove1, ToRemove2, S2SToUpdate), 
     union(ToAdd1,ToAdd2,ToAdd), union(ToRemove1,ToRemove2,ToRemove).
 
-cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW) :-
+cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, Alloc, PAlloc) :-
     getServiceIDs(ToRemove, ToRemoveSIDs),
     union(ToUpdate, ToRemove, ToClean),
-    changeResourceAllocations(ToClean, S2SToUpdate, AllocHW, PAllocHW, AllocBW, PAllocBW),
+    changeResourceAllocations(ToClean, S2SToUpdate, Alloc, PAlloc),
     partialPlacement(Placement, ToRemoveSIDs, PPlacement).
 
-replacement(A, [], Placement, AllocHW, AllocBW, Placement) :-
-    retract(deployment(A, _, _, _, _)), deploy(A, Placement, AllocHW, AllocBW).
-replacement(A, ServicesToPlace, Placement, AllocHW, AllocBW, NewPlacement) :-
-    dif(ServicesToPlace,[]), retract(deployment(A, _, _, _, _)),
-    placement(ServicesToPlace, AllocHW, NewAllocHW, AllocBW, NewAllocBW, Placement, NewPlacement),
-    deploy(A, NewPlacement, NewAllocHW, NewAllocBW).
+replacement(A, [], Placement, Alloc, Placement) :-
+    retract(deployment(A, _, _, _)), deploy(A, Placement, Alloc).
+replacement(A, ServicesToPlace, Placement, Alloc, NewPlacement) :-
+    dif(ServicesToPlace,[]), retract(deployment(A, _, _, _)),
+    placement(ServicesToPlace, Alloc, NewAlloc, Placement, NewPlacement),
+    deploy(A, NewPlacement, NewAlloc).
 
 serviceDiffs(AppId,Placement, CtxServices, ToAdd, ToUpdate, ToRemove) :-
     application(AppId, Services),
@@ -149,16 +149,7 @@ linkProblem(S1,N1,S2,N2) :-
 linkProblem(_,N1,_,N2) :-
     \+ link(N1,N2,_,_).
 
-/*
-toReplace(N1,N2,((ReqLat, _),BWDiff)):- 
-    %(dif(LatDiff,0); dif(BWDiff,0)),
-    link(N1,N2,FeatLat,FeatBW),
-    FeatLat > ReqLat, bwTh(T), FeatBW < T + BWDiff.
-toReplace(N1,N2,_):-
-    \+ link(N1,N2,_,_).
-*/
-
-changeResourceAllocations(ToClean, S2S, AllocHW, NewAllocHW, AllocBW, NewAllocBW) :-
+changeResourceAllocations(ToClean, S2S, (AllocHW, AllocBW), (NewAllocHW, NewAllocBW)) :-
     changeHWAllocation(AllocHW, NewAllocHW, ToClean),
     changeBWAllocation(AllocBW, NewAllocBW, S2S).
  

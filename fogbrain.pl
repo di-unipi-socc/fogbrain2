@@ -1,4 +1,4 @@
-:-dynamic deployment/5.
+:-dynamic deployment/4.
 :-dynamic application/2.
 :-dynamic service/4.
 :-dynamic s2s/4.
@@ -7,7 +7,7 @@
 
 :-qcompile('utils.pl').
 :-qcompile('./src/placer.pl').
-:-qcompile('./src/reasoning.pl').
+:-qcompile('./src/reasoningB.pl').
 :-use_module(library(lists)).
 
 %%%% Thresholds to identify overloaded nodes and saturated e2e links%%%%
@@ -20,12 +20,12 @@ fogBrain(AppSpec, NewPlacement) :-
 	loadSpec('infra.pl'), 
 	loadSpec(AppSpec), %checkAppSpec(),
 	application(AppId,_),
-	deployment(AppId, Placement, AllocHW, AllocBW, Context), %writeln('A deployment exist, starting a reasoning step...'),
-	time(reasoningStep(AppId, Placement, AllocHW, AllocBW, Context, NewPlacement)),
+	deployment(AppId, Placement, Alloc, Context), %writeln('A deployment exist, starting a reasoning step...'),
+	time(reasoningStep(AppId, Placement, Alloc, Context, NewPlacement)),
 	unloadSpec('infra.pl'), unloadSpec(AppSpec).
 fogBrain(AppSpec, Placement) :-
 	application(AppId,_),
-	\+deployment(AppId,_,_,_,_), %writeln('A deployment does not exist, starting placing the app...'),
+	\+deployment(AppId,_,_,_), %writeln('A deployment does not exist, starting placing the app...'),
 	time(placement(AppId, Placement)),
 	unloadSpec('infra.pl'), unloadSpec(AppSpec).
 fogBrain(AppSpec,_) :-

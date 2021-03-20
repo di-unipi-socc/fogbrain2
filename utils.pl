@@ -1,4 +1,4 @@
-del :- retract(deployment(vrApp, _, _, _, _)).
+del :- retract(deployment(vrApp, _, _, _)).
 test(P) :- make,fogBrain(vrApp,P).
 
 loadSpec(Spec) :- consult(Spec).
@@ -12,7 +12,7 @@ checkAppSpec() :-
 	SServices=SServiceDecl.
 
 deployment(App) :-
-	deployment(App, Placement, AllocHW, AllocBW, (Services, S2Ss)),
+	deployment(App, Placement, (AllocHW, AllocBW), (Services, S2Ss)),
 	write('App: '), writeln(App),
 	write('Placement: '), writeln(Placement),
 	write('AllocHW: '), writeln(AllocHW),
