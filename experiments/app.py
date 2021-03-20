@@ -14,6 +14,14 @@ class App:
         if service1 in self._services and service2 in self._services and (service1,service2) not in self._s2ss:
             self._s2ss[(service1,service2)] = (lat,bw)
 
+    def modifyService(self, service, sw, hw, things):
+        if service in self._services:
+            self._services[service] = (sw,hw,things)
+
+    def modifyS2S(self, service1, service2, lat, bw):
+        if (service1,service2) in self._s2ss:
+            self._s2ss[(service1,service2)] = (lat,bw)
+
     def removeService(self, service):
         if service in self._services:
             del self._services[service]
