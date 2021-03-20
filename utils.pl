@@ -1,6 +1,9 @@
 del :- retract(deployment(vrApp, _, _, _, _)).
 test(P) :- make,fogBrain(vrApp,P).
 
+loadSpec(Spec) :- consult(Spec).
+unloadSpec(Spec) :- unload_file(Spec).
+
 checkAppSpec() :-
 	findall(1, application(AppId,_),[1]),
 	application(AppId, Services),

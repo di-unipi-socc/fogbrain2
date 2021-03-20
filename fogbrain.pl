@@ -2,8 +2,9 @@
 :-dynamic application/2.
 :-dynamic service/4.
 :-dynamic s2s/4.
-:-qcompile('infra.pl').
-:-qcompile('app.pl').
+:-dynamic link/4.
+:-dynamic node/4.
+
 :-qcompile('utils.pl').
 :-qcompile('./src/placer.pl').
 :-qcompile('./src/reasoning.pl').
@@ -16,13 +17,16 @@ itTh(10).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fogBrain(AppSpec, NewPlacement) :-
-	consult('infra.pl'), 
-	consult(AppSpec), checkAppSpec(),
+	loadSpec('infra.pl'), 
+	loadSpec(AppSpec), %checkAppSpec(),
 	application(AppId,_),
-	deployment(AppId, Placement, AllocHW, AllocBW, Context), %writeln('A deployment exist, starting a reasoning step...'),
-	time(reasoningStep(AppId, Placement, AllocHW, AllocBW, Context, NewPlacement)).
-fogBrain(_, Placement) :-
+	deployment(AppId, Placement, AllocHW, AllocBW, Context), writeln('A deployment exist, starting a reasoning step...'),
+	time(reasoningStep(AppId, Placement, AllocHW, AllocBW, Context, NewPlacement)),
+	unloadSpec('infra.pl'), unloadSpec(AppSpec).
+fogBrain(AppSpec, Placement) :-
 	application(AppId,_),
-	\+deployment(AppId,_,_,_,_), %writeln('A deployment does not exist, starting placing the app...'),
-	time(placement(AppId, Placement)).
-
+	\+deployment(AppId,_,_,_,_), writeln('A deployment does not exist, starting placing the app...'),
+	time(placement(AppId, Placement)),
+	unloadSpec('infra.pl'), unloadSpec(AppSpec).
+fogBrain(AppSpec,_) :-
+	unloadSpec('infra.pl'), unloadSpec(AppSpec).
