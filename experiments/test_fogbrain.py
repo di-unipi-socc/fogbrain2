@@ -154,16 +154,14 @@ class FogBrainTest(unittest.TestCase):
         ans = parse(deployment)     
         res = {'Placement': [('on', ['videoStorage', 'ispdatacentre']), ('on', ['vrDriver', 'accesspoint']), ('on', ['sceneSelector', 'cabinetserver'])], 'AllocHW': [('cabinetserver', 2), ('accesspoint', 2), ('ispdatacentre', 16)], 'AllocBW':  [('accesspoint', ('cabinetserver', 1)), ('cabinetserver', ('accesspoint', 8)), ('ispdatacentre', ('cabinetserver', 101)), ('cabinetserver', ('ispdatacentre', 0.5))], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']]), ('service', ['videoStorage', ['mySQL', 'ubuntu'], 16, []])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1]), ('s2s', ['videoStorage', 'sceneSelector', 150, 101]), ('s2s', ['sceneSelector', 'videoStorage', 150, 0.5])]}
         self.assertEqual(ans,res,ans)
-    """
-    def test_modify_service_with_migration(self):
+    
+    def test_with_migration_modify_service(self):
         self.app.modifyService("sceneSelector", ["ubuntu", "gcc", "make"], 1, ["vrViewer"])
         self.app.upload()
         deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, AllocHW, AllocBW, (ContextServices, ContextS2S)).").__next__()
         ans = parse(deployment)     
-        res = {'Placement': [('on', ['vrDriver', 'accesspoint']), ('on', ['sceneSelector', 'accesspoint'])], 'AllocHW': [('accesspoint', 3)], 'AllocBW': [], 'ContextServices': [('service', ['sceneSelector', ['ubuntu','gcc',"make"], 1, ["vrViewer"]]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1])]}
+        res = {'Placement': [ ('on', ['sceneSelector', 'accesspoint']), ('on', ['vrDriver', 'accesspoint'])], 'AllocHW': [('accesspoint', 3)], 'AllocBW': [], 'ContextServices': [('service', ['sceneSelector', ['ubuntu','gcc',"make"], 1, ["vrViewer"]]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1])]}
         self.assertEqual(ans,res,ans)
-    """
-    
 
 if __name__ == '__main__':
     unittest.main()
