@@ -2,8 +2,6 @@
 % Given an AppId, its current Placement and the associated AllocHW and AllocBW, 
 % and its deployment Context, it determines a NewPlacement via continuous reasoning.
 
-% RIMUOVERE SW THINGS E LAT DIFF
-
 reasoningStep(AppId, Placement, AllocHW, AllocBW, Context, NewPlacement) :-
     appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate),
     cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW),
@@ -55,13 +53,13 @@ serviceDiff(S, _, CtxServices, diff(S,none,(SWReqs,HWReqs,TReqs))) :-
     \+ member(service(S, _, _, _),CtxServices),
     service(S, SWReqs, HWReqs, TReqs).
 
-sortService(diff(S,none,_), _, ToAdd, ToUpdate, ToRemove, [S|ToAdd], ToUpdate, ToRemove). 
+sortService(diff(S,none,_), _, ToAdd, ToUpdate, ToRemove, [S|ToAdd], ToUpdate, ToRemove).
 sortService(diff(S,N,D), CtxServices, ToAdd, ToUpdate, ToRemove, [S|ToAdd], ToUpdate, [diff(S,N,(SWReqsOld,-HWReqsOld,TReqsOld))|ToRemove]) :- 
     dif(N,none), toMigrate(N,D), 
-    member(service(S, SWReqsOld, HWReqsOld, TReqsOld),CtxServices). 
+    member(service(S, SWReqsOld, HWReqsOld, TReqsOld),CtxServices).
 sortService(diff(S,N,D), _, ToAdd, ToUpdate, ToRemove, ToAdd, [diff(S,N,D)|ToUpdate], ToRemove) :- 
     dif(N,none), toUpdate(N,D).
-sortService(diff(_,N,([],0,[])), _, ToAdd, ToUpdate, ToRemove, ToAdd, ToUpdate, ToRemove) :- 
+sortService(diff(_,N,(_,0,_)), _, ToAdd, ToUpdate, ToRemove, ToAdd, ToUpdate, ToRemove) :- 
     dif(N,none). 
 
 toMigrate(N,(SWReqs,HWDiff,TReqs)) :-
