@@ -3,6 +3,7 @@
 % and its deployment Context, it determines a NewPlacement via continuous reasoning.
 reasoningStep(AppId, Placement, AllocHW, AllocBW, Context, NewPlacement) :-
     appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate),
+    writeln(ToRemove),
     cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW),
     replacement(AppId, ToAdd, PPlacement, PAllocHW, PAllocBW, NewPlacement).
 
@@ -14,7 +15,8 @@ appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate) :-
 
 cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, AllocHW, PAllocHW, AllocBW, PAllocBW) :-
     getServiceIDs(ToRemove, ToRemoveSIDs),
-    changeResourceAllocations(ToUpdate, S2SToUpdate, AllocHW, PAllocHW, AllocBW, PAllocBW),
+    union(ToUpdate, ToRemove, ToClean),
+    changeResourceAllocations(ToClean, S2SToUpdate, AllocHW, PAllocHW, AllocBW, PAllocBW),
     partialPlacement(Placement, ToRemoveSIDs, PPlacement).
 
 replacement(A, [], Placement, AllocHW, AllocBW, Placement) :-
