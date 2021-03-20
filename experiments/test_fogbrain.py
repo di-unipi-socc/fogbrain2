@@ -1,9 +1,32 @@
 from .app import App
 from .infra import Infra
 
-from pyswip import Prolog
+from pyswip import Prolog, Functor, Atom
 
 import unittest 
+
+def parse(query):
+    if isinstance(query,dict):
+        ans = {}
+        for k,v in query.items():
+            ans[k] = parse(v)
+        return ans
+    elif isinstance(query,list):
+        ans = []
+        for v in query:
+            ans.append(parse(v)) 
+        return ans
+    elif isinstance(query,Atom):
+        return query.value
+    elif isinstance(query, Functor):
+        fun = query.name.value
+        if fun != ",": #prolog tuple
+            ans = (fun,parse(query.args))
+        else:
+            ans = tuple(parse(query.args))
+        return ans
+    else:
+        return query
 
 class FogBrainTest(unittest.TestCase):
     
@@ -68,13 +91,16 @@ class FogBrainTest(unittest.TestCase):
     def tearDown(self): 
         pass 
 
+
     ###############
     #### tests #### 
     ############### 
 
-    def test(self):
+    def test_two_services(self):
         deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, AllocHW, AllocBW, (ContextServices, ContextS2S)).").__next__()
-        self.assertFalse(True,deployment["Placement"])
+        ans = parse(deployment)     
+        res = {'Placement': [('on', ['vrDriver', 'accesspoint']), ('on', ['sceneSelector', 'cabinetserver'])], 'AllocHW': [('cabinetserver', 2), ('accesspoint', 2)], 'AllocBW': [('accesspoint', ('cabinetserver', 1)), ('cabinetserver', ('accesspoint', 8))], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1])]}
+        self.assertEqual(ans,res,ans)
 
 if __name__ == '__main__':
     unittest.main()
