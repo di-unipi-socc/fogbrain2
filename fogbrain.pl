@@ -7,7 +7,7 @@
 
 :-qcompile('utils.pl').
 :-qcompile('./src/placer.pl').
-:-qcompile('./src/reasoningB.pl').
+:-qcompile('./src/reasoningC.pl').
 :-use_module(library(lists)).
 
 %%%% Thresholds to identify overloaded nodes and saturated e2e links%%%%
