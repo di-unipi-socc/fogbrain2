@@ -52,6 +52,7 @@ class FogBrainTest(unittest.TestCase):
         self.infra.addNode("ispdatacentre", ["ubuntu", "mySQL"], 50, [])
         self.infra.addNode("cabinetserver", ["ubuntu", "mySQL"], 20, [])
         self.infra.addNode("accesspoint", ["ubuntu", "gcc", "make"], 4, ["vrViewer"])
+        self.infra.addNode("accesspoint2", ["ubuntu", "gcc", "make"], 4, ["vrViewer"])
         self.infra.addNode("smartphone", ["android", "gcc", "make"], 8, ["vrViewer"])
 
         self.infra.addLink("cloud", "ispdatacentre", 110, 1000)
@@ -69,6 +70,7 @@ class FogBrainTest(unittest.TestCase):
         self.infra.addLink("accesspoint", "cloud", 148, 3)
         self.infra.addLink("accesspoint", "ispdatacentre", 38, 4)
         self.infra.addLink("accesspoint", "cabinetserver", 13, 4)
+        self.infra.addLink("accesspoint2", "cabinetserver", 13, 50)
         self.infra.addLink("accesspoint", "smartphone", 2, 70)
         self.infra.addLink("smartphone", "cloud", 150, 2)
         self.infra.addLink("smartphone", "ispdatacentre", 40, 2.5)
@@ -91,7 +93,7 @@ class FogBrainTest(unittest.TestCase):
 
     # executed after each test 
     def tearDown(self): 
-        pass
+        self.prolog.query("del.")
 
 
 
@@ -100,13 +102,6 @@ class FogBrainTest(unittest.TestCase):
     ############### 
     
     def test_two_services(self):
-        deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
-        ans = parse(deployment)     
-        res = {'Placement': [('on', ['vrDriver', 'accesspoint']), ('on', ['sceneSelector', 'cabinetserver'])], 'AllocHW': [('cabinetserver', 2), ('accesspoint', 2)], 'AllocBW': [('accesspoint', ('cabinetserver', 1)), ('cabinetserver', ('accesspoint', 8))], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1])]}
-        self.assertEqual(ans,res,ans)
-
-    def test_nop(self):
-        self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
         deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
         ans = parse(deployment)     
         res = {'Placement': [('on', ['vrDriver', 'accesspoint']), ('on', ['sceneSelector', 'cabinetserver'])], 'AllocHW': [('cabinetserver', 2), ('accesspoint', 2)], 'AllocBW': [('accesspoint', ('cabinetserver', 1)), ('cabinetserver', ('accesspoint', 8))], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1])]}
@@ -161,6 +156,48 @@ class FogBrainTest(unittest.TestCase):
         deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
         ans = parse(deployment)     
         res = {'Placement': [ ('on', ['sceneSelector', 'accesspoint']), ('on', ['vrDriver', 'accesspoint'])], 'AllocHW': [('accesspoint', 3)], 'AllocBW': [], 'ContextServices': [('service', ['sceneSelector', ['ubuntu','gcc',"make"], 1, ["vrViewer"]]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1])]}
+        self.assertEqual(ans,res,ans)
+
+    def test_node_to_zero(self):
+        self.infra.modifyNode("accesspoint", ["ubuntu", "gcc", "make"], 0, ["vrViewer"])
+        self.infra.upload()
+        deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
+        ans = parse(deployment)     
+        res = {'Placement': [('on', ['vrDriver', 'smartphone']), ('on', ['sceneSelector', 'cabinetserver'])], 'AllocHW': [('cabinetserver', 2), ('smartphone', 2)], 'AllocBW':  [('smartphone', ('cabinetserver', 1)), ('cabinetserver', ('smartphone', 8))], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1])]}
+        self.assertEqual(ans,res,ans)
+        self.infra.modifyNode("accesspoint", ["ubuntu", "gcc", "make"], 4, ["vrViewer"])
+        self.infra.upload()
+
+    def test_on_suffering_node(self):
+        self.app.addService("vrDriver", ["gcc", "make"], 8, ["vrViewer"])
+        self.app.upload()
+        deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
+        ans = parse(deployment)    
+        res = {'Placement': [('on', ['vrDriver', 'smartphone']), ('on', ['sceneSelector', 'cabinetserver'])], 'AllocHW': [('cabinetserver', 2), ('smartphone', 2)], 'AllocBW':  [('smartphone', ('cabinetserver', 1)), ('cabinetserver', ('smartphone', 8))], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 1])]}
+        self.assertEqual(ans,res,ans)
+
+    def test_remove_s2s(self):
+        self.app.removeS2S("vrDriver", "sceneSelector")
+        self.app.upload()
+        deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
+        ans = parse(deployment)     
+        res = {'Placement': [('on', ['vrDriver', 'smartphone']), ('on', ['sceneSelector', 'cabinetserver'])], 'AllocHW': [('cabinetserver', 2), ('smartphone', 2)], 'AllocBW': [('cabinetserver', ('smartphone', 8))], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8])]}
+        self.assertEqual(ans,res,ans)
+
+    def test_modify_s2s(self):
+        self.app.modifyS2S("vrDriver", "sceneSelector", 18, 2)
+        self.app.upload()
+        deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
+        ans = parse(deployment)     
+        res = {'Placement': [('on', ['vrDriver', 'accesspoint']), ('on', ['sceneSelector', 'cabinetserver'])], 'AllocHW': [('cabinetserver', 2), ('accesspoint', 2)], 'AllocBW': [('accesspoint', ('cabinetserver', 2)), ('cabinetserver', ('accesspoint', 8))], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 18, 2])]}
+        self.assertEqual(ans,res,ans)
+
+    def test_with_migration_modify_service2service(self):
+        self.app.modifyS2S("vrDriver", "sceneSelector", 20, 15)
+        self.app.upload()
+        deployment = self.prolog.query("make,fogBrain('app.pl',_),deployment(vrApp, Placement, (AllocHW, AllocBW), (ContextServices, ContextS2S)).").__next__()
+        ans = parse(deployment)     
+        res = {'Placement': [('on', ['sceneSelector', 'accesspoint']), ('on', ['vrDriver', 'accesspoint'])], 'AllocHW': [('accesspoint', 4)], 'AllocBW': [], 'ContextServices': [('service', ['sceneSelector', ['ubuntu'], 2, []]), ('service', ['vrDriver', ['gcc', 'make'], 2, ['vrViewer']])], 'ContextS2S': [('s2s', ['sceneSelector', 'vrDriver', 20, 8]), ('s2s', ['vrDriver', 'sceneSelector', 20, 15])]}
         self.assertEqual(ans,res,ans)
 
 if __name__ == '__main__':

@@ -9,13 +9,7 @@ reasoningStep(AppId, Placement, Alloc, Context, NewPlacement) :-
 appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate) :-
     Context=(CtxServices,CtxS2S),
     serviceDiffs(AppId,Placement, CtxServices, ToAdd1, ToUpdate1, ToRemove1),!,
-    writeln('1'),
-    writeln(ToAdd1),
-    writeln(ToUpdate1),
-    writeln(ToRemove1),
-    writeln('1'),
     s2sDiffs(Placement, CtxServices, CtxS2S, ToAdd2, ToUpdate1, ToUpdate, ToRemove1, ToRemove2, S2SToUpdate), 
-    writeln('2'),
     union(ToAdd1,ToAdd2,ToAdd), union(ToRemove1,ToRemove2,ToRemove).
 
 cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, Alloc, PAlloc) :-
@@ -34,8 +28,7 @@ serviceDiffs(AppId,Placement, CtxServices, ToAdd, ToUpdate, ToRemove) :-
     changedServices(Services, Placement, CtxServices, ToAdd, ToUpdate, ToRemove).
 
 changedServices([], Placement, CtxServices, [], ToUpdate, ToRemove) :- 
-    removedServices(CtxServices, Placement, ToUpdate, ToRemove),
-    writeln(ToUpdate), writeln(ToRemove).
+    removedServices(CtxServices, Placement, ToUpdate, ToRemove).
 changedServices([S|Services], Placement, CtxServices, NewToAdd, NewToUpdate, NewToRemove) :-
     changedServices(Services, Placement, CtxServices, TmpToAdd, TmpToUpdate, TmpToRemove),
     serviceDiff(S, Placement, CtxServices, Diff),
@@ -113,7 +106,7 @@ s2sDiff(S1, S2, ReqLat, ReqBW, Placement, CtxS2S, diff(S1,N1,S2,N2,(ReqLat,ReqBW
 s2sDiff(S1, S2, _, _, Placement, CtxS2S, pass) :-
     \+ member(s2s(S1, S2, _, _), CtxS2S), % new s2s
     \+ (member(on(S1,_),Placement), member(on(S2,_),Placement)). % at least one non-placed service
-s2sDiff(S1, S2, _, _, Placement, CtxS2S, pass) :-
+s2sDiff(S1, S2, _, _, Placement, _, pass) :-
     member(on(S1,N1),Placement), member(on(S2,N2),Placement), N1=N2. %same node
 
 sortS2S(D, _, _, ToUpdate, ToUpdate, SToRemove, SToAdd, S2SToUpdate, SToRemove, SToAdd, S2SToUpdate) :-
@@ -123,10 +116,9 @@ sortS2S(diff(S1,N1,S2,N2,Diff), _, _, ToUpdate, ToUpdate, SToRemove, SToAdd, S2S
 sortS2S(diff(S1,N1,S2,N2,Diff), CtxServices, _, ToUpdate1, ToUpdate, SToRemove, SToAdd, S2SToUpdate, NewSToRemove, NewSToAdd, [diff(S1,N1,S2,N2,Diff)|S2SToUpdate]) :-
     \+ member(diff(S1,N1,S2,N2,_), S2SToUpdate), 
     s2sToReplace(N1,N2,Diff,S2SToUpdate),
-    serviceDiff(S1, [on(S1,N1)], CtxServices, (_,HWDiff1,_)), addDiff(S1,N1,HWDiff1,ToUpdate1,TmpToUpdate),
-    serviceDiff(S2, [on(S2,N2)], CtxServices, (_,HWDiff2,_)), addDiff(S2,N2,HWDiff2,TmpToUpdate,ToUpdate), 
-    append(S1,SToRemove,Tmp1), union(S2,Tmp1,NewSToRemove),
-    append(S1,SToAdd,Tmp2), union(S2,Tmp2,NewSToAdd).
+    serviceDiff(S1, [on(S1,N1)], CtxServices, diff(_,_,(_,HWDiff1,_))), addDiff(S1,N1,HWDiff1,ToUpdate1,TmpToUpdate),
+    serviceDiff(S2, [on(S2,N2)], CtxServices, diff(_,_,(_,HWDiff2,_))), addDiff(S2,N2,HWDiff2,TmpToUpdate,ToUpdate), 
+    union([S1,S2],SToRemove,NewSToRemove), union([S1,S2],SToAdd,NewSToAdd).
 sortS2S(D, _, _, ToUpdate, ToUpdate, SToRemove, SToAdd, S2SToUpdate, SToRemove, SToAdd, S2SToUpdate) :-
     D = diff(_,_,_,_,(_,BWDiff)), BWDiff =:= 0. %LatDiff =:= 0
 
@@ -169,8 +161,6 @@ partialPlacement([on(S,_)|P],Services,PPlacement) :-
     member(S,Services), partialPlacement(P,Services,PPlacement).
 partialPlacement([on(S,N)|P],Services,[on(S,N)|PPlacement]) :-
     \+member(S,Services), partialPlacement(P,Services,PPlacement).
-
-getServiceIDs(List, Services) :- findall(S, (member(diff(S,_,_),List)), Services).
  
 assembleHW((_,NewAllocHW), L, L) :- NewAllocHW=:=0.
 assembleHW((N, NewAllocHW), L, [(N,NewAllocHW)|L]) :- NewAllocHW>0.

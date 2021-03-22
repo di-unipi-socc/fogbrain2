@@ -2,6 +2,7 @@ node(cloud, [ubuntu, mySQL, gcc, make], inf, []).
 node(ispdatacentre, [ubuntu, mySQL], 50, []).
 node(cabinetserver, [ubuntu, mySQL], 20, []).
 node(accesspoint, [ubuntu, gcc, make], 4, [vrViewer]).
+node(accesspoint2, [ubuntu, gcc, make], 4, [vrViewer]).
 node(smartphone, [android, gcc, make], 8, [vrViewer]).
 
 link(cloud, ispdatacentre, 110, 1000).
@@ -19,6 +20,7 @@ link(cabinetserver, smartphone, 15, 35).
 link(accesspoint, cloud, 148, 3).
 link(accesspoint, ispdatacentre, 38, 4).
 link(accesspoint, cabinetserver, 13, 4).
+link(accesspoint2, cabinetserver, 13, 50).
 link(accesspoint, smartphone, 2, 70).
 link(smartphone, cloud, 150, 2).
 link(smartphone, ispdatacentre, 40, 2.5).

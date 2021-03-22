@@ -13,6 +13,14 @@ class Infra:
         if node1 in self._nodes and node2 in self._nodes and node1 != node2 and (node1,node2) not in self._links:
             self._links[(node1,node2)] = (lat,bw)
 
+    def modifyNode(self, node, sw, hw, things):
+        if node in self._nodes:
+            self._nodes[node] = (sw,hw,things)
+
+    def modifyLink(self, node1, node2, lat, bw):
+        if (node1,node2) in self._links:
+            self._links[(node1,node2)] = (lat,bw)
+
     def removeNode(self, node):
         if node in self._nodes:
             del self._nodes[node]
