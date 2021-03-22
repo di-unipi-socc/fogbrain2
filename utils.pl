@@ -11,6 +11,10 @@ checkAppSpec() :-
 	msort(Services, SServices), msort(ServiceDecl, SServiceDecl),
 	SServices=SServiceDecl.
 
+listDiff(_,[],[]).
+listDiff(L1,[L|Ls],Add) :- member(L,L1), listDiff(L1,Ls,Add).
+listDiff(L1,[L|Ls],[L|Add]) :- \+ member(L,L1), listDiff(L1,Ls,Add).
+
 deployment(App) :-
 	deployment(App, Placement, (AllocHW, AllocBW), (Services, S2Ss)),
 	write('App: '), writeln(App),
