@@ -187,8 +187,6 @@ assembleHW((N, NewAllocHW), L, [(N,NewAllocHW)|L]) :- NewAllocHW>0.
  
 sumLinkBWDiff(_, _, [], 0).
 sumLinkBWDiff(N1, N2, [diff(_,N1,_,N2,(_,BWDiff))|STMs], Tot) :- sumLinkBWDiff(N1, N2, STMs, BB), Tot is BWDiff+BB.
-% TODO: DOUBLECHECK THE CLAUSE BELOW: not sure it is needed here
-%sumLinkBWDiff(N1, N2, [diff(_,N2,_,N1,(_,BWDiff))|STMs], Tot) :- sumLinkBWDiff(N1, N2, STMs, BB), Tot is BWDiff+BB. 
 sumLinkBWDiff(N1, N2, [diff(_,N3,_,N4,_)|STMs], B) :- (dif(N1,N3);dif(N2,N4)), sumLinkBWDiff(N1, N2, STMs, B).
 
 assembleBW((_,_,AllocatedBW), L, L) :- AllocatedBW =:= 0.
