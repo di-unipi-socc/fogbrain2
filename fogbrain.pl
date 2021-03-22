@@ -29,4 +29,4 @@ fogBrain(AppSpec, Placement) :-
 	time(placement(AppId, Placement)),
 	unloadSpec('infra.pl'), unloadSpec(AppSpec).
 fogBrain(AppSpec,_) :-
-	unloadSpec('infra.pl'), unloadSpec(AppSpec).
+	unloadSpec('infra.pl'), unloadSpec(AppSpec),fail.

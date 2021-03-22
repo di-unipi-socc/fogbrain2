@@ -8,8 +8,14 @@ reasoningStep(AppId, Placement, Alloc, Context, NewPlacement) :-
 
 appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate) :-
     Context=(CtxServices,CtxS2S),
-    serviceDiffs(AppId,Placement, CtxServices, ToAdd1, ToUpdate1, ToRemove1),
+    serviceDiffs(AppId,Placement, CtxServices, ToAdd1, ToUpdate1, ToRemove1),!,
+    writeln('1'),
+    writeln(ToAdd1),
+    writeln(ToUpdate1),
+    writeln(ToRemove1),
+    writeln('1'),
     s2sDiffs(Placement, CtxServices, CtxS2S, ToAdd2, ToUpdate1, ToUpdate, ToRemove1, ToRemove2, S2SToUpdate), 
+    writeln('2'),
     union(ToAdd1,ToAdd2,ToAdd), union(ToRemove1,ToRemove2,ToRemove).
 
 cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, Alloc, PAlloc) :-
@@ -28,7 +34,8 @@ serviceDiffs(AppId,Placement, CtxServices, ToAdd, ToUpdate, ToRemove) :-
     changedServices(Services, Placement, CtxServices, ToAdd, ToUpdate, ToRemove).
 
 changedServices([], Placement, CtxServices, [], ToUpdate, ToRemove) :- 
-    removedServices(CtxServices, Placement, ToUpdate, ToRemove). % ottimizzabile>? Posso fare un preprocessing?
+    removedServices(CtxServices, Placement, ToUpdate, ToRemove),
+    writeln(ToUpdate), writeln(ToRemove).
 changedServices([S|Services], Placement, CtxServices, NewToAdd, NewToUpdate, NewToRemove) :-
     changedServices(Services, Placement, CtxServices, TmpToAdd, TmpToUpdate, TmpToRemove),
     serviceDiff(S, Placement, CtxServices, Diff),
@@ -106,6 +113,8 @@ s2sDiff(S1, S2, ReqLat, ReqBW, Placement, CtxS2S, diff(S1,N1,S2,N2,(ReqLat,ReqBW
 s2sDiff(S1, S2, _, _, Placement, CtxS2S, pass) :-
     \+ member(s2s(S1, S2, _, _), CtxS2S), % new s2s
     \+ (member(on(S1,_),Placement), member(on(S2,_),Placement)). % at least one non-placed service
+s2sDiff(S1, S2, _, _, Placement, CtxS2S, pass) :-
+    member(on(S1,N1),Placement), member(on(S2,N2),Placement), N1=N2. %same node
 
 sortS2S(D, _, _, ToUpdate, ToUpdate, SToRemove, SToAdd, S2SToUpdate, SToRemove, SToAdd, S2SToUpdate) :-
     D=pass; ( D = diff(S1,N1,S2,N2,_), member(diff(S1,N1,S2,N2,_), S2SToUpdate) ). % it's a pass or it's already to be removed fully
