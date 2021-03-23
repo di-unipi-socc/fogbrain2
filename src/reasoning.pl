@@ -1,9 +1,9 @@
 reasoningStep(AppId, Placement, Alloc, Ctx, NewPlacement) :-
-    appDiff(AppId, Placement, Ctx, SToAdd, SToRemove, HWDiffs, BWDiffs),
+    appDiffs(AppId, Placement, Ctx, SToAdd, SToRemove, HWDiffs, BWDiffs),
     cleanDeployment(SToRemove, HWDiffs, BWDiffs, Placement, PPlacement, Alloc, PAlloc),
     replacement(AppId, SToAdd, PPlacement, PAlloc, NewPlacement).
 
-appDiff(AppId, Placement, Ctx, SToAdd, SToRemove, HWDiffs, BWDiffs) :-
+appDiffs(AppId, Placement, Ctx, SToAdd, SToRemove, HWDiffs, BWDiffs) :-
     serviceDiffs(AppId, Placement, Ctx, SToAdd1, HWDiffs1, SToRemove1),
     s2sDiffs(Placement, Ctx, SToAdd2, HWDiffs1, HWDiffs, SToRemove1, SToRemove2, BWDiffs), 
     union(SToAdd1,SToAdd2,SToAdd), union(SToRemove1,SToRemove2,SToRemove).

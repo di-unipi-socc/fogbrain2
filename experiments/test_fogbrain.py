@@ -3,7 +3,7 @@ from .infra import Infra
 
 from pyswip import Prolog, Functor, Atom
 
-import unittest 
+import unittest
 
 def parse(query):
     if isinstance(query,dict):
@@ -93,8 +93,7 @@ class FogBrainTest(unittest.TestCase):
 
     # executed after each test 
     def tearDown(self): 
-        self.prolog.query("del.")
-
+        self.prolog.retractall('deployment')
 
 
     ###############
