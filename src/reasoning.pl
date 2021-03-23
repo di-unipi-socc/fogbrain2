@@ -8,7 +8,7 @@ reasoningStep(AppId, Placement, Alloc, Context, NewPlacement) :-
 
 appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate) :-
     Context=(CtxServices,CtxS2S),
-    serviceDiffs(AppId,Placement, CtxServices, ToAdd1, ToUpdate1, ToRemove1),!,
+    serviceDiffs(AppId,Placement, CtxServices, ToAdd1, ToUpdate1, ToRemove1), %!,
     s2sDiffs(Placement, CtxServices, CtxS2S, ToAdd2, ToUpdate1, ToUpdate, ToRemove1, ToRemove2, S2SToUpdate), 
     union(ToAdd1,ToAdd2,ToAdd), union(ToRemove1,ToRemove2,ToRemove).
 
@@ -178,11 +178,8 @@ assembleBW((N1,N2,AllocatedBW), L, [(N1,N2,AllocatedBW)|L]) :- AllocatedBW>0.
 
 addDiff(S1, N1, HWDiff, ToUpdate, [Diff|NewToUpdate]) :-
     member((S1,N1,OldHWDiff),ToUpdate),
-    min(HWDiff, OldHWDiff, MinHWDiff),
+    MinHWDiff is min(HWDiff, OldHWDiff),
     Diff=diff(S1,N1,MinHWDiff),
     delete(ToUpdate,(S1,N1,OldHWDiff),NewToUpdate).
 addDiff(S1, N1, HWDiff, ToUpdate, [diff(S1,N1,HWDiff)|ToUpdate]) :-
     \+ member((S1,N1,_),ToUpdate).
-
-min(A,B,A) :- A =< B.
-min(A,B,B) :- B < A.
