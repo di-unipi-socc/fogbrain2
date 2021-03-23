@@ -13,20 +13,16 @@
 %%%% Thresholds to identify overloaded nodes and saturated e2e links%%%%
 hwTh(0.5).
 bwTh(0.2). 
-itTh(10).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fogBrain(AppSpec, NewPlacement) :-
-	loadSpec('infra.pl'), 
-	loadSpec(AppSpec), %checkAppSpec(),
-	application(AppId,_),
-	deployment(AppId, Placement, Alloc, Context), %writeln('A deployment exist, starting a reasoning step...'),
-	time(reasoningStep(AppId, Placement, Alloc, Context, NewPlacement)),
-	unloadSpec('infra.pl'), unloadSpec(AppSpec).
+	consult('infra.pl'), consult(AppSpec), 
+	application(AppId,_), deployment(AppId, Placement, Alloc, Context), 
+	reasoningStep(AppId, Placement, Alloc, Context, NewPlacement),
+	unload_file(AppSpec).
 fogBrain(AppSpec, Placement) :-
-	application(AppId,_),
-	\+deployment(AppId,_,_,_), %writeln('A deployment does not exist, starting placing the app...'),
-	time(placement(AppId, Placement)),
-	unloadSpec('infra.pl'), unloadSpec(AppSpec).
+	application(AppId,_), \+deployment(AppId,_,_,_),
+	placement(AppId, Placement),
+	unload_file(AppSpec).
 fogBrain(AppSpec,_) :-
-	unloadSpec('infra.pl'), unloadSpec(AppSpec),fail.
+	unload_file(AppSpec), fail.

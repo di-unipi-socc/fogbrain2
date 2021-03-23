@@ -1,6 +1,3 @@
-% reasoningStep(+AppId, +Placement, +AllocHW, +AllocBW, +Context, -NewPlacement)
-% Given an AppId, its current Placement and the associated AllocHW and AllocBW, 
-% and its deployment Context, it determines a NewPlacement via continuous reasoning.
 reasoningStep(AppId, Placement, Alloc, Context, NewPlacement) :-
     appDiff(AppId, Placement, Context, ToAdd, ToRemove, ToUpdate, S2SToUpdate),
     cleanPlacement(ToRemove, ToUpdate, S2SToUpdate, Placement, PPlacement, Alloc, PAlloc),
