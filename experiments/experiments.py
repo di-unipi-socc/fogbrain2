@@ -71,14 +71,14 @@ def do_experiments(runs, nodes):
                       }}
         
         prolog = get_new_prolog_instance()
-        next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',_,_,I).")) # first placement for reasoning
+        next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',_,I).")) # first placement for reasoning
         for commit in commits:
-            ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',_,S,I)."))
+            ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
             report[run]["inferences"]["reasoning"][commit] = ans["I"]
         
         for commit in commits:
             prolog = get_new_prolog_instance()
-            ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',_,S,I)."))
+            ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
             report[run]["inferences"]["placement"][commit] = ans["I"]
         
         print(f"* completed {round((run+1)/runs*100,2)}% ({datetime.now().strftime('%H:%M:%S')})", end="\r")

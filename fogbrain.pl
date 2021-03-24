@@ -12,20 +12,20 @@
 
 %%%% Thresholds to identify overloaded nodes and saturated e2e links%%%%
 hwTh(0.5).
-bwTh(0.2). 
+bwTh(0.2).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fogBrain(AppSpec, NewPlacement,reasoning) :-
-	consult('infra.pl'), consult(AppSpec), 
-	application(AppId,_), deployment(AppId, Placement, Alloc, Context), 
+fogBrain(AppSpec, NewPlacement) :-
+	consult('infra.pl'), consult(AppSpec),
+	application(AppId,_), deployment(AppId, Placement, Alloc, Context),
 	reasoningStep(AppId, Placement, Alloc, Context, NewPlacement),
 	unload_file(AppSpec).
-fogBrain(AppSpec, Placement,placement) :-
+fogBrain(AppSpec, Placement) :-
 	application(AppId,_), \+deployment(AppId,_,_,_),
 	placement(AppId, Placement),
 	unload_file(AppSpec).
-fogBrain(AppSpec,_,failed) :-
+fogBrain(AppSpec,_) :-
 	unload_file(AppSpec), fail.
     
-fogBrain(AppSpec, NewPlacement, Status, Inferences) :-
-    stat(fogBrain(AppSpec, NewPlacement, Status), Inferences).
+fogBrain(AppSpec, NewPlacement, Inferences) :-
+    stat(fogBrain(AppSpec, NewPlacement), Inferences).
