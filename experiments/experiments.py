@@ -86,7 +86,7 @@ def do_experiments(runs, nodes):
             report[run]["inferences"][commit]["placement"] = ans["I"]
             sys.stdout.write("\033[K")
             
-    print(f"* completed 100% ({datetime.now().strftime('%H:%M:%S')})   ")
+        debug(f"completed {(run+1)/runs*100}%")
           
             
     return report
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     start_time = time.time()
     generate_commits()
     debug("commits generated")
-    report = experiments(1)
+    report = experiments(2)
     print(analyse(report))
     debug(f"Ended in {round(time.time() - start_time,2)} seconds")
     
