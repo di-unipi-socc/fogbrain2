@@ -73,6 +73,7 @@ def do_experiments(runs, nodes):
         prolog = get_new_prolog_instance()
         debug("doing first placement")
         next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',_,I).")) # first placement for reasoning
+        debug("done first placement")
         for commit in commits:
             print(f"* doing {commit} [reasoning] ({datetime.now().strftime('%H:%M:%S')})", end="\r")
             ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
@@ -128,7 +129,7 @@ if __name__ == "__main__":
     start_time = time.time()
     generate_commits()
     debug("commits generated")
-    report = experiments(2)
+    report = experiments(1, upper=5)
     print(analyse(report))
     debug(f"Ended in {round(time.time() - start_time,2)} seconds")
     

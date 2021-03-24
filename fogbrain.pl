@@ -26,6 +26,3 @@ fogBrain(AppSpec, Placement) :-
 	unload_file(AppSpec).
 fogBrain(AppSpec,_) :-
 	unload_file(AppSpec), fail.
-    
-fogBrain(AppSpec, NewPlacement, Inferences) :-
-    stat(fogBrain(AppSpec, NewPlacement), Inferences).

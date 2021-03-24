@@ -22,4 +22,16 @@ stat(Goal, Inferences) :-
     statistics(inferences, OldInferences),
     call(Goal),
     statistics(inferences, NewInferences),
-    Inferences is NewInferences - OldInferences - 3. 
+    Inferences is NewInferences - OldInferences.
+    
+fogBrain(AppSpec, NewPlacement, Inferences) :-
+	consult('infra.pl'), consult(AppSpec),
+	application(AppId,_), deployment(AppId, Placement, Alloc, Context),
+	stat(reasoningStep(AppId, Placement, Alloc, Context, NewPlacement), Inferences),
+	unload_file(AppSpec).
+fogBrain(AppSpec, Placement, Inferences) :-
+	application(AppId,_), \+deployment(AppId,_,_,_),
+	stat(placement(AppId, Placement), Inferences),
+	unload_file(AppSpec).
+fogBrain(AppSpec,_,_) :-
+	unload_file(AppSpec), fail.
