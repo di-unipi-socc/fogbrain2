@@ -15,14 +15,17 @@ hwTh(0.5).
 bwTh(0.2). 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fogBrain(AppSpec, NewPlacement) :-
+fogBrain(AppSpec, NewPlacement,reasoning) :-
 	consult('infra.pl'), consult(AppSpec), 
 	application(AppId,_), deployment(AppId, Placement, Alloc, Context), 
 	reasoningStep(AppId, Placement, Alloc, Context, NewPlacement),
 	unload_file(AppSpec).
-fogBrain(AppSpec, Placement) :-
+fogBrain(AppSpec, Placement,placement) :-
 	application(AppId,_), \+deployment(AppId,_,_,_),
 	placement(AppId, Placement),
 	unload_file(AppSpec).
-fogBrain(AppSpec,_) :-
+fogBrain(AppSpec,_,failed) :-
 	unload_file(AppSpec), fail.
+    
+fogBrain(AppSpec, NewPlacement, Status, Inferences) :-
+    stat(fogBrain(AppSpec, NewPlacement, Status), Inferences).

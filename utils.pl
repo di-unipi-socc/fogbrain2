@@ -16,3 +16,10 @@ deployment(App) :-
 listDiff(_,[],[]).
 listDiff(L1,[L|Ls],Add) :- member(L,L1), listDiff(L1,Ls,Add).
 listDiff(L1,[L|Ls],[L|Add]) :- \+ member(L,L1), listDiff(L1,Ls,Add).
+
+
+stat(Goal, Inferences) :-
+    statistics(inferences, OldInferences),
+    call(Goal),
+    statistics(inferences, NewInferences),
+    Inferences is NewInferences - OldInferences - 3. 

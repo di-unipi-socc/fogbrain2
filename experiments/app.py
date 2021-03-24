@@ -58,8 +58,10 @@ class App:
         specs = ("application("+self._app+", "+str(services)+").\n\n").replace("'","")+specs
         return specs
 
-    def upload(self):
-        with open(self._file,"w") as f:
+    def upload(self, file=None):
+        if file is None:
+            file = self._file
+        with open(file,"w") as f:
             f.write(str(self))
 
 if __name__ == "__main__":

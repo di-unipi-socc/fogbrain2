@@ -1,5 +1,6 @@
-from .app import App
-from .infra import Infra
+from .\tests.app import App
+
+from .\infra import Infra
 
 from pyswip import Prolog, Functor, Atom
 

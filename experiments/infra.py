@@ -68,15 +68,17 @@ class Infra:
         infra+="\n"
         return infra
 
-    def upload(self):
-        with open(self._file,"w") as f:
+    def upload(self, file=None):
+        if file is None:
+            file = self._file
+        with open(file,"w") as f:
             f.write(str(self))
 
 if __name__ == "__main__":
 
     infra = Infra("infra.pl")
 
-    """
+    
     nodesnumber = 400
 
     CLOUDS = nodesnumber
@@ -126,8 +128,8 @@ if __name__ == "__main__":
     infra.addLinks(smartphones, cabinets, 15, 3)
     infra.addLinks(smartphones, accesspoints, 2, 70)
     infra.addLinks(smartphones, smartphones, 15, 50)
+   
     """
-
     infra.addNode("cloud", ["ubuntu", "mySQL", "gcc", "make"], "inf", [])
     infra.addNode("ispdatacentre", ["ubuntu", "mySQL"], 50, [])
     infra.addNode("cabinetserver", ["ubuntu", "mySQL"], 20, [])
@@ -154,6 +156,6 @@ if __name__ == "__main__":
     infra.addLink("smartphone", "ispdatacentre", 40, 2.5)
     infra.addLink("smartphone", "cabinetserver", 15, 3)
     infra.addLink("smartphone", "accesspoint", 2, 70)
-
+    """
 
     infra.upload()
