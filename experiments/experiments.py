@@ -1,6 +1,7 @@
 
 import random
 import os
+import sys
 
 from pyswip import Prolog
 
@@ -70,17 +71,20 @@ def do_experiments(runs, nodes):
                       }}
         
         prolog = get_new_prolog_instance()
+        debug("doing first placement")
         next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',_,I).")) # first placement for reasoning
         for commit in commits:
+            print(f"* doing {commit} [reasoning] ({datetime.now().strftime('%H:%M:%S')})", end="\r")
             ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
             report[run]["inferences"][commit] = {"reasoning":ans["I"]}
+            sys.stdout.write("\033[K")
         
         for commit in commits:
             prolog = get_new_prolog_instance()
+            print(f"* doing {commit} [placement] ({datetime.now().strftime('%H:%M:%S')})", end="\r")
             ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
             report[run]["inferences"][commit]["placement"] = ans["I"]
-        
-        print(f"* completed {round((run+1)/runs*100,2)}% ({datetime.now().strftime('%H:%M:%S')})", end="\r")
+            sys.stdout.write("\033[K")
             
     print(f"* completed 100% ({datetime.now().strftime('%H:%M:%S')})   ")
           

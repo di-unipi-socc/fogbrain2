@@ -33,7 +33,7 @@ def builder(nodesnumber, path="infra.pl"):
     writeNodes("cloud", CLOUDS, "[ubuntu, mySQL, gcc, make], inf, []", clouds, f)
     writeNodes("ispdatacentre", ISPS, "[ubuntu, mySQL], 50, []", isps, f)
     writeNodes("cabinetserver", CABINETS, "[ubuntu, mySQL], 20, []", cabinets, f)
-    writeNodes("accesspoint", ACCESSPOINTS, "[ubuntu, gcc, make], 4, []", accesspoints, f)
+    writeNodes("accesspoint", ACCESSPOINTS, "[ubuntu, gcc, make], 4, [vrViewer]", accesspoints, f)
     writeNodes("smartphone", SMARTPHONES, "[android, gcc, make], 8, [vrViewer]", smartphones, f)
 
     f.write("\n")
