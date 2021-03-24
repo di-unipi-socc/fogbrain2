@@ -55,6 +55,7 @@ def debug(msg):
     print(f"* {msg} ({datetime.now().strftime('%H:%M:%S')})")
 
 def do_experiments(runs, nodes):
+    #TODO: check if no placement availbale
     debug(f"starting new session [nodes: {nodes} - runs: {runs}]")
     report = {}
     commits = get_commits(PATH)
@@ -66,20 +67,18 @@ def do_experiments(runs, nodes):
         changes = "" #get_infrastructure()
         report[run] = {"infra_changes":changes,
                       "inferences":{
-                          "placement":{},
-                          "reasoning":{},
                       }}
         
         prolog = get_new_prolog_instance()
         next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',_,I).")) # first placement for reasoning
         for commit in commits:
             ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
-            report[run]["inferences"]["reasoning"][commit] = ans["I"]
+            report[run]["inferences"][commit] = {"reasoning":ans["I"]}
         
         for commit in commits:
             prolog = get_new_prolog_instance()
             ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
-            report[run]["inferences"]["placement"][commit] = ans["I"]
+            report[run]["inferences"][commit]["placement"] = ans["I"]
         
         print(f"* completed {round((run+1)/runs*100,2)}% ({datetime.now().strftime('%H:%M:%S')})", end="\r")
             
@@ -87,6 +86,31 @@ def do_experiments(runs, nodes):
           
             
     return report
+    
+def analyse(report):
+    analysis = {}
+    commits = get_commits(PATH)
+    for nodes in report:
+        analysis[nodes] = {}
+        for commit in commits:
+            analysis[nodes][commit] = {"placement":[], "reasoning":[]}
+        runs = 0
+        for run in report[nodes]:
+            for commit in report[nodes][run]["inferences"]:
+                analysis[nodes][commit]["reasoning"].append(report[nodes][run]["inferences"][commit]["reasoning"])
+                
+                analysis[nodes][commit]["placement"].append(report[nodes][run]["inferences"][commit]["placement"])
+                
+        for commit in analysis[nodes]:
+            analysis[nodes][commit]["reasoning"] = sum(analysis[nodes][commit]["reasoning"])/len(analysis[nodes][commit]["reasoning"])
+            
+            analysis[nodes][commit]["placement"] = sum(analysis[nodes][commit]["placement"])/len(analysis[nodes][commit]["placement"])
+            
+            analysis[nodes][commit]["ratio"] = analysis[nodes][commit]["placement"]/analysis[nodes][commit]["reasoning"]
+        
+        
+    return analysis
+        
 
 def experiments(runs, low=4, upper=11):
     report = {}
@@ -100,7 +124,8 @@ if __name__ == "__main__":
     start_time = time.time()
     generate_commits()
     debug("commits generated")
-    print(experiments(3, upper=5))
+    report = experiments(1)
+    print(analyse(report))
     debug(f"Ended in {round(time.time() - start_time,2)} seconds")
     
     
