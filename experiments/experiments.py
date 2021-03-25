@@ -16,6 +16,12 @@ PATH = "./experiments/commits/"
 
 PATH_REPORTS = "./experiments/reports/"
 
+RUNS = 1
+
+LOWER = 4
+
+UPPER = LOWER+0
+
 def parse(query):
     if isinstance(query,dict):
         ans = {}
@@ -72,8 +78,32 @@ def generate_commits():
     app = initial_commit()
     add_commit(app, "initial", DIR=PATH)
     
-    app.removeService("videoStorage")
+    app.addService("tokensDealer", ["ubuntu", "mySQL"], 20, [])
+    app.addService("userProfiler", ["gcc","make"], 2, [])
+    app.addS2S("userProfiler", "sceneSelector", 50, 2)
+    app.addS2S("sceneSelector", "userProfiler", 50, 2)
+    app.addS2S("userProfiler", "tokensDealer", 200, 0.5)
+    app.addS2S("tokensDealer", "userProfiler", 200, 1)
+    add_commit(app, "added2Services", DIR=PATH)
+    
+    app.removeService("tokensDealer")
     add_commit(app, "removedService", DIR=PATH)
+    
+    app.modifyService("videoStorage", ["ubuntu","mySQL"], 30, [])
+    app.modifyService("userProfiler", ["gcc","make"], 2, ["vrViewer"])
+    add_commit(app, "changed2Services", DIR=PATH)
+    
+    app.addS2S("userProfiler", "videoStorage", 200, 1)
+    app.addS2S("videoStorage", "userProfiler", 200, 1)
+    add_commit(app, "added2S2S", DIR=PATH)
+    
+    app.removeS2S("sceneSelector","userProfiler")
+    add_commit(app, "removedS2S", DIR=PATH)
+    
+    app.modifyS2S("videoStorage", "userProfiler", 500, 1)
+    app.modifyS2S("userProfiler", "videoStorage", 500, 2)
+    add_commit(app, "changed2S2S", DIR=PATH)
+    
 
 def generate_infrastructure(nodesnumber):
     builder(nodesnumber)
@@ -103,19 +133,19 @@ def do_experiments(runs, nodes):
             next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',P,I).")) # first placement for reasoning
             debug("done first placement")
             for commit in commits:
-                print(f"* doing {commit} [reasoning] ({datetime.now().strftime('%d/%m/%Y %H:%M:%S')})", end="\r")
+                debug(f"doing {commit} [reasoning]")
                 ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
                 report[run]["inferences"][commit] = {"reasoning":ans["I"]}
                 report[run]["inferences"][commit]["Placements"] = {"reasoning":parse(ans["P"])}
-                sys.stdout.write("\033[K")
+                debug(f"completed {commit} [reasoning]")
             
             for commit in commits:
                 prolog = get_new_prolog_instance()
-                print(f"* doing {commit} [placement] ({datetime.now().strftime('%d/%m/%Y %H:%M:%S')})", end="\r")
+                debug(f"doing {commit} [placement]")
                 ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
                 report[run]["inferences"][commit]["placement"] = ans["I"]
                 report[run]["inferences"][commit]["Placements"]["placement"] = parse(ans["P"])
-                sys.stdout.write("\033[K")
+                debug(f"completed {commit} [placement]")
             
         except Exception as e:
             debug(f"exception {e.__class__.__name__} at run {run}")
@@ -163,13 +193,13 @@ def analyse(report):
     return analysis
         
 
-def experiments(runs, low=4, upper=11):
+def experiments(runs, lower=4, upper=11):
     try:
         os.mkdir(PATH_REPORTS)
     except OSError:
         pass
     report = {}
-    for i in range(low,upper+1):
+    for i in range(lower,upper+1):
         nodes = pow(2,i)
         report[nodes]=do_experiments(runs,nodes)
           
@@ -180,7 +210,7 @@ if __name__ == "__main__":
     start_time = time.time()
     generate_commits()
     debug("commits generated")
-    report = experiments(1, upper=5)
+    report = experiments(RUNS, lower=LOWER,upper=UPPER)
     debug("doing analysis")
     analysis = analyse(report)
     debug("writing analysis")
