@@ -24,7 +24,7 @@ RUNS = 1
 
 LOWER = 4
 
-UPPER = 11
+UPPER = 5
 
 def parse(query):
     if isinstance(query,dict):
@@ -207,6 +207,13 @@ def experimentsPhase1(lower=4, upper=11):
         debug("infrastructure generated")
         report[nodes]=do_experiments(1,nodes)
         
+        debug("doing analysis")
+        analysis = analyse(report)
+        debug("writing analysis")
+        with open(PATH_REPORTS+"TEMP-"+str(nodes)+"-analysis-phase1-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+            f.write(json.dumps(analysis))
+        debug("store completed")
+        
     debug("doing analysis")
     analysis = analyse(report)
     debug("writing analysis")
@@ -230,6 +237,13 @@ def experimentsPhase2():
     for infra in infrastructures:
         shutil.copyfile(PATH_INFRA+infra, "./infra.pl")
         report[infra]=do_experiments(1,infra[:-3])
+        
+        debug("doing analysis")
+        analysis = analyse(report)
+        debug("writing analysis")
+        with open(PATH_REPORTS+"TEMP-"+infra[:-3]+"-analysis-phase2-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+            f.write(json.dumps(analysis))
+        debug("store completed")
         
     debug("doing analysis")
     analysis = analyse(report)
