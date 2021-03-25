@@ -24,7 +24,7 @@ RUNS = 1
 
 LOWER = 4
 
-UPPER = 5
+UPPER = 11
 
 def parse(query):
     if isinstance(query,dict):
