@@ -2,8 +2,9 @@
 import random
 import os
 import sys
+import json
 
-from pyswip import Prolog
+from pyswip import Prolog, Functor, Atom
 
 from builder import builder
 
@@ -12,6 +13,31 @@ from commitsGenerator import *
 from datetime import datetime
 
 PATH = "./experiments/commits/"
+
+PATH_REPORTS = "./experiments/reports/"
+
+def parse(query):
+    if isinstance(query,dict):
+        ans = {}
+        for k,v in query.items():
+            ans[k] = parse(v)
+        return ans
+    elif isinstance(query,list):
+        ans = []
+        for v in query:
+            ans.append(parse(v))
+        return ans
+    elif isinstance(query,Atom):
+        return query.value
+    elif isinstance(query, Functor):
+        fun = query.name.value
+        if fun != ",": #prolog tuple
+            ans = (fun,parse(query.args))
+        else:
+            ans = tuple(parse(query.args))
+        return ans
+    else:
+        return query
 
 def round_robin(ls):
     size = len(ls)
@@ -53,7 +79,7 @@ def generate_infrastructure(nodesnumber):
     builder(nodesnumber)
     
 def debug(msg):
-    print(f"* {msg} ({datetime.now().strftime('%H:%M:%S')})")
+    print(f"* {msg} ({datetime.now().strftime('%d/%m/%Y %H:%M:%S')})")
 
 def do_experiments(runs, nodes):
     #TODO: check if no placement availbale
@@ -69,26 +95,39 @@ def do_experiments(runs, nodes):
         report[run] = {"infra_changes":changes,
                       "inferences":{
                       }}
+                      
+        try:
         
-        prolog = get_new_prolog_instance()
-        debug("doing first placement")
-        next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',_,I).")) # first placement for reasoning
-        debug("done first placement")
-        for commit in commits:
-            print(f"* doing {commit} [reasoning] ({datetime.now().strftime('%H:%M:%S')})", end="\r")
-            ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
-            report[run]["inferences"][commit] = {"reasoning":ans["I"]}
-            sys.stdout.write("\033[K")
-        
-        for commit in commits:
             prolog = get_new_prolog_instance()
-            print(f"* doing {commit} [placement] ({datetime.now().strftime('%H:%M:%S')})", end="\r")
-            ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
-            report[run]["inferences"][commit]["placement"] = ans["I"]
-            sys.stdout.write("\033[K")
+            debug("doing first placement")
+            next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',P,I).")) # first placement for reasoning
+            debug("done first placement")
+            for commit in commits:
+                print(f"* doing {commit} [reasoning] ({datetime.now().strftime('%d/%m/%Y %H:%M:%S')})", end="\r")
+                ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
+                report[run]["inferences"][commit] = {"reasoning":ans["I"]}
+                report[run]["inferences"][commit]["Placements"] = {"reasoning":parse(ans["P"])}
+                sys.stdout.write("\033[K")
+            
+            for commit in commits:
+                prolog = get_new_prolog_instance()
+                print(f"* doing {commit} [placement] ({datetime.now().strftime('%d/%m/%Y %H:%M:%S')})", end="\r")
+                ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
+                report[run]["inferences"][commit]["placement"] = ans["I"]
+                report[run]["inferences"][commit]["Placements"]["placement"] = parse(ans["P"])
+                sys.stdout.write("\033[K")
+            
+        except Exception as e:
+            debug(f"exception {e.__class__.__name__} at run {run}")
+            report[run]["excpetion"] = e.__class__.__name__
+            
             
         debug(f"completed {(run+1)/runs*100}%")
-          
+        
+    debug("writing on file")
+    with open(PATH_REPORTS+"report-"+str(nodes)+"-"+str(runs)+"-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+        f.write(json.dumps(report))
+    debug("store completed")
             
     return report
     
@@ -107,21 +146,33 @@ def analyse(report):
                 analysis[nodes][commit]["placement"].append(report[nodes][run]["inferences"][commit]["placement"])
                 
         for commit in analysis[nodes]:
-            analysis[nodes][commit]["reasoning"] = sum(analysis[nodes][commit]["reasoning"])/len(analysis[nodes][commit]["reasoning"])
+            try:
+                analysis[nodes][commit]["reasoning"] = sum(analysis[nodes][commit]["reasoning"])/len(analysis[nodes][commit]["reasoning"])
+            except Exception as e:
+                analysis[nodes][commit]["reasoning"] = "exception "+e.__class__.__name__
+            try:
+                analysis[nodes][commit]["placement"] = sum(analysis[nodes][commit]["placement"])/len(analysis[nodes][commit]["placement"])
+            except Exception as e:
+                analysis[nodes][commit]["placement"] = "exception "+e.__class__.__name__
+            try:
+                analysis[nodes][commit]["ratio"] = analysis[nodes][commit]["placement"]/analysis[nodes][commit]["reasoning"]
+            except Exception as e:
+                analysis[nodes][commit]["ratio"] = "exception "+e.__class__.__name__
             
-            analysis[nodes][commit]["placement"] = sum(analysis[nodes][commit]["placement"])/len(analysis[nodes][commit]["placement"])
-            
-            analysis[nodes][commit]["ratio"] = analysis[nodes][commit]["placement"]/analysis[nodes][commit]["reasoning"]
-        
         
     return analysis
         
 
 def experiments(runs, low=4, upper=11):
+    try:
+        os.mkdir(PATH_REPORTS)
+    except OSError:
+        pass
     report = {}
     for i in range(low,upper+1):
         nodes = pow(2,i)
         report[nodes]=do_experiments(runs,nodes)
+          
     return report
 
 if __name__ == "__main__":
@@ -130,7 +181,12 @@ if __name__ == "__main__":
     generate_commits()
     debug("commits generated")
     report = experiments(1, upper=5)
-    print(analyse(report))
+    debug("doing analysis")
+    analysis = analyse(report)
+    debug("writing analysis")
+    with open(PATH_REPORTS+"analysis-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+        f.write(json.dumps(analysis))
+    debug("store completed")
     debug(f"Ended in {round(time.time() - start_time,2)} seconds")
     
     
