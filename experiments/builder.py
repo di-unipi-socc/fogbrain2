@@ -80,4 +80,4 @@ def builder(nodesnumber, path="infra.pl"):
     f.close()
     
 if __name__ == "__main__":
-    builder(10)
+    builder(16)

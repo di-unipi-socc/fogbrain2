@@ -575,7 +575,7 @@ link(cloud15, ispdatacentre12, 110, 1000).
 link(cloud15, ispdatacentre13, 110, 1000).
 link(cloud15, ispdatacentre14, 110, 1000).
 link(cloud15, ispdatacentre15, 110, 1000).
-link(cloud0, cabinetserver0, 135, 1350).
+link(cloud0, cabinetserver0, 135, 100).
 link(cloud0, cabinetserver1, 135, 100).
 link(cloud0, cabinetserver2, 135, 100).
 link(cloud0, cabinetserver3, 135, 100).

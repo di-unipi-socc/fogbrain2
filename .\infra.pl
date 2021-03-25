@@ -1,4 +1,3 @@
-node(cloud0,[ubuntu, mySQL, gcc, make], inf, []).
 node(cloud1,[ubuntu, mySQL, gcc, make], inf, []).
 node(cloud2,[ubuntu, mySQL, gcc, make], inf, []).
 node(cloud3,[ubuntu, mySQL, gcc, make], inf, []).
@@ -79,22 +78,6 @@ node(smartphone13,[android, gcc, make], 8, [vrViewer]).
 node(smartphone14,[android, gcc, make], 8, [vrViewer]).
 node(smartphone15,[android, gcc, make], 8, [vrViewer]).
 
-link(cloud0, cloud1, 20, 1000).
-link(cloud0, cloud2, 20, 1000).
-link(cloud0, cloud3, 20, 1000).
-link(cloud0, cloud4, 20, 1000).
-link(cloud0, cloud5, 20, 1000).
-link(cloud0, cloud6, 20, 1000).
-link(cloud0, cloud7, 20, 1000).
-link(cloud0, cloud8, 20, 1000).
-link(cloud0, cloud9, 20, 1000).
-link(cloud0, cloud10, 20, 1000).
-link(cloud0, cloud11, 20, 1000).
-link(cloud0, cloud12, 20, 1000).
-link(cloud0, cloud13, 20, 1000).
-link(cloud0, cloud14, 20, 1000).
-link(cloud0, cloud15, 20, 1000).
-link(cloud1, cloud0, 20, 1000).
 link(cloud1, cloud2, 20, 1000).
 link(cloud1, cloud3, 20, 1000).
 link(cloud1, cloud4, 20, 1000).
@@ -109,7 +92,6 @@ link(cloud1, cloud12, 20, 1000).
 link(cloud1, cloud13, 20, 1000).
 link(cloud1, cloud14, 20, 1000).
 link(cloud1, cloud15, 20, 1000).
-link(cloud2, cloud0, 20, 1000).
 link(cloud2, cloud1, 20, 1000).
 link(cloud2, cloud3, 20, 1000).
 link(cloud2, cloud4, 20, 1000).
@@ -124,7 +106,6 @@ link(cloud2, cloud12, 20, 1000).
 link(cloud2, cloud13, 20, 1000).
 link(cloud2, cloud14, 20, 1000).
 link(cloud2, cloud15, 20, 1000).
-link(cloud3, cloud0, 20, 1000).
 link(cloud3, cloud1, 20, 1000).
 link(cloud3, cloud2, 20, 1000).
 link(cloud3, cloud4, 20, 1000).
@@ -139,7 +120,6 @@ link(cloud3, cloud12, 20, 1000).
 link(cloud3, cloud13, 20, 1000).
 link(cloud3, cloud14, 20, 1000).
 link(cloud3, cloud15, 20, 1000).
-link(cloud4, cloud0, 20, 1000).
 link(cloud4, cloud1, 20, 1000).
 link(cloud4, cloud2, 20, 1000).
 link(cloud4, cloud3, 20, 1000).
@@ -154,7 +134,6 @@ link(cloud4, cloud12, 20, 1000).
 link(cloud4, cloud13, 20, 1000).
 link(cloud4, cloud14, 20, 1000).
 link(cloud4, cloud15, 20, 1000).
-link(cloud5, cloud0, 20, 1000).
 link(cloud5, cloud1, 20, 1000).
 link(cloud5, cloud2, 20, 1000).
 link(cloud5, cloud3, 20, 1000).
@@ -169,7 +148,6 @@ link(cloud5, cloud12, 20, 1000).
 link(cloud5, cloud13, 20, 1000).
 link(cloud5, cloud14, 20, 1000).
 link(cloud5, cloud15, 20, 1000).
-link(cloud6, cloud0, 20, 1000).
 link(cloud6, cloud1, 20, 1000).
 link(cloud6, cloud2, 20, 1000).
 link(cloud6, cloud3, 20, 1000).
@@ -184,7 +162,6 @@ link(cloud6, cloud12, 20, 1000).
 link(cloud6, cloud13, 20, 1000).
 link(cloud6, cloud14, 20, 1000).
 link(cloud6, cloud15, 20, 1000).
-link(cloud7, cloud0, 20, 1000).
 link(cloud7, cloud1, 20, 1000).
 link(cloud7, cloud2, 20, 1000).
 link(cloud7, cloud3, 20, 1000).
@@ -199,7 +176,6 @@ link(cloud7, cloud12, 20, 1000).
 link(cloud7, cloud13, 20, 1000).
 link(cloud7, cloud14, 20, 1000).
 link(cloud7, cloud15, 20, 1000).
-link(cloud8, cloud0, 20, 1000).
 link(cloud8, cloud1, 20, 1000).
 link(cloud8, cloud2, 20, 1000).
 link(cloud8, cloud3, 20, 1000).
@@ -214,7 +190,6 @@ link(cloud8, cloud12, 20, 1000).
 link(cloud8, cloud13, 20, 1000).
 link(cloud8, cloud14, 20, 1000).
 link(cloud8, cloud15, 20, 1000).
-link(cloud9, cloud0, 20, 1000).
 link(cloud9, cloud1, 20, 1000).
 link(cloud9, cloud2, 20, 1000).
 link(cloud9, cloud3, 20, 1000).
@@ -229,7 +204,6 @@ link(cloud9, cloud12, 20, 1000).
 link(cloud9, cloud13, 20, 1000).
 link(cloud9, cloud14, 20, 1000).
 link(cloud9, cloud15, 20, 1000).
-link(cloud10, cloud0, 20, 1000).
 link(cloud10, cloud1, 20, 1000).
 link(cloud10, cloud2, 20, 1000).
 link(cloud10, cloud3, 20, 1000).
@@ -244,7 +218,6 @@ link(cloud10, cloud12, 20, 1000).
 link(cloud10, cloud13, 20, 1000).
 link(cloud10, cloud14, 20, 1000).
 link(cloud10, cloud15, 20, 1000).
-link(cloud11, cloud0, 20, 1000).
 link(cloud11, cloud1, 20, 1000).
 link(cloud11, cloud2, 20, 1000).
 link(cloud11, cloud3, 20, 1000).
@@ -259,7 +232,6 @@ link(cloud11, cloud12, 20, 1000).
 link(cloud11, cloud13, 20, 1000).
 link(cloud11, cloud14, 20, 1000).
 link(cloud11, cloud15, 20, 1000).
-link(cloud12, cloud0, 20, 1000).
 link(cloud12, cloud1, 20, 1000).
 link(cloud12, cloud2, 20, 1000).
 link(cloud12, cloud3, 20, 1000).
@@ -274,7 +246,6 @@ link(cloud12, cloud11, 20, 1000).
 link(cloud12, cloud13, 20, 1000).
 link(cloud12, cloud14, 20, 1000).
 link(cloud12, cloud15, 20, 1000).
-link(cloud13, cloud0, 20, 1000).
 link(cloud13, cloud1, 20, 1000).
 link(cloud13, cloud2, 20, 1000).
 link(cloud13, cloud3, 20, 1000).
@@ -289,7 +260,6 @@ link(cloud13, cloud11, 20, 1000).
 link(cloud13, cloud12, 20, 1000).
 link(cloud13, cloud14, 20, 1000).
 link(cloud13, cloud15, 20, 1000).
-link(cloud14, cloud0, 20, 1000).
 link(cloud14, cloud1, 20, 1000).
 link(cloud14, cloud2, 20, 1000).
 link(cloud14, cloud3, 20, 1000).
@@ -304,7 +274,6 @@ link(cloud14, cloud11, 20, 1000).
 link(cloud14, cloud12, 20, 1000).
 link(cloud14, cloud13, 20, 1000).
 link(cloud14, cloud15, 20, 1000).
-link(cloud15, cloud0, 20, 1000).
 link(cloud15, cloud1, 20, 1000).
 link(cloud15, cloud2, 20, 1000).
 link(cloud15, cloud3, 20, 1000).
@@ -319,22 +288,6 @@ link(cloud15, cloud11, 20, 1000).
 link(cloud15, cloud12, 20, 1000).
 link(cloud15, cloud13, 20, 1000).
 link(cloud15, cloud14, 20, 1000).
-link(cloud0, ispdatacentre0, 110, 1000).
-link(cloud0, ispdatacentre1, 110, 1000).
-link(cloud0, ispdatacentre2, 110, 1000).
-link(cloud0, ispdatacentre3, 110, 1000).
-link(cloud0, ispdatacentre4, 110, 1000).
-link(cloud0, ispdatacentre5, 110, 1000).
-link(cloud0, ispdatacentre6, 110, 1000).
-link(cloud0, ispdatacentre7, 110, 1000).
-link(cloud0, ispdatacentre8, 110, 1000).
-link(cloud0, ispdatacentre9, 110, 1000).
-link(cloud0, ispdatacentre10, 110, 1000).
-link(cloud0, ispdatacentre11, 110, 1000).
-link(cloud0, ispdatacentre12, 110, 1000).
-link(cloud0, ispdatacentre13, 110, 1000).
-link(cloud0, ispdatacentre14, 110, 1000).
-link(cloud0, ispdatacentre15, 110, 1000).
 link(cloud1, ispdatacentre0, 110, 1000).
 link(cloud1, ispdatacentre1, 110, 1000).
 link(cloud1, ispdatacentre2, 110, 1000).
@@ -575,22 +528,6 @@ link(cloud15, ispdatacentre12, 110, 1000).
 link(cloud15, ispdatacentre13, 110, 1000).
 link(cloud15, ispdatacentre14, 110, 1000).
 link(cloud15, ispdatacentre15, 110, 1000).
-link(cloud0, cabinetserver0, 135, 1350).
-link(cloud0, cabinetserver1, 135, 100).
-link(cloud0, cabinetserver2, 135, 100).
-link(cloud0, cabinetserver3, 135, 100).
-link(cloud0, cabinetserver4, 135, 100).
-link(cloud0, cabinetserver5, 135, 100).
-link(cloud0, cabinetserver6, 135, 100).
-link(cloud0, cabinetserver7, 135, 100).
-link(cloud0, cabinetserver8, 135, 100).
-link(cloud0, cabinetserver9, 135, 100).
-link(cloud0, cabinetserver10, 135, 100).
-link(cloud0, cabinetserver11, 135, 100).
-link(cloud0, cabinetserver12, 135, 100).
-link(cloud0, cabinetserver13, 135, 100).
-link(cloud0, cabinetserver14, 135, 100).
-link(cloud0, cabinetserver15, 135, 100).
 link(cloud1, cabinetserver0, 135, 100).
 link(cloud1, cabinetserver1, 135, 100).
 link(cloud1, cabinetserver2, 135, 100).
@@ -831,22 +768,6 @@ link(cloud15, cabinetserver12, 135, 100).
 link(cloud15, cabinetserver13, 135, 100).
 link(cloud15, cabinetserver14, 135, 100).
 link(cloud15, cabinetserver15, 135, 100).
-link(cloud0, accesspoint0,  148, 20).
-link(cloud0, accesspoint1,  148, 20).
-link(cloud0, accesspoint2,  148, 20).
-link(cloud0, accesspoint3,  148, 20).
-link(cloud0, accesspoint4,  148, 20).
-link(cloud0, accesspoint5,  148, 20).
-link(cloud0, accesspoint6,  148, 20).
-link(cloud0, accesspoint7,  148, 20).
-link(cloud0, accesspoint8,  148, 20).
-link(cloud0, accesspoint9,  148, 20).
-link(cloud0, accesspoint10,  148, 20).
-link(cloud0, accesspoint11,  148, 20).
-link(cloud0, accesspoint12,  148, 20).
-link(cloud0, accesspoint13,  148, 20).
-link(cloud0, accesspoint14,  148, 20).
-link(cloud0, accesspoint15,  148, 20).
 link(cloud1, accesspoint0,  148, 20).
 link(cloud1, accesspoint1,  148, 20).
 link(cloud1, accesspoint2,  148, 20).
@@ -1087,22 +1008,6 @@ link(cloud15, accesspoint12,  148, 20).
 link(cloud15, accesspoint13,  148, 20).
 link(cloud15, accesspoint14,  148, 20).
 link(cloud15, accesspoint15,  148, 20).
-link(cloud0, smartphone0, 150, 18).
-link(cloud0, smartphone1, 150, 18).
-link(cloud0, smartphone2, 150, 18).
-link(cloud0, smartphone3, 150, 18).
-link(cloud0, smartphone4, 150, 18).
-link(cloud0, smartphone5, 150, 18).
-link(cloud0, smartphone6, 150, 18).
-link(cloud0, smartphone7, 150, 18).
-link(cloud0, smartphone8, 150, 18).
-link(cloud0, smartphone9, 150, 18).
-link(cloud0, smartphone10, 150, 18).
-link(cloud0, smartphone11, 150, 18).
-link(cloud0, smartphone12, 150, 18).
-link(cloud0, smartphone13, 150, 18).
-link(cloud0, smartphone14, 150, 18).
-link(cloud0, smartphone15, 150, 18).
 link(cloud1, smartphone0, 150, 18).
 link(cloud1, smartphone1, 150, 18).
 link(cloud1, smartphone2, 150, 18).
@@ -1344,7 +1249,6 @@ link(cloud15, smartphone13, 150, 18).
 link(cloud15, smartphone14, 150, 18).
 link(cloud15, smartphone15, 150, 18).
 
-link(ispdatacentre0, cloud0, 110, 1000).
 link(ispdatacentre0, cloud1, 110, 1000).
 link(ispdatacentre0, cloud2, 110, 1000).
 link(ispdatacentre0, cloud3, 110, 1000).
@@ -1360,7 +1264,6 @@ link(ispdatacentre0, cloud12, 110, 1000).
 link(ispdatacentre0, cloud13, 110, 1000).
 link(ispdatacentre0, cloud14, 110, 1000).
 link(ispdatacentre0, cloud15, 110, 1000).
-link(ispdatacentre1, cloud0, 110, 1000).
 link(ispdatacentre1, cloud1, 110, 1000).
 link(ispdatacentre1, cloud2, 110, 1000).
 link(ispdatacentre1, cloud3, 110, 1000).
@@ -1376,7 +1279,6 @@ link(ispdatacentre1, cloud12, 110, 1000).
 link(ispdatacentre1, cloud13, 110, 1000).
 link(ispdatacentre1, cloud14, 110, 1000).
 link(ispdatacentre1, cloud15, 110, 1000).
-link(ispdatacentre2, cloud0, 110, 1000).
 link(ispdatacentre2, cloud1, 110, 1000).
 link(ispdatacentre2, cloud2, 110, 1000).
 link(ispdatacentre2, cloud3, 110, 1000).
@@ -1392,7 +1294,6 @@ link(ispdatacentre2, cloud12, 110, 1000).
 link(ispdatacentre2, cloud13, 110, 1000).
 link(ispdatacentre2, cloud14, 110, 1000).
 link(ispdatacentre2, cloud15, 110, 1000).
-link(ispdatacentre3, cloud0, 110, 1000).
 link(ispdatacentre3, cloud1, 110, 1000).
 link(ispdatacentre3, cloud2, 110, 1000).
 link(ispdatacentre3, cloud3, 110, 1000).
@@ -1408,7 +1309,6 @@ link(ispdatacentre3, cloud12, 110, 1000).
 link(ispdatacentre3, cloud13, 110, 1000).
 link(ispdatacentre3, cloud14, 110, 1000).
 link(ispdatacentre3, cloud15, 110, 1000).
-link(ispdatacentre4, cloud0, 110, 1000).
 link(ispdatacentre4, cloud1, 110, 1000).
 link(ispdatacentre4, cloud2, 110, 1000).
 link(ispdatacentre4, cloud3, 110, 1000).
@@ -1424,7 +1324,6 @@ link(ispdatacentre4, cloud12, 110, 1000).
 link(ispdatacentre4, cloud13, 110, 1000).
 link(ispdatacentre4, cloud14, 110, 1000).
 link(ispdatacentre4, cloud15, 110, 1000).
-link(ispdatacentre5, cloud0, 110, 1000).
 link(ispdatacentre5, cloud1, 110, 1000).
 link(ispdatacentre5, cloud2, 110, 1000).
 link(ispdatacentre5, cloud3, 110, 1000).
@@ -1440,7 +1339,6 @@ link(ispdatacentre5, cloud12, 110, 1000).
 link(ispdatacentre5, cloud13, 110, 1000).
 link(ispdatacentre5, cloud14, 110, 1000).
 link(ispdatacentre5, cloud15, 110, 1000).
-link(ispdatacentre6, cloud0, 110, 1000).
 link(ispdatacentre6, cloud1, 110, 1000).
 link(ispdatacentre6, cloud2, 110, 1000).
 link(ispdatacentre6, cloud3, 110, 1000).
@@ -1456,7 +1354,6 @@ link(ispdatacentre6, cloud12, 110, 1000).
 link(ispdatacentre6, cloud13, 110, 1000).
 link(ispdatacentre6, cloud14, 110, 1000).
 link(ispdatacentre6, cloud15, 110, 1000).
-link(ispdatacentre7, cloud0, 110, 1000).
 link(ispdatacentre7, cloud1, 110, 1000).
 link(ispdatacentre7, cloud2, 110, 1000).
 link(ispdatacentre7, cloud3, 110, 1000).
@@ -1472,7 +1369,6 @@ link(ispdatacentre7, cloud12, 110, 1000).
 link(ispdatacentre7, cloud13, 110, 1000).
 link(ispdatacentre7, cloud14, 110, 1000).
 link(ispdatacentre7, cloud15, 110, 1000).
-link(ispdatacentre8, cloud0, 110, 1000).
 link(ispdatacentre8, cloud1, 110, 1000).
 link(ispdatacentre8, cloud2, 110, 1000).
 link(ispdatacentre8, cloud3, 110, 1000).
@@ -1488,7 +1384,6 @@ link(ispdatacentre8, cloud12, 110, 1000).
 link(ispdatacentre8, cloud13, 110, 1000).
 link(ispdatacentre8, cloud14, 110, 1000).
 link(ispdatacentre8, cloud15, 110, 1000).
-link(ispdatacentre9, cloud0, 110, 1000).
 link(ispdatacentre9, cloud1, 110, 1000).
 link(ispdatacentre9, cloud2, 110, 1000).
 link(ispdatacentre9, cloud3, 110, 1000).
@@ -1504,7 +1399,6 @@ link(ispdatacentre9, cloud12, 110, 1000).
 link(ispdatacentre9, cloud13, 110, 1000).
 link(ispdatacentre9, cloud14, 110, 1000).
 link(ispdatacentre9, cloud15, 110, 1000).
-link(ispdatacentre10, cloud0, 110, 1000).
 link(ispdatacentre10, cloud1, 110, 1000).
 link(ispdatacentre10, cloud2, 110, 1000).
 link(ispdatacentre10, cloud3, 110, 1000).
@@ -1520,7 +1414,6 @@ link(ispdatacentre10, cloud12, 110, 1000).
 link(ispdatacentre10, cloud13, 110, 1000).
 link(ispdatacentre10, cloud14, 110, 1000).
 link(ispdatacentre10, cloud15, 110, 1000).
-link(ispdatacentre11, cloud0, 110, 1000).
 link(ispdatacentre11, cloud1, 110, 1000).
 link(ispdatacentre11, cloud2, 110, 1000).
 link(ispdatacentre11, cloud3, 110, 1000).
@@ -1536,7 +1429,6 @@ link(ispdatacentre11, cloud12, 110, 1000).
 link(ispdatacentre11, cloud13, 110, 1000).
 link(ispdatacentre11, cloud14, 110, 1000).
 link(ispdatacentre11, cloud15, 110, 1000).
-link(ispdatacentre12, cloud0, 110, 1000).
 link(ispdatacentre12, cloud1, 110, 1000).
 link(ispdatacentre12, cloud2, 110, 1000).
 link(ispdatacentre12, cloud3, 110, 1000).
@@ -1552,7 +1444,6 @@ link(ispdatacentre12, cloud12, 110, 1000).
 link(ispdatacentre12, cloud13, 110, 1000).
 link(ispdatacentre12, cloud14, 110, 1000).
 link(ispdatacentre12, cloud15, 110, 1000).
-link(ispdatacentre13, cloud0, 110, 1000).
 link(ispdatacentre13, cloud1, 110, 1000).
 link(ispdatacentre13, cloud2, 110, 1000).
 link(ispdatacentre13, cloud3, 110, 1000).
@@ -1568,7 +1459,6 @@ link(ispdatacentre13, cloud12, 110, 1000).
 link(ispdatacentre13, cloud13, 110, 1000).
 link(ispdatacentre13, cloud14, 110, 1000).
 link(ispdatacentre13, cloud15, 110, 1000).
-link(ispdatacentre14, cloud0, 110, 1000).
 link(ispdatacentre14, cloud1, 110, 1000).
 link(ispdatacentre14, cloud2, 110, 1000).
 link(ispdatacentre14, cloud3, 110, 1000).
@@ -1584,7 +1474,6 @@ link(ispdatacentre14, cloud12, 110, 1000).
 link(ispdatacentre14, cloud13, 110, 1000).
 link(ispdatacentre14, cloud14, 110, 1000).
 link(ispdatacentre14, cloud15, 110, 1000).
-link(ispdatacentre15, cloud0, 110, 1000).
 link(ispdatacentre15, cloud1, 110, 1000).
 link(ispdatacentre15, cloud2, 110, 1000).
 link(ispdatacentre15, cloud3, 110, 1000).
@@ -2609,7 +2498,6 @@ link(ispdatacentre15, smartphone13, 20, 1000).
 link(ispdatacentre15, smartphone14, 20, 1000).
 link(ispdatacentre15, smartphone15, 20, 1000).
 
-link(cabinetserver0, cloud0, 135, 100).
 link(cabinetserver0, cloud1, 135, 100).
 link(cabinetserver0, cloud2, 135, 100).
 link(cabinetserver0, cloud3, 135, 100).
@@ -2625,7 +2513,6 @@ link(cabinetserver0, cloud12, 135, 100).
 link(cabinetserver0, cloud13, 135, 100).
 link(cabinetserver0, cloud14, 135, 100).
 link(cabinetserver0, cloud15, 135, 100).
-link(cabinetserver1, cloud0, 135, 100).
 link(cabinetserver1, cloud1, 135, 100).
 link(cabinetserver1, cloud2, 135, 100).
 link(cabinetserver1, cloud3, 135, 100).
@@ -2641,7 +2528,6 @@ link(cabinetserver1, cloud12, 135, 100).
 link(cabinetserver1, cloud13, 135, 100).
 link(cabinetserver1, cloud14, 135, 100).
 link(cabinetserver1, cloud15, 135, 100).
-link(cabinetserver2, cloud0, 135, 100).
 link(cabinetserver2, cloud1, 135, 100).
 link(cabinetserver2, cloud2, 135, 100).
 link(cabinetserver2, cloud3, 135, 100).
@@ -2657,7 +2543,6 @@ link(cabinetserver2, cloud12, 135, 100).
 link(cabinetserver2, cloud13, 135, 100).
 link(cabinetserver2, cloud14, 135, 100).
 link(cabinetserver2, cloud15, 135, 100).
-link(cabinetserver3, cloud0, 135, 100).
 link(cabinetserver3, cloud1, 135, 100).
 link(cabinetserver3, cloud2, 135, 100).
 link(cabinetserver3, cloud3, 135, 100).
@@ -2673,7 +2558,6 @@ link(cabinetserver3, cloud12, 135, 100).
 link(cabinetserver3, cloud13, 135, 100).
 link(cabinetserver3, cloud14, 135, 100).
 link(cabinetserver3, cloud15, 135, 100).
-link(cabinetserver4, cloud0, 135, 100).
 link(cabinetserver4, cloud1, 135, 100).
 link(cabinetserver4, cloud2, 135, 100).
 link(cabinetserver4, cloud3, 135, 100).
@@ -2689,7 +2573,6 @@ link(cabinetserver4, cloud12, 135, 100).
 link(cabinetserver4, cloud13, 135, 100).
 link(cabinetserver4, cloud14, 135, 100).
 link(cabinetserver4, cloud15, 135, 100).
-link(cabinetserver5, cloud0, 135, 100).
 link(cabinetserver5, cloud1, 135, 100).
 link(cabinetserver5, cloud2, 135, 100).
 link(cabinetserver5, cloud3, 135, 100).
@@ -2705,7 +2588,6 @@ link(cabinetserver5, cloud12, 135, 100).
 link(cabinetserver5, cloud13, 135, 100).
 link(cabinetserver5, cloud14, 135, 100).
 link(cabinetserver5, cloud15, 135, 100).
-link(cabinetserver6, cloud0, 135, 100).
 link(cabinetserver6, cloud1, 135, 100).
 link(cabinetserver6, cloud2, 135, 100).
 link(cabinetserver6, cloud3, 135, 100).
@@ -2721,7 +2603,6 @@ link(cabinetserver6, cloud12, 135, 100).
 link(cabinetserver6, cloud13, 135, 100).
 link(cabinetserver6, cloud14, 135, 100).
 link(cabinetserver6, cloud15, 135, 100).
-link(cabinetserver7, cloud0, 135, 100).
 link(cabinetserver7, cloud1, 135, 100).
 link(cabinetserver7, cloud2, 135, 100).
 link(cabinetserver7, cloud3, 135, 100).
@@ -2737,7 +2618,6 @@ link(cabinetserver7, cloud12, 135, 100).
 link(cabinetserver7, cloud13, 135, 100).
 link(cabinetserver7, cloud14, 135, 100).
 link(cabinetserver7, cloud15, 135, 100).
-link(cabinetserver8, cloud0, 135, 100).
 link(cabinetserver8, cloud1, 135, 100).
 link(cabinetserver8, cloud2, 135, 100).
 link(cabinetserver8, cloud3, 135, 100).
@@ -2753,7 +2633,6 @@ link(cabinetserver8, cloud12, 135, 100).
 link(cabinetserver8, cloud13, 135, 100).
 link(cabinetserver8, cloud14, 135, 100).
 link(cabinetserver8, cloud15, 135, 100).
-link(cabinetserver9, cloud0, 135, 100).
 link(cabinetserver9, cloud1, 135, 100).
 link(cabinetserver9, cloud2, 135, 100).
 link(cabinetserver9, cloud3, 135, 100).
@@ -2769,7 +2648,6 @@ link(cabinetserver9, cloud12, 135, 100).
 link(cabinetserver9, cloud13, 135, 100).
 link(cabinetserver9, cloud14, 135, 100).
 link(cabinetserver9, cloud15, 135, 100).
-link(cabinetserver10, cloud0, 135, 100).
 link(cabinetserver10, cloud1, 135, 100).
 link(cabinetserver10, cloud2, 135, 100).
 link(cabinetserver10, cloud3, 135, 100).
@@ -2785,7 +2663,6 @@ link(cabinetserver10, cloud12, 135, 100).
 link(cabinetserver10, cloud13, 135, 100).
 link(cabinetserver10, cloud14, 135, 100).
 link(cabinetserver10, cloud15, 135, 100).
-link(cabinetserver11, cloud0, 135, 100).
 link(cabinetserver11, cloud1, 135, 100).
 link(cabinetserver11, cloud2, 135, 100).
 link(cabinetserver11, cloud3, 135, 100).
@@ -2801,7 +2678,6 @@ link(cabinetserver11, cloud12, 135, 100).
 link(cabinetserver11, cloud13, 135, 100).
 link(cabinetserver11, cloud14, 135, 100).
 link(cabinetserver11, cloud15, 135, 100).
-link(cabinetserver12, cloud0, 135, 100).
 link(cabinetserver12, cloud1, 135, 100).
 link(cabinetserver12, cloud2, 135, 100).
 link(cabinetserver12, cloud3, 135, 100).
@@ -2817,7 +2693,6 @@ link(cabinetserver12, cloud12, 135, 100).
 link(cabinetserver12, cloud13, 135, 100).
 link(cabinetserver12, cloud14, 135, 100).
 link(cabinetserver12, cloud15, 135, 100).
-link(cabinetserver13, cloud0, 135, 100).
 link(cabinetserver13, cloud1, 135, 100).
 link(cabinetserver13, cloud2, 135, 100).
 link(cabinetserver13, cloud3, 135, 100).
@@ -2833,7 +2708,6 @@ link(cabinetserver13, cloud12, 135, 100).
 link(cabinetserver13, cloud13, 135, 100).
 link(cabinetserver13, cloud14, 135, 100).
 link(cabinetserver13, cloud15, 135, 100).
-link(cabinetserver14, cloud0, 135, 100).
 link(cabinetserver14, cloud1, 135, 100).
 link(cabinetserver14, cloud2, 135, 100).
 link(cabinetserver14, cloud3, 135, 100).
@@ -2849,7 +2723,6 @@ link(cabinetserver14, cloud12, 135, 100).
 link(cabinetserver14, cloud13, 135, 100).
 link(cabinetserver14, cloud14, 135, 100).
 link(cabinetserver14, cloud15, 135, 100).
-link(cabinetserver15, cloud0, 135, 100).
 link(cabinetserver15, cloud1, 135, 100).
 link(cabinetserver15, cloud2, 135, 100).
 link(cabinetserver15, cloud3, 135, 100).
@@ -3874,7 +3747,6 @@ link(cabinetserver15, smartphone13, 15, 35).
 link(cabinetserver15, smartphone14, 15, 35).
 link(cabinetserver15, smartphone15, 15, 35).
 
-link(accesspoint0, cloud0, 148, 3).
 link(accesspoint0, cloud1, 148, 3).
 link(accesspoint0, cloud2, 148, 3).
 link(accesspoint0, cloud3, 148, 3).
@@ -3890,7 +3762,6 @@ link(accesspoint0, cloud12, 148, 3).
 link(accesspoint0, cloud13, 148, 3).
 link(accesspoint0, cloud14, 148, 3).
 link(accesspoint0, cloud15, 148, 3).
-link(accesspoint1, cloud0, 148, 3).
 link(accesspoint1, cloud1, 148, 3).
 link(accesspoint1, cloud2, 148, 3).
 link(accesspoint1, cloud3, 148, 3).
@@ -3906,7 +3777,6 @@ link(accesspoint1, cloud12, 148, 3).
 link(accesspoint1, cloud13, 148, 3).
 link(accesspoint1, cloud14, 148, 3).
 link(accesspoint1, cloud15, 148, 3).
-link(accesspoint2, cloud0, 148, 3).
 link(accesspoint2, cloud1, 148, 3).
 link(accesspoint2, cloud2, 148, 3).
 link(accesspoint2, cloud3, 148, 3).
@@ -3922,7 +3792,6 @@ link(accesspoint2, cloud12, 148, 3).
 link(accesspoint2, cloud13, 148, 3).
 link(accesspoint2, cloud14, 148, 3).
 link(accesspoint2, cloud15, 148, 3).
-link(accesspoint3, cloud0, 148, 3).
 link(accesspoint3, cloud1, 148, 3).
 link(accesspoint3, cloud2, 148, 3).
 link(accesspoint3, cloud3, 148, 3).
@@ -3938,7 +3807,6 @@ link(accesspoint3, cloud12, 148, 3).
 link(accesspoint3, cloud13, 148, 3).
 link(accesspoint3, cloud14, 148, 3).
 link(accesspoint3, cloud15, 148, 3).
-link(accesspoint4, cloud0, 148, 3).
 link(accesspoint4, cloud1, 148, 3).
 link(accesspoint4, cloud2, 148, 3).
 link(accesspoint4, cloud3, 148, 3).
@@ -3954,7 +3822,6 @@ link(accesspoint4, cloud12, 148, 3).
 link(accesspoint4, cloud13, 148, 3).
 link(accesspoint4, cloud14, 148, 3).
 link(accesspoint4, cloud15, 148, 3).
-link(accesspoint5, cloud0, 148, 3).
 link(accesspoint5, cloud1, 148, 3).
 link(accesspoint5, cloud2, 148, 3).
 link(accesspoint5, cloud3, 148, 3).
@@ -3970,7 +3837,6 @@ link(accesspoint5, cloud12, 148, 3).
 link(accesspoint5, cloud13, 148, 3).
 link(accesspoint5, cloud14, 148, 3).
 link(accesspoint5, cloud15, 148, 3).
-link(accesspoint6, cloud0, 148, 3).
 link(accesspoint6, cloud1, 148, 3).
 link(accesspoint6, cloud2, 148, 3).
 link(accesspoint6, cloud3, 148, 3).
@@ -3986,7 +3852,6 @@ link(accesspoint6, cloud12, 148, 3).
 link(accesspoint6, cloud13, 148, 3).
 link(accesspoint6, cloud14, 148, 3).
 link(accesspoint6, cloud15, 148, 3).
-link(accesspoint7, cloud0, 148, 3).
 link(accesspoint7, cloud1, 148, 3).
 link(accesspoint7, cloud2, 148, 3).
 link(accesspoint7, cloud3, 148, 3).
@@ -4002,7 +3867,6 @@ link(accesspoint7, cloud12, 148, 3).
 link(accesspoint7, cloud13, 148, 3).
 link(accesspoint7, cloud14, 148, 3).
 link(accesspoint7, cloud15, 148, 3).
-link(accesspoint8, cloud0, 148, 3).
 link(accesspoint8, cloud1, 148, 3).
 link(accesspoint8, cloud2, 148, 3).
 link(accesspoint8, cloud3, 148, 3).
@@ -4018,7 +3882,6 @@ link(accesspoint8, cloud12, 148, 3).
 link(accesspoint8, cloud13, 148, 3).
 link(accesspoint8, cloud14, 148, 3).
 link(accesspoint8, cloud15, 148, 3).
-link(accesspoint9, cloud0, 148, 3).
 link(accesspoint9, cloud1, 148, 3).
 link(accesspoint9, cloud2, 148, 3).
 link(accesspoint9, cloud3, 148, 3).
@@ -4034,7 +3897,6 @@ link(accesspoint9, cloud12, 148, 3).
 link(accesspoint9, cloud13, 148, 3).
 link(accesspoint9, cloud14, 148, 3).
 link(accesspoint9, cloud15, 148, 3).
-link(accesspoint10, cloud0, 148, 3).
 link(accesspoint10, cloud1, 148, 3).
 link(accesspoint10, cloud2, 148, 3).
 link(accesspoint10, cloud3, 148, 3).
@@ -4050,7 +3912,6 @@ link(accesspoint10, cloud12, 148, 3).
 link(accesspoint10, cloud13, 148, 3).
 link(accesspoint10, cloud14, 148, 3).
 link(accesspoint10, cloud15, 148, 3).
-link(accesspoint11, cloud0, 148, 3).
 link(accesspoint11, cloud1, 148, 3).
 link(accesspoint11, cloud2, 148, 3).
 link(accesspoint11, cloud3, 148, 3).
@@ -4066,7 +3927,6 @@ link(accesspoint11, cloud12, 148, 3).
 link(accesspoint11, cloud13, 148, 3).
 link(accesspoint11, cloud14, 148, 3).
 link(accesspoint11, cloud15, 148, 3).
-link(accesspoint12, cloud0, 148, 3).
 link(accesspoint12, cloud1, 148, 3).
 link(accesspoint12, cloud2, 148, 3).
 link(accesspoint12, cloud3, 148, 3).
@@ -4082,7 +3942,6 @@ link(accesspoint12, cloud12, 148, 3).
 link(accesspoint12, cloud13, 148, 3).
 link(accesspoint12, cloud14, 148, 3).
 link(accesspoint12, cloud15, 148, 3).
-link(accesspoint13, cloud0, 148, 3).
 link(accesspoint13, cloud1, 148, 3).
 link(accesspoint13, cloud2, 148, 3).
 link(accesspoint13, cloud3, 148, 3).
@@ -4098,7 +3957,6 @@ link(accesspoint13, cloud12, 148, 3).
 link(accesspoint13, cloud13, 148, 3).
 link(accesspoint13, cloud14, 148, 3).
 link(accesspoint13, cloud15, 148, 3).
-link(accesspoint14, cloud0, 148, 3).
 link(accesspoint14, cloud1, 148, 3).
 link(accesspoint14, cloud2, 148, 3).
 link(accesspoint14, cloud3, 148, 3).
@@ -4114,7 +3972,6 @@ link(accesspoint14, cloud12, 148, 3).
 link(accesspoint14, cloud13, 148, 3).
 link(accesspoint14, cloud14, 148, 3).
 link(accesspoint14, cloud15, 148, 3).
-link(accesspoint15, cloud0, 148, 3).
 link(accesspoint15, cloud1, 148, 3).
 link(accesspoint15, cloud2, 148, 3).
 link(accesspoint15, cloud3, 148, 3).
@@ -5139,7 +4996,6 @@ link(accesspoint15, smartphone13, 2, 70).
 link(accesspoint15, smartphone14, 2, 70).
 link(accesspoint15, smartphone15, 2, 70).
 
-link(smartphone0, cloud0, 150, 2).
 link(smartphone0, cloud1, 150, 2).
 link(smartphone0, cloud2, 150, 2).
 link(smartphone0, cloud3, 150, 2).
@@ -5155,7 +5011,6 @@ link(smartphone0, cloud12, 150, 2).
 link(smartphone0, cloud13, 150, 2).
 link(smartphone0, cloud14, 150, 2).
 link(smartphone0, cloud15, 150, 2).
-link(smartphone1, cloud0, 150, 2).
 link(smartphone1, cloud1, 150, 2).
 link(smartphone1, cloud2, 150, 2).
 link(smartphone1, cloud3, 150, 2).
@@ -5171,7 +5026,6 @@ link(smartphone1, cloud12, 150, 2).
 link(smartphone1, cloud13, 150, 2).
 link(smartphone1, cloud14, 150, 2).
 link(smartphone1, cloud15, 150, 2).
-link(smartphone2, cloud0, 150, 2).
 link(smartphone2, cloud1, 150, 2).
 link(smartphone2, cloud2, 150, 2).
 link(smartphone2, cloud3, 150, 2).
@@ -5187,7 +5041,6 @@ link(smartphone2, cloud12, 150, 2).
 link(smartphone2, cloud13, 150, 2).
 link(smartphone2, cloud14, 150, 2).
 link(smartphone2, cloud15, 150, 2).
-link(smartphone3, cloud0, 150, 2).
 link(smartphone3, cloud1, 150, 2).
 link(smartphone3, cloud2, 150, 2).
 link(smartphone3, cloud3, 150, 2).
@@ -5203,7 +5056,6 @@ link(smartphone3, cloud12, 150, 2).
 link(smartphone3, cloud13, 150, 2).
 link(smartphone3, cloud14, 150, 2).
 link(smartphone3, cloud15, 150, 2).
-link(smartphone4, cloud0, 150, 2).
 link(smartphone4, cloud1, 150, 2).
 link(smartphone4, cloud2, 150, 2).
 link(smartphone4, cloud3, 150, 2).
@@ -5219,7 +5071,6 @@ link(smartphone4, cloud12, 150, 2).
 link(smartphone4, cloud13, 150, 2).
 link(smartphone4, cloud14, 150, 2).
 link(smartphone4, cloud15, 150, 2).
-link(smartphone5, cloud0, 150, 2).
 link(smartphone5, cloud1, 150, 2).
 link(smartphone5, cloud2, 150, 2).
 link(smartphone5, cloud3, 150, 2).
@@ -5235,7 +5086,6 @@ link(smartphone5, cloud12, 150, 2).
 link(smartphone5, cloud13, 150, 2).
 link(smartphone5, cloud14, 150, 2).
 link(smartphone5, cloud15, 150, 2).
-link(smartphone6, cloud0, 150, 2).
 link(smartphone6, cloud1, 150, 2).
 link(smartphone6, cloud2, 150, 2).
 link(smartphone6, cloud3, 150, 2).
@@ -5251,7 +5101,6 @@ link(smartphone6, cloud12, 150, 2).
 link(smartphone6, cloud13, 150, 2).
 link(smartphone6, cloud14, 150, 2).
 link(smartphone6, cloud15, 150, 2).
-link(smartphone7, cloud0, 150, 2).
 link(smartphone7, cloud1, 150, 2).
 link(smartphone7, cloud2, 150, 2).
 link(smartphone7, cloud3, 150, 2).
@@ -5267,7 +5116,6 @@ link(smartphone7, cloud12, 150, 2).
 link(smartphone7, cloud13, 150, 2).
 link(smartphone7, cloud14, 150, 2).
 link(smartphone7, cloud15, 150, 2).
-link(smartphone8, cloud0, 150, 2).
 link(smartphone8, cloud1, 150, 2).
 link(smartphone8, cloud2, 150, 2).
 link(smartphone8, cloud3, 150, 2).
@@ -5283,7 +5131,6 @@ link(smartphone8, cloud12, 150, 2).
 link(smartphone8, cloud13, 150, 2).
 link(smartphone8, cloud14, 150, 2).
 link(smartphone8, cloud15, 150, 2).
-link(smartphone9, cloud0, 150, 2).
 link(smartphone9, cloud1, 150, 2).
 link(smartphone9, cloud2, 150, 2).
 link(smartphone9, cloud3, 150, 2).
@@ -5299,7 +5146,6 @@ link(smartphone9, cloud12, 150, 2).
 link(smartphone9, cloud13, 150, 2).
 link(smartphone9, cloud14, 150, 2).
 link(smartphone9, cloud15, 150, 2).
-link(smartphone10, cloud0, 150, 2).
 link(smartphone10, cloud1, 150, 2).
 link(smartphone10, cloud2, 150, 2).
 link(smartphone10, cloud3, 150, 2).
@@ -5315,7 +5161,6 @@ link(smartphone10, cloud12, 150, 2).
 link(smartphone10, cloud13, 150, 2).
 link(smartphone10, cloud14, 150, 2).
 link(smartphone10, cloud15, 150, 2).
-link(smartphone11, cloud0, 150, 2).
 link(smartphone11, cloud1, 150, 2).
 link(smartphone11, cloud2, 150, 2).
 link(smartphone11, cloud3, 150, 2).
@@ -5331,7 +5176,6 @@ link(smartphone11, cloud12, 150, 2).
 link(smartphone11, cloud13, 150, 2).
 link(smartphone11, cloud14, 150, 2).
 link(smartphone11, cloud15, 150, 2).
-link(smartphone12, cloud0, 150, 2).
 link(smartphone12, cloud1, 150, 2).
 link(smartphone12, cloud2, 150, 2).
 link(smartphone12, cloud3, 150, 2).
@@ -5347,7 +5191,6 @@ link(smartphone12, cloud12, 150, 2).
 link(smartphone12, cloud13, 150, 2).
 link(smartphone12, cloud14, 150, 2).
 link(smartphone12, cloud15, 150, 2).
-link(smartphone13, cloud0, 150, 2).
 link(smartphone13, cloud1, 150, 2).
 link(smartphone13, cloud2, 150, 2).
 link(smartphone13, cloud3, 150, 2).
@@ -5363,7 +5206,6 @@ link(smartphone13, cloud12, 150, 2).
 link(smartphone13, cloud13, 150, 2).
 link(smartphone13, cloud14, 150, 2).
 link(smartphone13, cloud15, 150, 2).
-link(smartphone14, cloud0, 150, 2).
 link(smartphone14, cloud1, 150, 2).
 link(smartphone14, cloud2, 150, 2).
 link(smartphone14, cloud3, 150, 2).
@@ -5379,7 +5221,6 @@ link(smartphone14, cloud12, 150, 2).
 link(smartphone14, cloud13, 150, 2).
 link(smartphone14, cloud14, 150, 2).
 link(smartphone14, cloud15, 150, 2).
-link(smartphone15, cloud0, 150, 2).
 link(smartphone15, cloud1, 150, 2).
 link(smartphone15, cloud2, 150, 2).
 link(smartphone15, cloud3, 150, 2).

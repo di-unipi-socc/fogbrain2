@@ -4,6 +4,8 @@ import os
 import sys
 import json
 
+import shutil
+
 from pyswip import Prolog, Functor, Atom
 
 from builder import builder
@@ -16,11 +18,13 @@ PATH = "./experiments/commits/"
 
 PATH_REPORTS = "./experiments/reports/"
 
+PATH_INFRA = "./experiments/infrastructures/"
+
 RUNS = 1
 
 LOWER = 4
 
-UPPER = LOWER+0
+UPPER = 11
 
 def parse(query):
     if isinstance(query,dict):
@@ -93,15 +97,15 @@ def generate_commits():
     app.modifyService("userProfiler", ["gcc","make"], 2, ["vrViewer"])
     add_commit(app, "changed2Services", DIR=PATH)
     
-    app.addS2S("userProfiler", "videoStorage", 200, 1)
-    app.addS2S("videoStorage", "userProfiler", 200, 1)
+    app.addS2S("userProfiler", "videoStorage", 500, 1)
+    app.addS2S("videoStorage", "userProfiler", 500, 1)
     add_commit(app, "added2S2S", DIR=PATH)
     
     app.removeS2S("sceneSelector","userProfiler")
     add_commit(app, "removedS2S", DIR=PATH)
     
-    app.modifyS2S("videoStorage", "userProfiler", 500, 1)
-    app.modifyS2S("userProfiler", "videoStorage", 500, 2)
+    app.modifyS2S("videoStorage", "userProfiler", 200, 1)
+    app.modifyS2S("userProfiler", "videoStorage", 200, 2)
     add_commit(app, "changed2S2S", DIR=PATH)
     
 
@@ -116,9 +120,6 @@ def do_experiments(runs, nodes):
     debug(f"starting new session [nodes: {nodes} - runs: {runs}]")
     report = {}
     commits = get_commits(PATH)
-    
-    generate_infrastructure(nodes)
-    debug("infrastructure generated")
     
     for run in range(runs):
         changes = "" #get_infrastructure()
@@ -193,7 +194,8 @@ def analyse(report):
     return analysis
         
 
-def experiments(runs, lower=4, upper=11):
+def experimentsPhase1(lower=4, upper=11):
+    debug("STARTING PHASE 1")
     try:
         os.mkdir(PATH_REPORTS)
     except OSError:
@@ -201,7 +203,40 @@ def experiments(runs, lower=4, upper=11):
     report = {}
     for i in range(lower,upper+1):
         nodes = pow(2,i)
-        report[nodes]=do_experiments(runs,nodes)
+        generate_infrastructure(nodes)
+        debug("infrastructure generated")
+        report[nodes]=do_experiments(1,nodes)
+        
+    debug("doing analysis")
+    analysis = analyse(report)
+    debug("writing analysis")
+    with open(PATH_REPORTS+"analysis-phase1-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+        f.write(json.dumps(analysis))
+    debug("store completed")
+          
+    return report
+    
+def experimentsPhase2():
+    debug("STARTING PHASE 2")
+    try:
+        os.mkdir(PATH_REPORTS)
+    except OSError:
+        pass
+    
+    infrastructures = os.listdir(PATH_INFRA)
+    infrastructures.sort()
+    
+    report = {}
+    for infra in infrastructures:
+        shutil.copyfile(PATH_INFRA+infra, "./infra.pl")
+        report[infra]=do_experiments(1,infra[:-3])
+        
+    debug("doing analysis")
+    analysis = analyse(report)
+    debug("writing analysis")
+    with open(PATH_REPORTS+"analysis-phase2-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+        f.write(json.dumps(analysis))
+    debug("store completed")
           
     return report
 
@@ -210,13 +245,8 @@ if __name__ == "__main__":
     start_time = time.time()
     generate_commits()
     debug("commits generated")
-    report = experiments(RUNS, lower=LOWER,upper=UPPER)
-    debug("doing analysis")
-    analysis = analyse(report)
-    debug("writing analysis")
-    with open(PATH_REPORTS+"analysis-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
-        f.write(json.dumps(analysis))
-    debug("store completed")
+    experimentsPhase1(lower=LOWER,upper=UPPER)
+    experimentsPhase2()
     debug(f"Ended in {round(time.time() - start_time,2)} seconds")
     
     
