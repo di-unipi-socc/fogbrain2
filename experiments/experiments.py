@@ -210,7 +210,7 @@ def experimentsPhase1(lower=4, upper=11):
         debug("doing analysis")
         analysis = analyse(report)
         debug("writing analysis")
-        with open(PATH_REPORTS+"TEMP-"+str(nodes)+"-analysis-phase1-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+        with open(PATH_REPORTS+"TEMP-analysis-phase1.txt","w+") as f:
             f.write(json.dumps(analysis))
         debug("store completed")
         
@@ -241,7 +241,7 @@ def experimentsPhase2():
         debug("doing analysis")
         analysis = analyse(report)
         debug("writing analysis")
-        with open(PATH_REPORTS+"TEMP-"+infra[:-3]+"-analysis-phase2-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+        with open(PATH_REPORTS+"TEMP-analysis-phase2.txt","w+") as f:
             f.write(json.dumps(analysis))
         debug("store completed")
         
