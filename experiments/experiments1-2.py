@@ -20,12 +20,6 @@ PATH_REPORTS = "./experiments/reports/"
 
 PATH_INFRA = "./experiments/infrastructures/"
 
-RUNS = 1
-
-LOWER = 4
-
-UPPER = 11
-
 def parse(query):
     if isinstance(query,dict):
         ans = {}
@@ -235,6 +229,7 @@ def experimentsPhase2():
         debug("store completed")
           
     return report
+
 
 if __name__ == "__main__":
     import time
