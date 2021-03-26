@@ -174,11 +174,3 @@ assembleDiff(S1, N1, HWDiff, [diff(S1,N1,OldHWDiff)|HWDiffs], [diff(S1,N1,MinHWD
     MinHWDiff is min(HWDiff, OldHWDiff).
 assembleDiff(S1, N1, HWDiff, [diff(S2,N2,HWDiff2)|HWDiffs], [diff(S2,N2,HWDiff2)|NewHWDiffs]) :-
     dif(S1,S2), dif(N1,N2), assembleDiff(S1, N1, HWDiff, HWDiffs, NewHWDiffs).
-
-% assembleDiff(S1, N1, HWDiff, HWDiffs, [Diff|NewHWDiffs]) :-
-%     member((S1,N1,OldHWDiff),HWDiffs),
-%     MinHWDiff is min(HWDiff, OldHWDiff),
-%     Diff=diff(S1,N1,MinHWDiff),
-%     delete(HWDiffs,(S1,N1,OldHWDiff),NewHWDiffs).
-% assembleDiff(S1, N1, HWDiff, HWDiffs, [diff(S1,N1,HWDiff)|HWDiffs]) :-
-%     \+ member((S1,N1,_),HWDiffs).
