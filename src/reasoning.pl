@@ -88,7 +88,7 @@ removedS2S([s2s(S1, S2, _, ReqBW)|CtxS2Ss], Placement, SToRemove1, [diff(S1,N1,S
     member(on(S1,N1),Placement), member(on(S2,N2),Placement), dif(N1,N2),
     removedS2S(CtxS2Ss, Placement, SToRemove1, Rest).
 removedS2S([s2s(S1, S2, _, _)|CtxS2Ss], Placement, SToRemove1, Rest) :-
-    s2s(S1, S2, _, _),
+    (s2s(S1, S2, _, _); (member(on(S1,N),Placement), member(on(S2,N),Placement)) ),
     removedS2S(CtxS2Ss, Placement, SToRemove1, Rest).
 
 s2sDiff(S1, S2, ReqLat, ReqBW, Placement, CtxS2S, diff(S1,N1,S2,N2,(ReqLat,BWDiff))) :-
