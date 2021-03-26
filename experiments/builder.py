@@ -3,9 +3,10 @@ import random as r
 def writeNodes(basename, number, caps, lista, f):
     for i in range(number):
         name = basename + str(i)
-        node = "node(" + name +"," + caps +").\n"
-        lista.append(name)
-        f.write(node)
+        if name != "cloud0":
+            node = "node(" + name +"," + caps +").\n"
+            lista.append(name)
+            f.write(node)
 
 def printLinks(list1, list2, qos, f):
     for n1 in list1:
@@ -80,4 +81,4 @@ def builder(nodesnumber, path="infra.pl"):
     f.close()
     
 if __name__ == "__main__":
-    builder(16)
+    builder(4)

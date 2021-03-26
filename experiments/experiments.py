@@ -122,9 +122,7 @@ def do_experiments(runs, nodes):
     commits = get_commits(PATH)
     
     for run in range(runs):
-        changes = "" #get_infrastructure()
-        report[run] = {"infra_changes":changes,
-                      "inferences":{
+        report[run] = {"inferences":{
                       }}
                       
         try:
@@ -194,30 +192,21 @@ def analyse(report):
     return analysis
         
 
-def experimentsPhase1(lower=4, upper=11):
+def experimentsPhase1(nodes):
     debug("STARTING PHASE 1")
     try:
         os.mkdir(PATH_REPORTS)
     except OSError:
         pass
     report = {}
-    for i in range(lower,upper+1):
-        nodes = pow(2,i)
-        generate_infrastructure(nodes)
-        debug("infrastructure generated")
-        report[nodes]=do_experiments(1,nodes)
-        
-        debug("doing analysis")
-        analysis = analyse(report)
-        debug("writing analysis")
-        with open(PATH_REPORTS+"TEMP-analysis-phase1.txt","w+") as f:
-            f.write(json.dumps(analysis))
-        debug("store completed")
-        
+    generate_infrastructure(nodes)
+    debug("infrastructure generated")
+    report["phase1"]=do_experiments(1,nodes)
+    
     debug("doing analysis")
     analysis = analyse(report)
     debug("writing analysis")
-    with open(PATH_REPORTS+"analysis-phase1-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
+    with open(PATH_REPORTS+"analysis-phase1.txt","w+") as f:
         f.write(json.dumps(analysis))
     debug("store completed")
           
@@ -241,16 +230,9 @@ def experimentsPhase2():
         debug("doing analysis")
         analysis = analyse(report)
         debug("writing analysis")
-        with open(PATH_REPORTS+"TEMP-analysis-phase2.txt","w+") as f:
+        with open(PATH_REPORTS+"analysis-phase2.txt","w+") as f:
             f.write(json.dumps(analysis))
         debug("store completed")
-        
-    debug("doing analysis")
-    analysis = analyse(report)
-    debug("writing analysis")
-    with open(PATH_REPORTS+"analysis-phase2-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
-        f.write(json.dumps(analysis))
-    debug("store completed")
           
     return report
 
@@ -259,7 +241,7 @@ if __name__ == "__main__":
     start_time = time.time()
     generate_commits()
     debug("commits generated")
-    experimentsPhase1(lower=LOWER,upper=UPPER)
+    experimentsPhase1(4)
     experimentsPhase2()
     debug(f"Ended in {round(time.time() - start_time,2)} seconds")
     
