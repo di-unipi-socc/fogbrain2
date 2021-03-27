@@ -51,8 +51,7 @@ bwOK(N1, N2, ReqBW, FeatBW, [(N1,N2,AllocBW)|L], [(N1,N2,NewAllocBW)|L]):-
 bwOK(N1, N2, ReqBW, FeatBW, [(N3,N4,AllocBW)|L], [(N3,N4,AllocBW)|NewL]):-
 	\+ (N1 == N3, N2 == N4), bwOK(N1,N2,ReqBW,FeatBW,L,NewL).
 
-deploy(App, Placement, Alloc) :-
-	%application(App, _),
-	findall(service(S, SW, HW, TH), service(S, SW, HW, TH), ContextServices),
-	findall(s2s(S1, S2, LA, BW), s2s(S1, S2, LA, BW), ContextS2S),
-	assert(deployment(App, Placement, Alloc, (ContextServices, ContextS2S))).
+deploy(AppId, Placement, Alloc) :-
+	findall(service(S, SW, HW, TH), service(S, SW, HW, TH), CtxServices),
+	findall(s2s(S1, S2, LA, BW), s2s(S1, S2, LA, BW), CtxS2S),
+	assert(deployment(AppId, Placement, Alloc, (CtxServices, CtxS2S))).
