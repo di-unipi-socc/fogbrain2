@@ -1,4 +1,6 @@
-import random as r
+import networkx as nx
+import random as rnd
+import math
 
 def writeNodes(basename, number, caps, lista, f):
     for i in range(number):
@@ -78,6 +80,162 @@ def builder(nodesnumber, path="infra.pl"):
     printLinks(smartphones, smartphones, "15, 50", f)
 
     f.close()
+
+def set_node_as_cloud(node):
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[ubuntu]"
+    else:
+        node["software"] = "[ubuntu, mySQL, gcc, make]"
+
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "100"
+    else:
+        node["hardware"] = "inf"
+
+    node["iot"] = "[]"
+    node["handler"] = set_node_as_cloud
+    return node
+
+def set_node_as_ispdatacentre(node):
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[ubuntu]"
+    else:
+        node["software"] = "[ubuntu, mySQL]"
+
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "25"
+    else:
+        node["hardware"] = "50"
+        
+    node["iot"] = "[]"
+    node["handler"] = set_node_as_ispdatacentre
+    return node
+
+def set_node_as_cabinetserver(node):
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[ubuntu]"
+    else:
+        node["software"] = "[ubuntu, mySQL]"
+
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "10"
+    else:
+        node["hardware"] = "20"
+
+    node["iot"] = "[]"
+    node["handler"] = set_node_as_cabinetserver
+    return node
+
+def set_node_as_accesspoint(node):
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[ubuntu]"
+    else:
+        node["software"] = "[ubuntu, gcc, make]"
+
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "2"
+    else:
+        node["hardware"] = "4"
     
+    if rnd.random() > 0.97: #3%
+        node["iot"] = "[vrViewer]"
+    else:
+         node["iot"] = "[]"
+    node["handler"] = set_node_as_accesspoint
+    return node
+
+def set_node_as_smartphone(node):
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[andorid]"
+    else:
+        node["software"] = "[android, gcc, make]"
+
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "4"
+    else:
+        node["hardware"] = "8"
+
+    if rnd.random() > 0.95: #5%
+        node["iot"] = "[vrViewer]"
+    else:
+         node["iot"] = "[]"
+
+    node["handler"] = set_node_as_smartphone
+    return node
+
+def set_link(link):
+    link['latency'] = rnd.choice([5,10,25,50,100,150,200])
+    link['bandwidth'] = rnd.choice([2, 7, 20, 50, 100, 500])
+
+def generate_graph_infrastructure(n,m,seed = None):
+
+    G = nx.generators.random_graphs.barabasi_albert_graph(n,m,seed)
+
+    for i in range(0,n):
+        rand = rnd.random()
+        if rand > 0.9: #10%
+            set_node_as_cloud(G.nodes[i])
+        elif rand > 0.7: #20%
+            set_node_as_ispdatacentre(G.nodes[i])
+        elif rand > 0.4: #30%
+            set_node_as_cabinetserver(G.nodes[i])
+        elif rand > 0.2: #20%
+            set_node_as_accesspoint(G.nodes[i])
+        else: #20%
+            set_node_as_smartphone(G.nodes[i])
+
+    for (i,j) in G.edges():
+        set_link(G.edges[i,j])
+
+    return G
+
+def change_graph_infrastructure(G):
+    return G,"none"
+    
+def print_graph_infrastructure(G,n):
+    f = open("./infra.pl","w+")
+    for i in range(0,n):
+        node = G.nodes[i]
+        newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', '+node['iot']+').\n'
+        f.write(newnode)
+    for (i,j) in G.edges():
+        link=G.edges[i,j]
+        newlink='link(node'+str(i)+', node'+str(j)+', '+str(link['latency'])+', '+str(link['bandwidth'])+').\n'
+        f.write(newlink)
+    f.close()
+
 if __name__ == "__main__":
-    builder(3)
+    #builder(2)
+    nodes = 16
+    G = generate_graph_infrastructure(nodes, (int(math.log2(nodes))))
+    print_graph_infrastructure(G, nodes)

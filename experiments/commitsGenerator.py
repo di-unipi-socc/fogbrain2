@@ -22,18 +22,40 @@ def initial_commit():
     app.addS2S("vrDriver", "sceneSelector", 20, 1)
     
     return app
-    
 
-if __name__ == "__main__":
+def generate_commits(PATH):
     try:
-        os.mkdir(DIR)
+        os.mkdir(PATH)
     except OSError:
-        pass   
+        pass
     
     app = initial_commit()
-    add_commit(app, "initial")
+    add_commit(app, "initial", DIR=PATH)
     
-    app.removeService("videoStorage")
-    add_commit(app, "removedService")
+    app.addService("tokensDealer", ["ubuntu", "mySQL"], 20, [])
+    app.addService("userProfiler", ["gcc","make"], 2, [])
+    app.addS2S("userProfiler", "sceneSelector", 50, 2)
+    app.addS2S("sceneSelector", "userProfiler", 50, 2)
+    app.addS2S("userProfiler", "tokensDealer", 200, 0.5)
+    app.addS2S("tokensDealer", "userProfiler", 200, 1)
+    add_commit(app, "added2Services", DIR=PATH)
+    
+    app.removeService("tokensDealer")
+    add_commit(app, "removedService", DIR=PATH)
+    
+    app.modifyService("videoStorage", ["ubuntu","mySQL"], 30, [])
+    app.modifyService("userProfiler", ["gcc","make"], 2, ["vrViewer"])
+    add_commit(app, "changed2Services", DIR=PATH)
+    
+    app.addS2S("userProfiler", "videoStorage", 500, 1)
+    app.addS2S("videoStorage", "userProfiler", 500, 1)
+    add_commit(app, "added2S2S", DIR=PATH)
+    
+    app.removeS2S("sceneSelector","userProfiler")
+    add_commit(app, "removedS2S", DIR=PATH)
+    
+    app.modifyS2S("videoStorage", "userProfiler", 200, 1)
+    app.modifyS2S("userProfiler", "videoStorage", 200, 2)
+    add_commit(app, "changed2S2S", DIR=PATH)
     
     
