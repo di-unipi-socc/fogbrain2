@@ -1,4 +1,4 @@
-continuousReasoning(AppId, Placement, Alloc, Ctx, NewPlacement) :-
+reasoningStep(AppId, Placement, Alloc, Ctx, NewPlacement) :-
     appDiffs(AppId, Placement, Ctx, SToAdd, SToRemove, HWDiffs, BWDiffs),
     cleanDeployment(SToRemove, HWDiffs, BWDiffs, Placement, PPlacement, Alloc, PAlloc),
     replacement(AppId, SToAdd, PPlacement, PAlloc, NewPlacement).
