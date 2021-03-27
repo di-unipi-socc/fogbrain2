@@ -1,7 +1,7 @@
-placement(App, Placement) :-
+placement(AppId, Placement) :-
 	application(App, Services),
-	placement(Services, ([],[]), NewAlloc, [], Placement),
-	deploy(App, Placement, NewAlloc).
+	placement(Services, ([],[]), Alloc, [], Placement),
+	deploy(AppId, Placement, Alloc).
 
 placement([], (AllocHW, AllocBW), (AllocHW, AllocBW), Placement, Placement).
 placement([S|Ss], (AllocHW, AllocBW), NewAlloc, Placement, NewPlacement) :-
@@ -52,7 +52,7 @@ bwOK(N1, N2, ReqBW, FeatBW, [(N3,N4,AllocBW)|L], [(N3,N4,AllocBW)|NewL]):-
 	\+ (N1 == N3, N2 == N4), bwOK(N1,N2,ReqBW,FeatBW,L,NewL).
 
 deploy(App, Placement, Alloc) :-
-	application(App, _),
+	%application(App, _),
 	findall(service(S, SW, HW, TH), service(S, SW, HW, TH), ContextServices),
 	findall(s2s(S1, S2, LA, BW), s2s(S1, S2, LA, BW), ContextS2S),
 	assert(deployment(App, Placement, Alloc, (ContextServices, ContextS2S))).
