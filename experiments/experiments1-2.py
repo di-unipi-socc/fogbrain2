@@ -9,72 +9,42 @@ from builder import builder
 
 from commitsGenerator import *
 
-def do_experiments(runs, nodes):
-    debug(f"starting new session [nodes: {nodes} - runs: {runs}]")
-    report = {}
-    commits = get_commits(PATH)
-    
-    for run in range(runs):
-        report[run] = {"inferences":{
-                      }}
-                      
-        try:
-            prolog = get_new_prolog_instance()
-            debug("doing first placement")
-            next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',P,I).")) # first placement for reasoning
-            debug("done first placement")
-            for commit in commits:
-                debug(f"doing {commit} [reasoning]")
-                ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
-                report[run]["inferences"][commit] = {"reasoning":ans["I"]}
-                report[run]["inferences"][commit]["Placements"] = {"reasoning":parse(ans["P"])}
-                debug(f"completed {commit} [reasoning]")
-            
-            for commit in commits:
-                prolog = get_new_prolog_instance()
-                debug(f"doing {commit} [placement]")
-                ans = next(prolog.query(f"make,fogBrain('{PATH+commit}',P,I)."))
-                report[run]["inferences"][commit]["placement"] = ans["I"]
-                report[run]["inferences"][commit]["Placements"]["placement"] = parse(ans["P"])
-                debug(f"completed {commit} [placement]")
-            
-        except Exception as e:
-            debug(f"exception {e.__class__.__name__} at run {run}")
-            report[run]["excpetion"] = e.__class__.__name__
-            
-            
-        debug(f"completed {(run+1)/runs*100}%")
-        
-    debug("writing on file")
-    with open(PATH_REPORTS+"report-"+str(nodes)+"-"+str(runs)+"-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
-        f.write(json.dumps(report))
-    debug("store completed")
-            
-    return report
-        
 
-def experimentsPhase1(nodes):
-    debug("STARTING PHASE 1")
-    try:
-        os.mkdir(PATH_REPORTS)
-    except OSError:
-        pass
+def execute(commits):
     report = {}
-    builder(nodes)
-    debug("infrastructure generated")
-    report["phase1-nodes"+str(nodes*5)]=do_experiments(1,nodes)
+    try:
+        prolog = get_new_prolog_instance()
+        debug("doing first placement")
+        next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',_)."))
+        debug("completed first placement")
+        for commit in commits:
+            debug(f"doing {commit}")
+            ans = next(prolog.query(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2))."))
+            report[commit] = {"reasoning":{
+                "inferences": ans["Inferences1"],
+                #"placement": parse(ans["Placement1"]),
+                #"alloc": parse(ans["Alloc1"]),
+            }}
+            report[commit]["placement"] = {
+                "inferences": ans["Inferences2"],
+                #"placement": parse(ans["Placement2"]),
+                #"alloc": parse(ans["Alloc2"]),
+            }
+    except Exception as e:
+        debug(f"exception {e.__class__.__name__} at run {run}")
+        report["exception"] = e.__class__.__name__
     
-    debug("doing analysis")
-    analysis = analyse(report)
-    debug("writing analysis")
-    with open(PATH_REPORTS+"analysis-phase1.txt","w+") as f:
-        f.write(json.dumps(analysis))
-    debug("store completed")
-          
+    return report
+
+
+def do_experiments(nodes, commits):
+    debug(f"starting new session [nodes: {nodes} - runs: {1}]")
+    report = {}
+    report[0] = execute(commits)
     return report
     
-def experimentsPhase2():
-    debug("STARTING PHASE 2")
+def experimentsPhase1_2(commits):
+    debug("STARTING PHASE 1&2")
     try:
         os.mkdir(PATH_REPORTS)
     except OSError:
@@ -86,12 +56,12 @@ def experimentsPhase2():
     report = {}
     for infra in infrastructures:
         shutil.copyfile(PATH_INFRA+infra, "./infra.pl")
-        report[infra]=do_experiments(1,infra[:-3])
+        report[infra]=do_experiments(infra[:-3],commits)
         
         debug("doing analysis")
         analysis = analyse(report)
         debug("writing analysis")
-        with open(PATH_REPORTS+"analysis-phase2.txt","w+") as f:
+        with open(PATH_REPORTS+"analysis-phase1-2.txt","w+") as f:
             f.write(json.dumps(analysis))
         debug("store completed")
           
@@ -102,9 +72,9 @@ if __name__ == "__main__":
     import time
     start_time = time.time()
     generate_commits(PATH)
+    commits = get_commits(PATH)
     debug("commits generated")
-    experimentsPhase1(2)
-    experimentsPhase2()
+    experimentsPhase1_2(commits)
     debug(f"Ended in {round(time.time() - start_time,2)} seconds")
     
     

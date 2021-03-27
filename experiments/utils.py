@@ -48,18 +48,20 @@ def get_new_prolog_instance():
 
 def analyse(report):
     analysis = {}
+    analysis["fault"] = 0
     commits = get_commits(PATH)
     for nodes in report:
         analysis[nodes] = {}
         for commit in commits:
             analysis[nodes][commit] = {"placement":[], "reasoning":[]}
-        runs = 0
         for run in report[nodes]:
-            for commit in report[nodes][run]["inferences"]:
-                analysis[nodes][commit]["reasoning"].append(report[nodes][run]["inferences"][commit]["reasoning"])
-                
-                analysis[nodes][commit]["placement"].append(report[nodes][run]["inferences"][commit]["placement"])
-                
+            for commit in report[nodes][run]:
+                if commit == "exception":
+                    analysis["fault"]+=1
+                    continue
+                analysis[nodes][commit]["reasoning"].append(report[nodes][run][commit]["reasoning"]["inferences"])
+                analysis[nodes][commit]["placement"].append(report[nodes][run][commit]["placement"]["inferences"])
+            
         for commit in analysis[nodes]:
             try:
                 analysis[nodes][commit]["reasoning"] = sum(analysis[nodes][commit]["reasoning"])/len(analysis[nodes][commit]["reasoning"])

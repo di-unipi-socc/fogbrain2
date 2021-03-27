@@ -93,8 +93,6 @@ def set_node_as_cloud(node):
     rand = rnd.random()
     if rand > 0.9:
         node["hardware"] = "0"
-    elif rand > 0.7:
-        node["hardware"] = "100"
     else:
         node["hardware"] = "inf"
 
@@ -173,7 +171,7 @@ def set_node_as_smartphone(node):
     if rand > 0.9:
         node["software"] = "[]"
     elif rand > 0.7:
-        node["software"] = "[andorid]"
+        node["software"] = "[android]"
     else:
         node["software"] = "[android, gcc, make]"
 
@@ -228,13 +226,18 @@ def change_graph_infrastructure(G):
         for (i,j) in G.edges():
             link=G.edges[i,j]
             link["handler"](link)
+        return G, "changed"
+    return G,"none"
 
     
 def print_graph_infrastructure(G):
     f = open("./infra.pl","w+")
     for i in G.nodes:
         node = G.nodes[i]
-        newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', '+node['iot']+').\n'
+        if rnd.random() > 0.9:
+            newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', [vrViewer]).\n'
+        else:
+            newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', [lamp, ac]).\n'
         f.write(newnode)
     for (i,j) in G.edges():
         link=G.edges[i,j]
@@ -243,9 +246,9 @@ def print_graph_infrastructure(G):
     f.close()
 
 if __name__ == "__main__":
-    builder(2)
+    builder(3)
     input()
-    nodes = 16
+    nodes = 2048
     G = generate_graph_infrastructure(nodes, (int(math.log2(nodes))))
     print_graph_infrastructure(G)
     input()
