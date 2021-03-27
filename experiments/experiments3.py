@@ -10,7 +10,7 @@ from commitsGenerator import *
 
 from builder import *
 
-RUNS = 1
+RUNS = 100
 EPOCHS = 1
 LOWER = 4
 UPPER = 12
@@ -63,10 +63,6 @@ def experimentsPhase3(runs, epochs, lower, upper, commits):
         nodes = pow(2,i)
         debug(f"STARTING SESSION {nodes} nodes")
         report[nodes]=do_experiments(runs, epochs, nodes, commits)
-    
-        with open(PATH_REPORTS+"report-"+str(nodes)+"-phase3-"+datetime.now().strftime('%d-%m-%Y-%H-%M-%S')+".txt","w+") as f:
-            f.write(json.dumps(report))
-        debug("store completed")
 
         debug("doing analysis")
         analysis = analyse(report)
