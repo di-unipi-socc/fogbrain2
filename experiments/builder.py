@@ -196,12 +196,13 @@ def set_node_as_smartphone(node):
 def set_link(link):
     link['latency'] = rnd.choice([5,10,25,50,100,150,200])
     link['bandwidth'] = rnd.choice([2, 7, 20, 50, 100, 500])
+    link["handler"] = set_link
 
 def generate_graph_infrastructure(n,m,seed = None):
 
     G = nx.generators.random_graphs.barabasi_albert_graph(n,m,seed)
 
-    for i in range(0,n):
+    for i in G.nodes:
         rand = rnd.random()
         if rand > 0.9: #10%
             set_node_as_cloud(G.nodes[i])
@@ -220,11 +221,18 @@ def generate_graph_infrastructure(n,m,seed = None):
     return G
 
 def change_graph_infrastructure(G):
-    return G,"none"
+    if rnd.random() > 0.5:
+        for i in G.nodes:
+            node = G.nodes[i]
+            node["handler"](node)
+        for (i,j) in G.edges():
+            link=G.edges[i,j]
+            link["handler"](link)
+
     
-def print_graph_infrastructure(G,n):
+def print_graph_infrastructure(G):
     f = open("./infra.pl","w+")
-    for i in range(0,n):
+    for i in G.nodes:
         node = G.nodes[i]
         newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', '+node['iot']+').\n'
         f.write(newnode)
@@ -235,7 +243,14 @@ def print_graph_infrastructure(G,n):
     f.close()
 
 if __name__ == "__main__":
-    #builder(2)
+    builder(2)
+    input()
     nodes = 16
     G = generate_graph_infrastructure(nodes, (int(math.log2(nodes))))
-    print_graph_infrastructure(G, nodes)
+    print_graph_infrastructure(G)
+    input()
+    change_graph_infrastructure(G)
+    print_graph_infrastructure(G)
+    input()
+    change_graph_infrastructure(G)
+    print_graph_infrastructure(G)
