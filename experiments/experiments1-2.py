@@ -195,7 +195,7 @@ def experimentsPhase1(nodes):
     report = {}
     generate_infrastructure(nodes)
     debug("infrastructure generated")
-    report["phase1"]=do_experiments(1,nodes)
+    report["phase1-nodes"+str(nodes*5)]=do_experiments(1,nodes)
     
     debug("doing analysis")
     analysis = analyse(report)
@@ -236,7 +236,7 @@ if __name__ == "__main__":
     start_time = time.time()
     generate_commits()
     debug("commits generated")
-    experimentsPhase1(4)
+    experimentsPhase1(1)
     experimentsPhase2()
     debug(f"Ended in {round(time.time() - start_time,2)} seconds")
     
