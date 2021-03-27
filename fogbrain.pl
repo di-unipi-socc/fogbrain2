@@ -18,7 +18,7 @@ bwTh(0.2).
 fogBrain(AppSpec, NewPlacement) :-
 	consult('infra.pl'), consult(AppSpec),
 	application(AppId,_), deployment(AppId, Placement, Alloc, Context),
-	reasoningStep(AppId, Placement, Alloc, Context, NewPlacement),
+	continuousReasoning(AppId, Placement, Alloc, Context, NewPlacement),
 	unload_file(AppSpec).
 fogBrain(AppSpec, Placement) :-
 	application(AppId,_), \+deployment(AppId,_,_,_),

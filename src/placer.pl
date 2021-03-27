@@ -1,5 +1,5 @@
 placement(AppId, Placement) :-
-	application(App, Services),
+	application(AppId, Services),
 	placement(Services, ([],[]), Alloc, [], Placement),
 	deploy(AppId, Placement, Alloc).
 
