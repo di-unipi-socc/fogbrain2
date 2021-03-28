@@ -11,17 +11,17 @@ from commitsGenerator import *
 from builder import *
 
 RUNS = 30
-EPOCHS = 1
+EPOCHS = 10
 LOWER = 4
 UPPER = 12
 
 def execute(prolog, commit, report):
     ans = next(prolog.query(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2))."))
-    ans = next(prolog.query(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2))."))
-    print(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2)).")
-    """
+    #ans = next(prolog.query(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2))."))
+    #print(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2)).")
     report["reasoning"]["inferences"] += ans["Inferences1"]
     report["placement"]["inferences"] += ans["Inferences2"]
+    """
     print(ans["Inferences1"])
     print(parse(ans["Placement1"]))
     print(ans["Inferences2"])
@@ -52,9 +52,9 @@ def do_experiments(runs, epochs, nodes, commits):
                 }
                 for epoch in range(epochs):
                     execute(prolog, commit, report[run][commit])
-                    #infra,_ = change_graph_infrastructure(infra)
+                    #infra = generate_graph_infrastructure(nodes,int(math.log2(nodes)))
                     #print_graph_infrastructure(infra)
-        except Exception as e:
+        except StopIteration as e:
             debug(f"!!!EXCEPTION!!! {e.__class__.__name__} at run {run}")
             report[run]["exception"] = e.__class__.__name__
 
