@@ -162,7 +162,7 @@ def set_node_as_accesspoint(node):
     if rnd.random() > 0.97: #3%
         node["iot"] = "[vrViewer]"
     else:
-         node["iot"] = "[sensor4, vrViewer]"
+         node["iot"] = "[sensor4]"
     node["handler"] = set_node_as_accesspoint
     return node
 
@@ -186,7 +186,7 @@ def set_node_as_smartphone(node):
     if rnd.random() > 0.95: #5%
         node["iot"] = "[vrViewer]"
     else:
-         node["iot"] = "[ac, lamp, vrViewer]"
+         node["iot"] = "[ac, lamp]"
 
     node["handler"] = set_node_as_smartphone
     return node
