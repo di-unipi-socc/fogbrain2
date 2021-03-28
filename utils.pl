@@ -5,6 +5,8 @@ checkAppSpec() :-
 	msort(Services, SServices), msort(ServiceDecl, SServiceDecl),
 	SServices=SServiceDecl.
 
+del:- retract(deployment(vrApp,_,_,_)).
+
 deployment(App) :-
 	deployment(App, Placement, (AllocHW, AllocBW), (Services, S2Ss)),
 	write('App: '), writeln(App),
@@ -31,10 +33,9 @@ testFogBrain(AppId, Placement) :-
 	\+deployment(AppId,_,_,_),
 	placement(AppId, Placement).
 
-
 assessFogBrain(AppSpec, (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2)) :-
 	consult('deployment.pl'),
-	consult('infra.pl'), consult(AppSpec),
+	consult(AppSpec),
 	application(AppId,_), 
 	stat(testFogBrain(AppId, Placement1), Inferences1),
 	deployment(AppId, Placement1, Alloc1, Ctx),

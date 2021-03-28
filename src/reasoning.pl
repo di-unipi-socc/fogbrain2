@@ -100,7 +100,7 @@ s2sDiff(S1, S2, ReqLat, ReqBW, Placement, CtxS2S, diff(S1,N1,S2,N2,(ReqLat,ReqBW
     member(on(S1,N1),Placement), member(on(S2,N2),Placement), dif(N1,N2). % already placed services
 s2sDiff(S1, S2, _, _, Placement, _, pass) :-
    ( \+ (member(on(S1,_),Placement), member(on(S2,_),Placement)) ) ; % new s2s: at least one non-placed service  \+ member(s2s(S1, S2, _, _), CtxS2S),
-   ( member(on(S1,N1),Placement), member(on(S2,N2),Placement), N1=N2 ).  % same node   
+   ( member(on(S1,N),Placement), member(on(S2,N),Placement) ).  % same node   
 
 sortS2S(D, _, _, HWDiffs, HWDiffs, SToRemove, SToAdd, BWDiffs, SToRemove, SToAdd, BWDiffs) :-
     D=pass; ( D = diff(S1,N1,S2,N2,_), member(diff(S1,N1,S2,N2,_), BWDiffs) ). % it's a pass or it's already to be removed fully

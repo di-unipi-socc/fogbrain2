@@ -1,4 +1,3 @@
-node(cloud0,[ubuntu, mySQL, gcc, make], inf, []).
 node(cloud1,[ubuntu, mySQL, gcc, make], inf, []).
 node(cloud2,[ubuntu, mySQL, gcc, make], inf, []).
 node(ispdatacentre0,[ubuntu, mySQL], 50, []).
@@ -14,42 +13,26 @@ node(smartphone0,[android, gcc, make], 8, [vrViewer]).
 node(smartphone1,[android, gcc, make], 8, [vrViewer]).
 node(smartphone2,[android, gcc, make], 8, [vrViewer]).
 
-link(cloud0, cloud1, 20, 1000).
-link(cloud0, cloud2, 20, 1000).
-link(cloud1, cloud0, 20, 1000).
 link(cloud1, cloud2, 20, 1000).
-link(cloud2, cloud0, 20, 1000).
 link(cloud2, cloud1, 20, 1000).
-link(cloud0, ispdatacentre0, 110, 1000).
-link(cloud0, ispdatacentre1, 110, 1000).
-link(cloud0, ispdatacentre2, 110, 1000).
 link(cloud1, ispdatacentre0, 110, 1000).
 link(cloud1, ispdatacentre1, 110, 1000).
 link(cloud1, ispdatacentre2, 110, 1000).
 link(cloud2, ispdatacentre0, 110, 1000).
 link(cloud2, ispdatacentre1, 110, 1000).
 link(cloud2, ispdatacentre2, 110, 1000).
-link(cloud0, cabinetserver0, 1350, 100).
-link(cloud0, cabinetserver1, 135, 100).
-link(cloud0, cabinetserver2, 135, 100).
-link(cloud1, cabinetserver0, 135, 100).
+link(cloud1, cabinetserver0, 1350, 100).
 link(cloud1, cabinetserver1, 135, 100).
 link(cloud1, cabinetserver2, 135, 100).
 link(cloud2, cabinetserver0, 135, 100).
 link(cloud2, cabinetserver1, 135, 100).
 link(cloud2, cabinetserver2, 135, 100).
-link(cloud0, accesspoint0,  148, 20).
-link(cloud0, accesspoint1,  148, 20).
-link(cloud0, accesspoint2,  148, 20).
 link(cloud1, accesspoint0,  148, 20).
 link(cloud1, accesspoint1,  148, 20).
 link(cloud1, accesspoint2,  148, 20).
 link(cloud2, accesspoint0,  148, 20).
 link(cloud2, accesspoint1,  148, 20).
 link(cloud2, accesspoint2,  148, 20).
-link(cloud0, smartphone0, 150, 18).
-link(cloud0, smartphone1, 150, 18).
-link(cloud0, smartphone2, 150, 18).
 link(cloud1, smartphone0, 150, 18).
 link(cloud1, smartphone1, 150, 18).
 link(cloud1, smartphone2, 150, 18).
@@ -57,13 +40,10 @@ link(cloud2, smartphone0, 150, 18).
 link(cloud2, smartphone1, 150, 18).
 link(cloud2, smartphone2, 150, 18).
 
-link(ispdatacentre0, cloud0, 110, 1000).
 link(ispdatacentre0, cloud1, 110, 1000).
 link(ispdatacentre0, cloud2, 110, 1000).
-link(ispdatacentre1, cloud0, 110, 1000).
 link(ispdatacentre1, cloud1, 110, 1000).
 link(ispdatacentre1, cloud2, 110, 1000).
-link(ispdatacentre2, cloud0, 110, 1000).
 link(ispdatacentre2, cloud1, 110, 1000).
 link(ispdatacentre2, cloud2, 110, 1000).
 link(ispdatacentre0, ispdatacentre1, 20, 1000).
@@ -100,13 +80,10 @@ link(ispdatacentre2, smartphone0, 20, 1000).
 link(ispdatacentre2, smartphone1, 20, 1000).
 link(ispdatacentre2, smartphone2, 20, 1000).
 
-link(cabinetserver0, cloud0, 135, 100).
 link(cabinetserver0, cloud1, 135, 100).
 link(cabinetserver0, cloud2, 135, 100).
-link(cabinetserver1, cloud0, 135, 100).
 link(cabinetserver1, cloud1, 135, 100).
 link(cabinetserver1, cloud2, 135, 100).
-link(cabinetserver2, cloud0, 135, 100).
 link(cabinetserver2, cloud1, 135, 100).
 link(cabinetserver2, cloud2, 135, 100).
 link(cabinetserver0, ispdatacentre0, 25, 500).
@@ -143,13 +120,10 @@ link(cabinetserver2, smartphone0, 15, 35).
 link(cabinetserver2, smartphone1, 15, 35).
 link(cabinetserver2, smartphone2, 15, 35).
 
-link(accesspoint0, cloud0, 148, 3).
 link(accesspoint0, cloud1, 148, 3).
 link(accesspoint0, cloud2, 148, 3).
-link(accesspoint1, cloud0, 148, 3).
 link(accesspoint1, cloud1, 148, 3).
 link(accesspoint1, cloud2, 148, 3).
-link(accesspoint2, cloud0, 148, 3).
 link(accesspoint2, cloud1, 148, 3).
 link(accesspoint2, cloud2, 148, 3).
 link(accesspoint0, ispdatacentre0, 38, 4).
@@ -186,13 +160,10 @@ link(accesspoint2, smartphone0, 2, 70).
 link(accesspoint2, smartphone1, 2, 70).
 link(accesspoint2, smartphone2, 2, 70).
 
-link(smartphone0, cloud0, 150, 2).
 link(smartphone0, cloud1, 150, 2).
 link(smartphone0, cloud2, 150, 2).
-link(smartphone1, cloud0, 150, 2).
 link(smartphone1, cloud1, 150, 2).
 link(smartphone1, cloud2, 150, 2).
-link(smartphone2, cloud0, 150, 2).
 link(smartphone2, cloud1, 150, 2).
 link(smartphone2, cloud2, 150, 2).
 link(smartphone0, ispdatacentre0, 40, 2.5).

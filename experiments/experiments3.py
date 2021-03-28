@@ -11,13 +11,14 @@ from commitsGenerator import *
 
 from builder import *
 
-RUNS = 10
+RUNS = 1
 EPOCHS = 1
-LOWER = 4
+LOWER = 1
 UPPER = 12
 
 def execute(prolog, commit, report):
     ans = next(prolog.query(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2))."))
+
     #ans = next(prolog.query(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2))."))
     #print(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2)).")
     report["reasoning"]["inferences"] += ans["Inferences1"]
@@ -28,17 +29,19 @@ def execute(prolog, commit, report):
     print(ans["Inferences2"])
     print(parse(ans["Placement2"]))
     """
+    return ans
     
 
 def do_experiments(runs, epochs, nodes, commits):
     report = {}
     for run in range(runs):
-        prolog = get_new_prolog_instance()
-        report[run]={}
-        debug(f"starting run {run}")
-        infra = generate_graph_infrastructure(nodes,int(math.log2(nodes)))
-        print_graph_infrastructure(infra)
         try:
+            prolog = get_new_prolog_instance()
+            report[run]={}
+            debug(f"starting run {run}")
+            builder(nodes)
+            #infra = generate_graph_infrastructure(nodes,int(math.log2(nodes)))
+            #print_graph_infrastructure(infra)
             debug("doing first placement")
             next(prolog.query(f"make,fogBrain('{PATH+commits[0]}',_)."))
             debug("completed first placement")
@@ -53,17 +56,11 @@ def do_experiments(runs, epochs, nodes, commits):
                     },
                 }
                 for epoch in range(epochs):
-                    #input()
-                    #time.sleep(1)
+                    prolog = get_new_prolog_instance()
+                    prolog.consult('infra.pl')
                     execute(prolog, commit, report[run][commit])
-                    #infra = generate_graph_infrastructure(nodes,int(math.log2(nodes)))
-                    #print_graph_infrastructure(infra)
-        except StopIteration as e:
-            debug(f"!!!EXCEPTION!!! {e.__class__.__name__} at run {run}")
-            report[run]["exception"] = e.__class__.__name__
-        except PrologError as e:
-            debug(f"!!!EXCEPTION!!! {e.__class__.__name__} at run {run}")
-            report[run]["exception"] = e.__class__.__name__
+        except :
+            print("error")
 
     return report
         

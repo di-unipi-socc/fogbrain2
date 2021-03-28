@@ -192,13 +192,13 @@ def set_node_as_smartphone(node):
     return node
 
 def set_link(link):
-    link['latency'] = rnd.choice([5,10,25,50,100,150,200])
-    link['bandwidth'] = rnd.choice([2, 7, 20, 50, 100, 500])
+    link['latency'] = rnd.choice([5,10,25,50,100,150])
+    link['bandwidth'] = rnd.choice([10, 20, 50, 100, 500])
     link["handler"] = set_link
 
 def generate_graph_infrastructure(n,m,seed = None):
 
-    G = nx.generators.random_graphs.barabasi_albert_graph(n,m,seed)
+    G = nx.generators.complete_graph(n)
 
     for i in G.nodes:
         rand = rnd.random()
