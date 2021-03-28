@@ -10,15 +10,23 @@ from commitsGenerator import *
 
 from builder import *
 
-RUNS = 1000
+RUNS = 30
 EPOCHS = 1
 LOWER = 4
 UPPER = 12
 
 def execute(prolog, commit, report):
     ans = next(prolog.query(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2))."))
+    ans = next(prolog.query(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2))."))
+    print(f"make,assessFogBrain('{PATH+commit}', (Inferences1, Placement1, Alloc1), (Inferences2, Placement2, Alloc2)).")
+    """
     report["reasoning"]["inferences"] += ans["Inferences1"]
     report["placement"]["inferences"] += ans["Inferences2"]
+    print(ans["Inferences1"])
+    print(parse(ans["Placement1"]))
+    print(ans["Inferences2"])
+    print(parse(ans["Placement2"]))
+    """
 
 def do_experiments(runs, epochs, nodes, commits):
     report = {}
@@ -43,14 +51,9 @@ def do_experiments(runs, epochs, nodes, commits):
                     },
                 }
                 for epoch in range(epochs):
-                    #assert del deployment qui new_prolog_instance
                     execute(prolog, commit, report[run][commit])
                     #infra,_ = change_graph_infrastructure(infra)
                     #print_graph_infrastructure(infra)
-                    for p in prolog.query("retractall(node(_,_,_,_)),fail"):
-                        pass
-                    for p in prolog.query("retractall(link(_,_,_,_)),fail"):
-                        pass
         except Exception as e:
             debug(f"!!!EXCEPTION!!! {e.__class__.__name__} at run {run}")
             report[run]["exception"] = e.__class__.__name__

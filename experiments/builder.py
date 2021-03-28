@@ -96,7 +96,7 @@ def set_node_as_cloud(node):
     else:
         node["hardware"] = "inf"
 
-    node["iot"] = "[]"
+    node["iot"] = "[sensor1, sensor2, senso3]"
     node["handler"] = set_node_as_cloud
     return node
 
@@ -117,7 +117,7 @@ def set_node_as_ispdatacentre(node):
     else:
         node["hardware"] = "50"
         
-    node["iot"] = "[]"
+    node["iot"] = "[sensor2]"
     node["handler"] = set_node_as_ispdatacentre
     return node
 
@@ -138,7 +138,7 @@ def set_node_as_cabinetserver(node):
     else:
         node["hardware"] = "20"
 
-    node["iot"] = "[]"
+    node["iot"] = "[sensor1, sensor3]"
     node["handler"] = set_node_as_cabinetserver
     return node
 
@@ -162,7 +162,7 @@ def set_node_as_accesspoint(node):
     if rnd.random() > 0.97: #3%
         node["iot"] = "[vrViewer]"
     else:
-         node["iot"] = "[]"
+         node["iot"] = "[sensor4]"
     node["handler"] = set_node_as_accesspoint
     return node
 
@@ -186,7 +186,7 @@ def set_node_as_smartphone(node):
     if rnd.random() > 0.95: #5%
         node["iot"] = "[vrViewer]"
     else:
-         node["iot"] = "[]"
+         node["iot"] = "[ac, lamp]"
 
     node["handler"] = set_node_as_smartphone
     return node
@@ -234,26 +234,23 @@ def print_graph_infrastructure(G):
     f = open("./infra.pl","w+")
     for i in G.nodes:
         node = G.nodes[i]
-        if rnd.random() > 0.9:
-            newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', [vrViewer]).\n'
-        else:
-            newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', [lamp, ac]).\n'
+        newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', '+node['iot']+').\n'
         f.write(newnode)
     for (i,j) in G.edges():
         link=G.edges[i,j]
         newlink='link(node'+str(i)+', node'+str(j)+', '+str(link['latency'])+', '+str(link['bandwidth'])+').\n'
         f.write(newlink)
+        newlink='link(node'+str(j)+', node'+str(i)+', '+str(link['latency'])+', '+str(link['bandwidth'])+').\n'
+        f.write(newlink)
     f.close()
 
 if __name__ == "__main__":
     builder(3)
-    input()
-    nodes = 2048
+    nodes = 1024
     G = generate_graph_infrastructure(nodes, (int(math.log2(nodes))))
     print_graph_infrastructure(G)
     input()
-    change_graph_infrastructure(G)
-    print_graph_infrastructure(G)
-    input()
-    change_graph_infrastructure(G)
-    print_graph_infrastructure(G)
+    while True:
+        change_graph_infrastructure(G)
+        print_graph_infrastructure(G)
+        input()
