@@ -1,3 +1,4 @@
+from pyswip.prolog import PrologError
 from utils import *
 
 from pyswip import Prolog, Functor, Atom
@@ -11,7 +12,7 @@ from commitsGenerator import *
 from builder import *
 
 RUNS = 30
-EPOCHS = 10
+EPOCHS = 1
 LOWER = 4
 UPPER = 12
 
@@ -27,6 +28,7 @@ def execute(prolog, commit, report):
     print(ans["Inferences2"])
     print(parse(ans["Placement2"]))
     """
+    
 
 def do_experiments(runs, epochs, nodes, commits):
     report = {}
@@ -51,10 +53,15 @@ def do_experiments(runs, epochs, nodes, commits):
                     },
                 }
                 for epoch in range(epochs):
+                    #input()
+                    #time.sleep(1)
                     execute(prolog, commit, report[run][commit])
                     #infra = generate_graph_infrastructure(nodes,int(math.log2(nodes)))
                     #print_graph_infrastructure(infra)
         except StopIteration as e:
+            debug(f"!!!EXCEPTION!!! {e.__class__.__name__} at run {run}")
+            report[run]["exception"] = e.__class__.__name__
+        except PrologError as e:
             debug(f"!!!EXCEPTION!!! {e.__class__.__name__} at run {run}")
             report[run]["exception"] = e.__class__.__name__
 

@@ -96,7 +96,7 @@ def set_node_as_cloud(node):
     else:
         node["hardware"] = "inf"
 
-    node["iot"] = "[sensor1, sensor2, senso3]"
+    node["iot"] = "[sensor1, sensor2, sensor3]"
     node["handler"] = set_node_as_cloud
     return node
 
