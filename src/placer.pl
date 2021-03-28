@@ -26,16 +26,16 @@ hwReqsOK(HWReqs, HWCaps, N, [], [(N,HWReqs)]) :-
 hwReqsOK(HWReqs, HWCaps, N, [(N,AllocHW)|L], [(N,NewAllocHW)|L]) :-
 	NewAllocHW is AllocHW + HWReqs, hwTh(T), HWCaps >= NewAllocHW + T.
 hwReqsOK(HWReqs, HWCaps, N, [(N1,AllocHW)|L], [(N1,AllocHW)|NewL]) :-
-	N \== N1, hwReqsOK(HWReqs, HWCaps, N, L, NewL).
+	dif(N,N1), hwReqsOK(HWReqs, HWCaps, N, L, NewL).
 
 flowOK(S, N, Placement, AllocBW, NewAllocBW) :-
 	findall(n2n(N1,N2,ReqLat,ReqBW), interested(N1,N2,ReqLat,ReqBW,S,N,Placement), N2Ns),
 	serviceFlowOK(N2Ns, AllocBW, NewAllocBW).
 
 interested(N, N2, ReqLat, ReqBW, S, N, Placement) :-
-	s2s(S, S2, ReqLat, ReqBW), member(on(S2,N2), Placement), N\==N2.
+	s2s(S, S2, ReqLat, ReqBW), member(on(S2,N2), Placement), dif(N,N2).
 interested(N1, N, ReqLat, ReqBW, S, N, Placement) :-
-	s2s(S1, S, ReqLat, ReqBW), member(on(S1,N1), Placement), N\==N1.
+	s2s(S1, S, ReqLat, ReqBW), member(on(S1,N1), Placement), dif(N,N1).
 
 serviceFlowOK([], AllocBW, AllocBW).
 serviceFlowOK([n2n(N1,N2,ReqLat,ReqBW)|Ss], AllocBW, NewAllocBW) :-

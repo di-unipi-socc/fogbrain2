@@ -12,12 +12,12 @@ cleanDeployment(SToRemove, HWDiffs, BWDiffs, Placement, PPlacement, Alloc, PAllo
     cleanPlacement(Placement, SToRemove, PPlacement),
     cleanResourceAllocation(HWDiffs, BWDiffs, Alloc, PAlloc).  
 
-replacement(A, [], Placement, Alloc, Placement) :-
-    retract(deployment(A, _, _, _)), deploy(A, Placement, Alloc).
-replacement(A, ServicesToPlace, Placement, Alloc, NewPlacement) :-
-    dif(ServicesToPlace,[]), retract(deployment(A, _, _, _)),
-    placement(ServicesToPlace, Alloc, NewAlloc, Placement, NewPlacement),
-    deploy(A, NewPlacement, NewAlloc).
+replacement(AppId, [], Placement, PAlloc, Placement) :-
+    retract(deployment(AppId, _, _, _)), deploy(AppId, Placement, PAlloc).
+replacement(AppId, SToAdd, Placement, PAlloc, NewPlacement) :-
+    dif(SToAdd,[]), retract(deployment(AppId, _, _, _)),
+    placement(SToAdd, PAlloc, NewAlloc, Placement, NewPlacement),
+    deploy(AppId, NewPlacement, NewAlloc).
 
 serviceDiffs(AppId, Placement, Ctx, SToAdd, HWDiffs, SToRemove) :-
     application(AppId, Services), Ctx=(CtxServices,_),
