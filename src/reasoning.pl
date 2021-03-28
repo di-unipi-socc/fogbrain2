@@ -169,7 +169,7 @@ assembleBW((_,_,AllocatedBW), L, L) :- AllocatedBW =:= 0.
 assembleBW((N1,N2,AllocatedBW), L, [(N1,N2,AllocatedBW)|L]) :- AllocatedBW>0.
 
 assembleDiff(S1, N1, HWDiff, [], [diff(S1,N1,HWDiff)]).
-assembleDiff(S1, N1, HWDiff, [diff(S1,N1,OldHWDiff)|HWDiffs], [diff(S1,N1,MinHWDiff)|HWDiffs]) :-
+assembleDiff(S1, N1, HWDiff, [diff(S1,N1,(SWReq,OldHWDiff,TReq))|HWDiffs], [diff(S1,N1,(SWReq,MinHWDiff,TReq))|HWDiffs]) :-
     MinHWDiff is min(HWDiff, OldHWDiff).
-assembleDiff(S1, N1, HWDiff, [diff(S2,N2,HWDiff2)|HWDiffs], [diff(S2,N2,HWDiff2)|NewHWDiffs]) :-
+assembleDiff(S1, N1, HWDiff, [diff(S2,N2,Diff)|HWDiffs], [diff(S2,N2,Diff)|NewHWDiffs]) :-
     (dif(S1,S2); dif(N1,N2)), assembleDiff(S1, N1, HWDiff, HWDiffs, NewHWDiffs).
