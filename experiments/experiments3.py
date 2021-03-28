@@ -11,7 +11,7 @@ from commitsGenerator import *
 
 from builder import *
 
-RUNS = 30
+RUNS = 10
 EPOCHS = 1
 LOWER = 4
 UPPER = 12
