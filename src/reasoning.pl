@@ -9,8 +9,8 @@ appDiffs(AppId, Placement, Ctx, SToAdd, SToRemove, HWDiffs, BWDiffs) :-
     union(SToAdd1,SToAdd2,SToAdd), union(SToRemove1,SToRemove2,SToRemove).
 
 cleanDeployment(SToRemove, HWDiffs, BWDiffs, Placement, PPlacement, Alloc, PAlloc) :-
-    cleanResourceAllocation(HWDiffs, BWDiffs, Alloc, PAlloc),
-    cleanPlacement(Placement, SToRemove, PPlacement).
+    cleanPlacement(Placement, SToRemove, PPlacement),
+    cleanResourceAllocation(HWDiffs, BWDiffs, Alloc, PAlloc).  
 
 replacement(A, [], Placement, Alloc, Placement) :-
     retract(deployment(A, _, _, _)), deploy(A, Placement, Alloc).
