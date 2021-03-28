@@ -42,7 +42,7 @@ serviceDiff(S, Placement, CtxServices, diff(S,N,(SWReqs,HWDiff,TReqs))) :-
     member(service(S, _, HWReqsOld, _),CtxServices),
     service(S, SWReqs, HWReqs, TReqs),
     HWDiff is HWReqs - HWReqsOld,
-    (member(on(S,N),Placement); N=none).
+    member(on(S,N),Placement). 
 serviceDiff(S, _, CtxServices, diff(S,none,(SWReqs,HWReqs,TReqs))) :-
     \+ member(service(S, _, _, _),CtxServices),
     service(S, SWReqs, HWReqs, TReqs).
@@ -64,7 +64,7 @@ serviceToMigrate(N,_) :-
     \+ node(N, _, _, _).
 
 serviceToUpdate(N,(SWReqs,HWDiff,TReqs), HWDiffs) :-
-    HWDiff =\= 0, node(N, SWCaps, HWCaps, TCaps),
+    HWDiff =\= 0, node(N, SWCaps, HWCaps, TCaps), 
     sumHWDiffs(N, HWDiffs, HWUpdate),
     swReqsOK(SWReqs, SWCaps), 
     hwTh(T), HWCaps > HWUpdate + HWDiff + T, 
@@ -108,7 +108,7 @@ sortS2S(diff(S1,N1,S2,N2,Diff), _, _, HWDiffs, HWDiffs, SToRemove, SToAdd, BWDif
     \+ member(diff(S1,N1,S2,N2,_), BWDiffs), s2sToUpdate(N1,N2,Diff,BWDiffs).
 sortS2S(diff(S1,N1,S2,N2,Diff), CtxServices, _, HWDiffs1, HWDiffs, SToRemove, SToAdd, BWDiffs, NewSToRemove, NewSToAdd, [diff(S1,N1,S2,N2,Diff)|BWDiffs]) :-
     \+ member(diff(S1,N1,S2,N2,_), BWDiffs), 
-    s2sToReplace(N1,N2,Diff,BWDiffs),
+    s2sToMigrate(N1,N2,Diff,BWDiffs),
     serviceDiff(S1, [on(S1,N1)], CtxServices, diff(_,_,(_,HWDiff1,_))), assembleDiff(S1,N1,HWDiff1,HWDiffs1,TmpHWDiffs),
     serviceDiff(S2, [on(S2,N2)], CtxServices, diff(_,_,(_,HWDiff2,_))), assembleDiff(S2,N2,HWDiff2,TmpHWDiffs,HWDiffs), 
     union([S1,S2],SToRemove,NewSToRemove), union([S1,S2],SToAdd,NewSToAdd).
@@ -116,16 +116,15 @@ sortS2S(D, _, _, HWDiffs, HWDiffs, SToRemove, SToAdd, BWDiffs, SToRemove, SToAdd
     D = diff(_,_,_,_,(_,BWDiff)), BWDiff =:= 0. %LatDiff =:= 0
 
 s2sToUpdate(N1,N2,(ReqLat,BWDiff),BWDiffs):-
-    BWDiff =\= 0,
+    BWDiff =\= 0, link(N1,N2,FeatLat,FeatBW),
     sumBWDiffs(N1,N2,BWDiffs,BWUpdate),
-    link(N1,N2,FeatLat,FeatBW),
     FeatLat =< ReqLat, bwTh(T), FeatBW >= BWUpdate + BWDiff + T.
 
-s2sToReplace(N1,N2,(ReqLat,BWDiff),BWDiffs):- 
+s2sToMigrate(N1,N2,(ReqLat,BWDiff),BWDiffs):- 
     link(N1,N2,FeatLat,FeatBW),
     sumBWDiffs(N1,N2,BWDiffs,BWUpdate),
     bwTh(T), \+ (FeatLat =< ReqLat, FeatBW >= BWUpdate + BWDiff + T).
-s2sToReplace(N1,N2,_, _):-
+s2sToMigrate(N1,N2,_, _):-
     \+ link(N1,N2,_,_).
 
 cleanResourceAllocation(HWDiffs, BWDiffs, (AllocHW, AllocBW), (NewAllocHW, NewAllocBW)) :-
