@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node(cloud, [ubuntu, mySQL, gcc, make], inf, []).
 node(ispdatacentre, [ubuntu, mySQL], 50, []).
 node(cabinetserver, [ubuntu, mySQL], 20, []).
@@ -27,3 +28,5 @@ link(smartphone, ispdatacentre, 40, 2.5).
 link(smartphone, cabinetserver, 15, 3).
 link(smartphone, accesspoint, 2, 70).
 
+=======
+>>>>>>> 66b0f0396a84e6b286c81124061e56279b479461
