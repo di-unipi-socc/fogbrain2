@@ -94,9 +94,9 @@ def set_node_as_cloud(node):
     if rand > 0.9:
         node["hardware"] = "0"
     else:
-        node["hardware"] = "50"
+        node["hardware"] = "inf"
 
-    node["iot"] = "[]"
+    node["iot"] = "[sensor1, sensor2, senso3]"
     node["handler"] = set_node_as_cloud
     return node
 
@@ -117,7 +117,7 @@ def set_node_as_ispdatacentre(node):
     else:
         node["hardware"] = "50"
         
-    node["iot"] = "[]"
+    node["iot"] = "[sensor2]"
     node["handler"] = set_node_as_ispdatacentre
     return node
 
@@ -138,7 +138,7 @@ def set_node_as_cabinetserver(node):
     else:
         node["hardware"] = "20"
 
-    node["iot"] = "[]"
+    node["iot"] = "[sensor1, sensor3]"
     node["handler"] = set_node_as_cabinetserver
     return node
 
@@ -162,7 +162,7 @@ def set_node_as_accesspoint(node):
     if rnd.random() > 0.97: #3%
         node["iot"] = "[vrViewer]"
     else:
-         node["iot"] = "[]"
+         node["iot"] = "[sensor4]"
     node["handler"] = set_node_as_accesspoint
     return node
 
@@ -186,7 +186,7 @@ def set_node_as_smartphone(node):
     if rnd.random() > 0.95: #5%
         node["iot"] = "[vrViewer]"
     else:
-         node["iot"] = "[]"
+         node["iot"] = "[ac, lamp]"
 
     node["handler"] = set_node_as_smartphone
     return node
