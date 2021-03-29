@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node(node0, [ubuntu], 50, [sensor2]).
 node(node1, [ubuntu, mySQL], 20, [sensor1, sensor3]).
 node(node2, [ubuntu, mySQL], 0, [sensor1, sensor3]).
@@ -70,3 +71,5 @@ link(node8, node11, 150, 500).
 link(node11, node8, 150, 500).
 link(node10, node15, 100, 50).
 link(node15, node10, 100, 50).
+=======
+>>>>>>> 843878d11d3b64e9843126a911f7072f45b42cd3
