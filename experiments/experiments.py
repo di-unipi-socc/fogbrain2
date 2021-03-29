@@ -23,12 +23,12 @@ def main():
 
         c3 = zip(c1,c2)
         c4 = [a/b for (a,b) in c3]
-        file = 'nodes.txt'
+        file = 'nodes'+str(nodes)+'.txt'
         with open(file, 'a+') as f:
-            f.write(c1)
-            f.write(c2)
-            f.write(c4)
-            f.write(ratios)
+            f.write(str(c1))
+            f.write(str(c2))
+            f.write(str(c4))
+            f.write(str(ratios))
      
     
 def get_commits():
@@ -55,7 +55,7 @@ def simulation(nodes, commits):
 
         print("**** Starting run ", j)
         while i < EPOCHS:
-            if rnd.random() > 0.7 and i % len(commits) != 0:
+            if rnd.random() > 0.5 and i % len(commits) != 0:
                 time.sleep(10)
                 infra=builder.change_graph_infrastructure(infra)
                 builder.print_graph_infrastructure(infra)
@@ -64,7 +64,9 @@ def simulation(nodes, commits):
             query = "fogBrain('" + PATH + app_spec + "', 'infra.pl', P, P1, InferencesCR, InferencesNoCR)"
 
             try:
-                result = next(prolog.query(query))
+                q = None
+                q = prolog.query(query)
+                result = next(q)
                 cr_inferences[current_commit] += result["InferencesCR"]
                 nocr_inferences[current_commit] += result["InferencesNoCR"]
                 ratios[current_commit] += ratios[current_commit] + (result["InferencesNoCR"] / result["InferencesCR"])
@@ -78,9 +80,9 @@ def simulation(nodes, commits):
                 infra=builder.change_graph_infrastructure(infra)
                 builder.print_graph_infrastructure(infra)
     
-    result = [r/10 for r in result]
+    ratios = [r/10 for r in ratios]
 
-    return cr_inferences, nocr_inferences, result
+    return cr_inferences, nocr_inferences, ratios
 
 main()
 
