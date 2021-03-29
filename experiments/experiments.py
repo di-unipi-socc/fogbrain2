@@ -8,16 +8,18 @@ import time
 rnd.seed(481183)
 
 PATH = "./experiments/commits/"
-RUNS = 2
-EPOCHS = 71
+RUNS = 1
+EPOCHS = 80
 MIN = 7
 MAX = 13
+
 
 def main():
     commits = get_commits()
     for nodes in [2**i for i in range(MIN,MAX+1)]:
         print("Starting with", nodes, "nodes.")
-        c1, c2 = simulation(nodes, commits)
+        c1, c2, ratios = simulation(nodes, commits)
+        print(ratios)
 
         c3 = zip(c1,c2)
         c4 = [a/b for (a,b) in c3]
@@ -26,6 +28,7 @@ def main():
             f.write(c1)
             f.write(c2)
             f.write(c4)
+            f.write(ratios)
      
     
 def get_commits():
@@ -36,6 +39,7 @@ def get_commits():
 def simulation(nodes, commits):
     cr_inferences = [0]*len(commits)
     nocr_inferences = [0]*len(commits)
+    ratios = [0]*len(commits)
 
     for j in range(RUNS):
         app_spec = ""
@@ -63,8 +67,9 @@ def simulation(nodes, commits):
                 result = next(prolog.query(query))
                 cr_inferences[current_commit] += result["InferencesCR"]
                 nocr_inferences[current_commit] += result["InferencesNoCR"]
+                ratios[current_commit] += ratios[current_commit] + (result["InferencesNoCR"] / result["InferencesCR"])
                 i = i + 1
-                print(result["InferencesCR"],"-",result["InferencesNoCR"])
+                #print(result["InferencesCR"],"-",result["InferencesNoCR"])
                 if i % len(commits) == 0:      
                     current_commit = (current_commit + 1) % len(commits)
                 
@@ -72,9 +77,10 @@ def simulation(nodes, commits):
                 print("StopIteration! Ooopsieee")
                 infra=builder.change_graph_infrastructure(infra)
                 builder.print_graph_infrastructure(infra)
-            
+    
+    result = [r/10 for r in result]
 
-    return cr_inferences, nocr_inferences
+    return cr_inferences, nocr_inferences, result
 
 main()
 
