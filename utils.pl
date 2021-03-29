@@ -27,7 +27,7 @@ fb(Placement) :-
 	placement(AppId, Placement).
 
 fogBrain(AppSpec, Infra, NewPlacement, NewPlacement1, InferencesCR, InferencesNoCR) :-
-	consult(Infra), consult(AppSpec),
+	consult(Infra),consult(AppSpec),
 	stat(fb(NewPlacement), InferencesCR),
 	findall(deployment(A, P, All, C), deployment(A, P, All, C),[D]),
 	retract(D), stat(fb(NewPlacement1),InferencesNoCR), retract(deployment(_,_,_,_)), assert(D),

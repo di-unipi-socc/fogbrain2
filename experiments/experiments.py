@@ -59,6 +59,7 @@ def simulation(nodes, commits):
                 cr_inferences[current_commit] += result["InferencesCR"]
                 nocr_inferences[current_commit] += result["InferencesNoCR"]
                 i = i + 1
+                print(result["InferencesCR"],"-",result["InferencesNoCR"])
                 if i % len(commits) == 0:      
                     current_commit = (current_commit + 1) % len(commits)
                     print("Epoch", i, "- commit: ", current_commit)
