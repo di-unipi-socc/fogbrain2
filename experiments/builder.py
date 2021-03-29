@@ -159,7 +159,7 @@ def set_node_as_accesspoint(node):
     else:
         node["hardware"] = "4"
     
-    if rnd.random() > 0.97: #3%
+    if rnd.random() > 0.95: #3%
         node["iot"] = "[vrViewer]"
     else:
          node["iot"] = "[sensor4]"

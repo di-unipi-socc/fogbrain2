@@ -7,14 +7,15 @@ import os
 rnd.seed(481183)
 
 PATH = "./experiments/commits/"
-RUNS = 10
-EPOCHS = 140
-MIN = 4
+RUNS = 2
+EPOCHS = 30
+MIN = 8
 MAX = 8
 
 def main():
     commits = get_commits()
-    for nodes in [2**i for i in range(MIN,MAX)]:
+    for nodes in [2**i for i in range(MIN,MAX+1)]:
+        print("Starting with", nodes, "nodes.")
         c1, c2 = simulation(nodes, commits)
         print(c1)
         print(c2)
@@ -32,28 +33,35 @@ def simulation(nodes, commits):
     for j in range(RUNS):
         app_spec = ""
         current_commit = 0
+
+        print("generate graph")
         infra = builder.generate_graph_infrastructure(nodes, int(math.log(nodes)))
         builder.print_graph_infrastructure(infra)
+        print("generated graph")
 
+        print("starting prolog")
         prolog = p.Prolog()
         prolog.consult('fogbrain.pl')
         i = 0
-        while i < EPOCHS:
 
+        print("**** Starting run ", j)
+        while i < EPOCHS:
+            print("Epoch", i)
             if rnd.random() > 0.5 and i % len(commits) != 0:
                 infra=builder.change_graph_infrastructure(infra)
                 builder.print_graph_infrastructure(infra)
 
             app_spec = commits[current_commit]
-            query = "fogBrain('" + PATH + app_spec + "', 'infra.pl', P, InferencesCR, InferencesNoCR)"
+            query = "fogBrain('" + PATH + app_spec + "', 'infra.pl', P, P1, InferencesCR, InferencesNoCR)"
 
             try:
                 result = next(prolog.query(query))
                 cr_inferences[current_commit] += result["InferencesCR"]
                 nocr_inferences[current_commit] += result["InferencesNoCR"]
                 i = i + 1
-                if i % COMMIT == 0:      
+                if i % len(commits) == 0:      
                     current_commit = (current_commit + 1) % len(commits)
+                    print("Epoch", i, "- commit: ", current_commit)
                 
             except StopIteration:
                 print("StopIteration! Ooopsieee")
