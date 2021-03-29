@@ -3,22 +3,29 @@ import builder
 import math
 import random as rnd
 import os
+import time
 
 rnd.seed(481183)
 
 PATH = "./experiments/commits/"
 RUNS = 2
-EPOCHS = 30
-MIN = 8
-MAX = 8
+EPOCHS = 71
+MIN = 7
+MAX = 13
 
 def main():
     commits = get_commits()
     for nodes in [2**i for i in range(MIN,MAX+1)]:
         print("Starting with", nodes, "nodes.")
         c1, c2 = simulation(nodes, commits)
-        print(c1)
-        print(c2)
+
+        c3 = zip(c1,c2)
+        c4 = [a/b for (a,b) in c3]
+        file = 'nodes.txt'
+        with open(file, 'a+') as f:
+            f.write(c1)
+            f.write(c2)
+            f.write(c4)
      
     
 def get_commits():
@@ -34,20 +41,18 @@ def simulation(nodes, commits):
         app_spec = ""
         current_commit = 0
 
-        print("generate graph")
-        infra = builder.generate_graph_infrastructure(nodes, int(math.log(nodes)))
+        infra = builder.generate_graph_infrastructure(nodes, nodes/4)
         builder.print_graph_infrastructure(infra)
-        print("generated graph")
 
-        print("starting prolog")
         prolog = p.Prolog()
         prolog.consult('fogbrain.pl')
+
         i = 0
 
         print("**** Starting run ", j)
         while i < EPOCHS:
-            print("Epoch", i)
-            if rnd.random() > 0.5 and i % len(commits) != 0:
+            if rnd.random() > 0.7 and i % len(commits) != 0:
+                time.sleep(10)
                 infra=builder.change_graph_infrastructure(infra)
                 builder.print_graph_infrastructure(infra)
 
@@ -62,10 +67,12 @@ def simulation(nodes, commits):
                 print(result["InferencesCR"],"-",result["InferencesNoCR"])
                 if i % len(commits) == 0:      
                     current_commit = (current_commit + 1) % len(commits)
-                    print("Epoch", i, "- commit: ", current_commit)
                 
             except StopIteration:
                 print("StopIteration! Ooopsieee")
+                infra=builder.change_graph_infrastructure(infra)
+                builder.print_graph_infrastructure(infra)
+            
 
     return cr_inferences, nocr_inferences
 

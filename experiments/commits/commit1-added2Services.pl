@@ -3,7 +3,7 @@ application(vrApp, [videoStorage, sceneSelector, vrDriver, tokensDealer, userPro
 service(videoStorage, [mySQL, ubuntu], 16, []).
 service(sceneSelector, [ubuntu], 2, []).
 service(vrDriver, [gcc, make], 2, [vrViewer]).
-service(tokensDealer, [ubuntu, mySQL], 20, []).
+service(tokensDealer, [ubuntu, mySQL], 5, []).
 service(userProfiler, [gcc, make], 2, []).
 
 s2s(videoStorage, sceneSelector, 150, 16).
