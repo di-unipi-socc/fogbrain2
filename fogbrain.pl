@@ -5,9 +5,9 @@
 :-dynamic link/4.
 :-dynamic node/4.
 
-:-qcompile('utils.pl').
-:-qcompile('./src/placer.pl').
-:-qcompile('./src/reasoning.pl').
+:-consult('utils.pl').
+:-consult('./src/placer.pl').
+:-consult('./src/reasoning.pl').
 :-use_module(library(lists)).
 
 %%%% Thresholds to identify overloaded nodes and saturated e2e links%%%%

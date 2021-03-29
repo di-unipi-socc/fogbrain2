@@ -96,7 +96,7 @@ def set_node_as_cloud(node):
     else:
         node["hardware"] = "inf"
 
-    node["iot"] = "[sensor1, sensor2, senso3]"
+    node["iot"] = "[sensor1, sensor2, sensor3]"
     node["handler"] = set_node_as_cloud
     return node
 
@@ -219,15 +219,14 @@ def generate_graph_infrastructure(n,m,seed = None):
     return G
 
 def change_graph_infrastructure(G):
-    if rnd.random() > 0.5:
-        for i in G.nodes:
-            node = G.nodes[i]
-            node["handler"](node)
-        for (i,j) in G.edges():
-            link=G.edges[i,j]
-            link["handler"](link)
-        return G, "changed"
-    return G,"none"
+    for i in G.nodes:
+        node = G.nodes[i]
+        node["handler"](node)
+    for (i,j) in G.edges():
+        link=G.edges[i,j]
+        link["handler"](link)
+    return G
+
 
     
 def print_graph_infrastructure(G):
