@@ -8,9 +8,9 @@ import time
 rnd.seed(481183)
 
 PATH = "./experiments/commits/"
-RUNS = 2
+RUNS = 10
 EPOCHS = 70
-NODENUMBERS = [500, 600]
+NODENUMBERS = [600]
 
 
 def main():
@@ -22,7 +22,6 @@ def main():
     for nodes in NODENUMBERS:
         print("Starting with", nodes, "nodes.")
         c1, c2, ratios, faults = simulation(nodes, commits)
-        print(ratios)
 
         c1_avg = avg_list(c1)
         c2_avg = avg_list(c2)
@@ -48,7 +47,6 @@ def avg_list(l):
     res = [0] * len(l)
     i = 0
     for el in l:
-        print(len(el))
         res[i] = sum(el)/len(el)
         i = i + 1
     return res
@@ -94,10 +92,6 @@ def simulation(nodes, commits):
         while i < EPOCHS:
          
             app_spec = commits[current_commit]
-
-            # t0    t1     t2    t3
-        #Ex.   P    P1     P2    P3
-        #CR    P    P'     P''   P3
 
             try:
 
