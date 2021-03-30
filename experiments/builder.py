@@ -159,7 +159,7 @@ def set_node_as_accesspoint(node):
     else:
         node["hardware"] = "4"
     
-    if rnd.random() > 0.95: #3%
+    if rnd.random() > 0.97: #3%
         node["iot"] = "[vrViewer]"
     else:
          node["iot"] = "[sensor4]"
@@ -192,8 +192,8 @@ def set_node_as_smartphone(node):
     return node
 
 def set_link(link):
-    link['latency'] = rnd.choice([5,10,25,50,100,150])
-    link['bandwidth'] = rnd.choice([10, 20, 50, 100, 500])
+    link['latency'] = rnd.choice([5,10,25,50,100])
+    link['bandwidth'] = rnd.choice([5,10,25,50,100])
     link["handler"] = set_link
 
 def generate_graph_infrastructure(n,m,seed = None):
