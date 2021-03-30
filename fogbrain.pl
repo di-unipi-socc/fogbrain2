@@ -7,7 +7,7 @@
 
 :-consult('utils.pl').
 :-consult('./src/placer.pl').
-:-consult('./src/reasoningNew.pl').
+:-consult('./src/reasoningOld.pl').
 :-consult('./src/slimFast.pl').
 :-use_module(library(lists)).
 
