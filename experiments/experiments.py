@@ -10,7 +10,7 @@ rnd.seed(481183)
 PATH = "./experiments/commits/"
 RUNS = 50
 EPOCHS = 70
-NODENUMBERS = [128, 256, 512, 1024, 2048, 4096, 8192]
+NODENUMBERS = [512, 1024, 2048, 4096, 8192]
 
 
 def main():
@@ -38,9 +38,11 @@ def main():
         file = './results/experiment_nodes'+str(nodes)+'.txt'
         with open(file, 'a') as f:
             f.write(str(c1))
-            f.write(str(c2))                                                                                         
-            f.write(str(c4))
+            f.write(str(c2))  
             f.write(str(ratios))
+            f.write(str(c1_avg))
+            f.write(str(c2_avg))
+            f.write(str(ratio_avg))
             f.write(str(faults))
 
 def avg_list(l):
