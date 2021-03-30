@@ -1,3 +1,7 @@
+:-dynamic application/2.
+:-dynamic service/4.
+:-dynamic s2s/4.
+
 application(vrApp, [videoStorage, sceneSelector, vrDriver]).
 
 service(videoStorage, [mySQL, ubuntu], 16, []).

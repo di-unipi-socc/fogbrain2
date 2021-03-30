@@ -159,7 +159,7 @@ def set_node_as_accesspoint(node):
     else:
         node["hardware"] = "4"
     
-    if rnd.random() > 0.97: #3%
+    if rnd.random() > 0.95: #3%
         node["iot"] = "[vrViewer]"
     else:
          node["iot"] = "[sensor4]"
@@ -231,6 +231,7 @@ def change_graph_infrastructure(G):
     
 def print_graph_infrastructure(G):
     f = open("./infra.pl","w+")
+    f.write(":-dynamic link/4.\n:-dynamic node/4.\n\n")
     for i in G.nodes:
         node = G.nodes[i]
         newnode = 'node(node'+str(i)+', '+node['software']+', '+node['hardware']+', '+node['iot']+').\n'

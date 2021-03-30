@@ -18,11 +18,11 @@ bwTh(0.2).
 fogBrain(AppSpec, NewPlacement) :-
 	consult('infra.pl'), consult(AppSpec),
 	application(AppId,_), deployment(AppId, Placement, Alloc, Context),
-	time(reasoningStep(AppId, Placement, Alloc, Context, NewPlacement)),
+	profile(reasoningStep(AppId, Placement, Alloc, Context, NewPlacement)),
 	unload_file(AppSpec).
 fogBrain(AppSpec, Placement) :-
 	application(AppId,_), \+deployment(AppId,_,_,_),
-	time(placement(AppId, Placement)),
+	profile(placement(AppId, Placement)),
 	unload_file(AppSpec).
 fogBrain(AppSpec,_) :-
 	unload_file(AppSpec), fail.
