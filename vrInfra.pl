@@ -1,5 +1,5 @@
 node(cloud, [centos, gcc, make], inf, []).
-node(ispdatacentre, [ubuntu, mySQL], 50, []).
+node(ispdatacentre, [], 50, []).
 node(cabinetserver, [ubuntu, mySQL], 20, []).
 node(accesspoint, [ubuntu, gcc, make], 4, [vrViewer]).
 node(smartphone, [android, gcc, make], 8, [vrViewer]).

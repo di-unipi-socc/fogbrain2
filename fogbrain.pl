@@ -7,8 +7,7 @@
 
 :-consult('utils.pl').
 :-consult('./src/placer.pl').
-:-consult('./src/reasoningOld.pl').
-:-consult('./src/slimFast.pl').
+:-consult('./src/reasoningNew.pl').
 :-use_module(library(lists)).
 
 %%%% Thresholds to identify overloaded nodes and saturated e2e links%%%%

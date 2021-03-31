@@ -35,7 +35,7 @@ def main():
         print()
         print(faults)
         
-        file = './results/experiment_nodes'+str(nodes)+'.txt'
+        file = './results/nodes'+str(nodes)+'.txt'
         with open(file, 'a') as f:
             f.write(str(c1))
             f.write(str(c2))  
