@@ -82,7 +82,7 @@ def simulation(nodes, commits):
         app_spec = ""
         current_commit = 0
 
-        infra = builder.generate_graph_infrastructure(nodes, math.log2(nodes))
+        infra = builder.generate_graph_infrastructure(nodes, int(nodes/2))
         builder.print_graph_infrastructure(infra)
 
         

@@ -84,14 +84,12 @@ def builder(nodesnumber, path="infra.pl"):
 def set_node_as_cloud(node):
     rand = rnd.random()
     if rand > 0.9:
-        node["software"] = "[]"
-    elif rand > 0.7:
         node["software"] = "[ubuntu]"
     else:
         node["software"] = "[ubuntu, mySQL, gcc, make]"
 
     rand = rnd.random()
-    if rand > 0.9:
+    if rand > 0.95:
         node["hardware"] = "0"
     else:
         node["hardware"] = "inf"
@@ -103,16 +101,14 @@ def set_node_as_cloud(node):
 def set_node_as_ispdatacentre(node):
     rand = rnd.random()
     if rand > 0.9:
-        node["software"] = "[]"
-    elif rand > 0.7:
         node["software"] = "[ubuntu]"
     else:
         node["software"] = "[ubuntu, mySQL]"
 
     rand = rnd.random()
-    if rand > 0.9:
+    if rand > 0.95:
         node["hardware"] = "0"
-    elif rand > 0.7:
+    elif rand > 0.75:
         node["hardware"] = "25"
     else:
         node["hardware"] = "50"
@@ -124,16 +120,14 @@ def set_node_as_ispdatacentre(node):
 def set_node_as_cabinetserver(node):
     rand = rnd.random()
     if rand > 0.9:
-        node["software"] = "[]"
-    elif rand > 0.7:
         node["software"] = "[ubuntu]"
     else:
         node["software"] = "[ubuntu, mySQL]"
 
     rand = rnd.random()
-    if rand > 0.9:
+    if rand > 0.95:
         node["hardware"] = "0"
-    elif rand > 0.7:
+    elif rand > 0.75:
         node["hardware"] = "10"
     else:
         node["hardware"] = "20"
@@ -145,16 +139,14 @@ def set_node_as_cabinetserver(node):
 def set_node_as_accesspoint(node):
     rand = rnd.random()
     if rand > 0.9:
-        node["software"] = "[]"
-    elif rand > 0.7:
         node["software"] = "[ubuntu]"
     else:
         node["software"] = "[ubuntu, gcc, make]"
 
     rand = rnd.random()
-    if rand > 0.9:
+    if rand > 0.95:
         node["hardware"] = "0"
-    elif rand > 0.7:
+    elif rand > 0.75:
         node["hardware"] = "2"
     else:
         node["hardware"] = "4"
@@ -169,16 +161,14 @@ def set_node_as_accesspoint(node):
 def set_node_as_smartphone(node):
     rand = rnd.random()
     if rand > 0.9:
-        node["software"] = "[]"
-    elif rand > 0.7:
         node["software"] = "[android]"
     else:
         node["software"] = "[android, gcc, make]"
 
     rand = rnd.random()
-    if rand > 0.9:
+    if rand > 0.95:
         node["hardware"] = "0"
-    elif rand > 0.7:
+    elif rand > 0.75:
         node["hardware"] = "4"
     else:
         node["hardware"] = "8"
