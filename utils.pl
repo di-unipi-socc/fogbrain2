@@ -18,7 +18,7 @@ cr(AppSpec, NewPlacement, InferencesCR, TimeCR):-
 		statistics(cputime, T2),
 	statistics(inferences, After1), InferencesCR is After1 - Before1 - 5, TimeCR is T2 - T1,
 	findall(deployment(A, P, All, C), deployment(A, P, All, C),[D]), writeDeployment(D), 
-	D=deployment(_, _, (_, AllocBW), _), F=0.6,%random(F), writeln(F),
+	D=deployment(_, _, (_, AllocBW), _), random(F), %writeln(F),
 		( F =< 0.5 ->  changeNode(NewPlacement)  ;  changeLink(AllocBW) ),%changeLink(AllocBW) ),
 	retractall(D), unload_file(AppSpec).
 
