@@ -82,43 +82,108 @@ def builder(nodesnumber, path="infra.pl"):
     f.close()
 
 def set_node_as_cloud(node):
-    node["software"] = "[ubuntu, mySQL, gcc, make]"
-    node["hardware"] = "inf"
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[ubuntu]"
+    else:
+        node["software"] = "[ubuntu, mySQL, gcc, make]"
+
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    else:
+        node["hardware"] = "inf"
+
     node["iot"] = "[sensor1, sensor2, sensor3]"
     node["handler"] = set_node_as_cloud
     return node
 
 def set_node_as_ispdatacentre(node):
-    node["software"] = "[ubuntu, mySQL]"
-    node["hardware"] = "50"
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[ubuntu]"
+    else:
+        node["software"] = "[ubuntu, mySQL]"
+
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "25"
+    else:
+        node["hardware"] = "50"
+        
     node["iot"] = "[sensor2]"
     node["handler"] = set_node_as_ispdatacentre
     return node
 
 def set_node_as_cabinetserver(node):
-    node["software"] = "[ubuntu, mySQL]"
-    node["hardware"] = "20"
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[ubuntu]"
+    else:
+        node["software"] = "[ubuntu, mySQL]"
+
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "10"
+    else:
+        node["hardware"] = "20"
+
     node["iot"] = "[sensor1, sensor3]"
     node["handler"] = set_node_as_cabinetserver
     return node
 
 def set_node_as_accesspoint(node):
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[ubuntu]"
+    else:
+        node["software"] = "[ubuntu, gcc, make]"
 
-    node["software"] = "[ubuntu, gcc, make]"
-    node["hardware"] = "4"
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "2"
+    else:
+        node["hardware"] = "4"
     
-    if rnd.random() > 0.9: #10%
+    if rnd.random() > 0.9: #3%
         node["iot"] = "[vrViewer]"
     else:
-        node["iot"] = "[sensor4]"
+         node["iot"] = "[sensor4]"
     node["handler"] = set_node_as_accesspoint
     return node
 
 def set_node_as_smartphone(node):
-    node["software"] = "[android, gcc, make]"
-    node["hardware"] = "8"
+    rand = rnd.random()
+    if rand > 0.9:
+        node["software"] = "[]"
+    elif rand > 0.7:
+        node["software"] = "[android]"
+    else:
+        node["software"] = "[android, gcc, make]"
 
-    if rnd.random() > 0.9: #10%
+    rand = rnd.random()
+    if rand > 0.9:
+        node["hardware"] = "0"
+    elif rand > 0.7:
+        node["hardware"] = "4"
+    else:
+        node["hardware"] = "8"
+
+    if rnd.random() > 0.95: #5%
         node["iot"] = "[vrViewer]"
     else:
          node["iot"] = "[ac, lamp]"

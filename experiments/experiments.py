@@ -8,7 +8,7 @@ import time
 rnd.seed(481183)
 
 PATH = "./experiments/commits/"
-RUNS = 20
+RUNS = 5
 EPOCHS = 70
 NODENUMBERS = [400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000]
 
@@ -27,11 +27,14 @@ def main():
         c2_avg = avg_list(c2)
         ratio_avg = avg_list(ratios)
 
+        avg = sum(ratio_avg)/len(ratio_avg)
         print(c1_avg)
         print()
         print(c2_avg)
         print()
         print(ratio_avg)
+        print()
+        print("avg:", avg)
         print()
         print(faults)
         
@@ -61,7 +64,7 @@ def get_commits():
 def my_query(s, prolog):
     q = prolog.query(s)
     result = next(q) 
-    return result, prolog
+    return result
 
 def list_of_list(n):
     ls=[]
@@ -82,7 +85,7 @@ def simulation(nodes, commits):
         app_spec = ""
         current_commit = 0
 
-        infra = builder.generate_graph_infrastructure(nodes, int(nodes/2))
+        infra = builder.generate_graph_infrastructure(nodes, math.log2(nodes))
         builder.print_graph_infrastructure(infra)
 
         
@@ -98,10 +101,10 @@ def simulation(nodes, commits):
             try:
 
                 query_cr = "cr('" + PATH + app_spec + "', P, InferencesCR, TimeCR)"
-                cr, prolog = my_query(query_cr, prolog)
+                cr = my_query(query_cr, prolog)
 
                 query_no_cr = "p('" + PATH + app_spec + "', P, InferencesNoCR, TimeNoCR)"
-                no_cr, prolog = my_query(query_no_cr, prolog)
+                no_cr = my_query(query_no_cr, prolog)
 
                 
                 

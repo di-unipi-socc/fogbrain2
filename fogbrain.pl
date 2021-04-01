@@ -7,7 +7,7 @@
 
 :-consult('utils.pl').
 :-consult('./src/placer.pl').
-:-consult('./src/reasoningOld.pl').
+:-consult('./src/reasoningNew.pl').
 :-use_module(library(lists)).
 
 %%%% Thresholds to identify overloaded nodes and saturated e2e links%%%%
@@ -17,8 +17,8 @@ bwTh(0.2).
 
 fogBrain(AppSpec, NewPlacement) :-
 	consult('vrInfra.pl'), consult(AppSpec),
-	application(AppId,_), deployment(AppId, Placement, Alloc, Context),
-	time(reasoningStep(AppId, Placement, Alloc, Context, NewPlacement)),
+	application(AppId,_), deployment(AppId, Placement, _, Context),
+	time(reasoningStep(AppId, Placement, Context, NewPlacement)),
 	unload_file(AppSpec).
 fogBrain(AppSpec, Placement) :-
 	application(AppId,_), \+deployment(AppId,_,_,_),

@@ -1,3 +1,5 @@
+:-dynamic link/4.
+:-dynamic node/4.
 node(cloud, [centos, gcc, make], inf, []).
 node(ispdatacentre, [], 50, []).
 node(cabinetserver, [ubuntu, mySQL], 20, []).
@@ -22,5 +24,5 @@ link(accesspoint, cabinetserver, 13, 4).
 link(accesspoint, smartphone, 2, 70).
 link(smartphone, cloud, 150, 2).
 link(smartphone, ispdatacentre, 40, 2.5).
-link(smartphone, cabinetserver, 15, 3).
+%link(smartphone, cabinetserver, 15, 3).
 link(smartphone, accesspoint, 2, 70).

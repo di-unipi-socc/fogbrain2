@@ -152,55 +152,26 @@ assembleDiff(S1, N1, HWDiff, [diff(S1,N1,(SWReq,OldHWDiff,TReq))|HWDiffs], [diff
 assembleDiff(S1, N1, HWDiff, [diff(S2,N2,Diff)|HWDiffs], [diff(S2,N2,Diff)|NewHWDiffs]) :-
     (dif(S1,S2); dif(N1,N2)), assembleDiff(S1, N1, HWDiff, HWDiffs, NewHWDiffs).
 
-allocatedHWPP(Placement,New) :-	
-	findall((N,HWReqs), (member(on(S,N),Placement), service(S,_,HWReqs,_)), Nodes),
+allocatedHWPP(PP,A) :-	
+	findall((N,HWReqs), (member(on(S,N),PP), service(S,_,HWReqs,_)), Nodes),
     msort(Nodes,SNodes),
-	countHWReqs(SNodes,[],New).
+	countHWReqs(SNodes,A).
 
-countHWReqs([],Alloc,Alloc).
-countHWReqs([(N,HWReqs)|Nodes], [], New) :-
-    countHWReqs(Nodes, [(N,HWReqs)], New).
-countHWReqs([(N,HWReqs)|Nodes], [(N,HWReqs1)|Alloc], New) :-
-    NewHW is HWReqs+HWReqs1,
-    countHWReqs(Nodes, [(N,NewHW)|Alloc], New).
-countHWReqs([(N,HWReqs)|Nodes], [(N1,HWReqs1)|Alloc], New) :-
-    dif(N,N1),
-    countHWReqs(Nodes, [(N,HWReqs),(N1,HWReqs1)|Alloc], New).
-/*
-allocatedHWPP([],X,X).
-allocatedHWPP([on(S,N)|L],X,A) :-	
-	service(S, _, HWReqs, _),
-	countHWReqs(HWReqs, N, X, Y),
-	allocatedHWPP(L,Y,A).	
+countHWReqs([],[]).
+countHWReqs([X|L],Res) :- countHWReqs(X,L,Res).
 
-countHWReqs(HWReqs, N, [], [(N,HWReqs)]).
-countHWReqs(HWReqs, N, [(N,AllocHW)|L], [(N,NewAllocHW)|L]) :- NewAllocHW is AllocHW + HWReqs.
-countHWReqs(HWReqs, N, [(N1,AllocHW)|L], [(N1,AllocHW)|NewL]) :- dif(N,N1), countHWReqs(HWReqs, N, L, NewL).
-*/
+countHWReqs(X,[],X).
+countHWReqs((N1,HW1),[(N1,HW2)|L],Res) :- HW12 is HW1+HW2, countHWReqs((N1,HW12),L,Res).
+countHWReqs((N1,HW1),[(N2,HW2)|L],[(N1,HW1)|Res]) :- dif(N1,N2), countHWReqs((N2,HW2),L,Res).
 
-allocatedBW(PP, B) :-
-	findall((N1, N2, ReqBW), (member(on(S1,N1), PP), member(on(S2,N2), PP), dif(N1,N2), s2s(S1, S2, _, ReqBW)), N2Ns),
-    msort(N2Ns, SN2Ns),
-	countBWReqs(SN2Ns,[],B).
-
-countBWReqs([], Alloc, Alloc).
-countBWReqs([(N1, N2, ReqBW)|Links], [], New) :-
-    countBWReqs(Links, [(N1, N2, ReqBW)], New).
-countBWReqs([(N1, N2, ReqBW)|Links], [(N1, N2, ReqBW1)|Alloc], New) :-
-    NewBW is ReqBW+ReqBW1,
-    countBWReqs(Links, [(N1, N2, NewBW)|Alloc], New).
-countBWReqs([(N1, N2, ReqBW)|Links], [(N3, N4, ReqBW1)|Alloc], New) :-
-    (dif(N1,N3);dif(N2,N4)),
-    countBWReqs(Links, [(N1, N2, ReqBW),(N3, N4, ReqBW1)|Alloc], New).
-/*
 allocatedBW(PP, B) :-
 	findall(n2n(N1, N2, ReqBW), (member(on(S1,N1), PP), member(on(S2,N2), PP), dif(N1,N2), s2s(S1, S2, _, ReqBW)), N2Ns),
-	allocatedBW(N2Ns,[],B).
+	msort(N2Ns,N2Nsorted),
+	allocatedBW(N2Nsorted,[],B).
 
-allocatedBW([],X,X).
-allocatedBW([n2n(N1, N2, ReqBW)|L],X,A) :- countBW(N1, N2, ReqBW, X, Y), allocatedBW(L,Y,A).
+allocatedBW([],[]).
+allocatedBW([X|L],Res) :- allocatedBW(X,L,Res). 
 
-countBW(N1, N2, ReqBW, [], [(N1,N2,ReqBW)]).
-countBW(N1, N2, ReqBW, [(N1,N2,AllocBW)|L], [(N1,N2,NewAllocBW)|L]):- NewAllocBW is ReqBW + AllocBW.
-countBW(N1, N2, ReqBW, [(N3,N4,AllocBW)|L], [(N3,N4,AllocBW)|NewL]):- (dif(N1,N3);dif(N2,N4)), countBW(N1,N2,ReqBW,L,NewL).
-*/
+allocatedBW(X,[],X).
+allocatedBW(n2n(N1,N2,R1),[n2n(N1, N2, R2)|L],Res) :- R12 is R1+R2, allocatedBW(n2n(N1,N2,R12),L,Res).
+allocatedBW(n2n(N1,N2,R1),[n2n(N3, N4, R2)|L],[n2n(N1,N2,R1)|Res]) :- (dif(N1,N3);dif(N2,N4)), allocatedBW(n2n(N3, N4, R2),L,Res).

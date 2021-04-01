@@ -19,7 +19,11 @@ cr(AppSpec, NewPlacement, InferencesCR, TimeCR):-
 	statistics(inferences, After1), InferencesCR is After1 - Before1 - 5, TimeCR is T2 - T1,
 	findall(deployment(A, P, All, C), deployment(A, P, All, C),[D]), writeDeployment(D), 
 	D=deployment(_, _, (_, AllocBW), _), random(F), %writeln(F),
-		( F =< 0.25 ->  changeNode(NewPlacement)  ;  ( F =< 0.5 ->  changeLink(AllocBW) ; true) ),
+	(
+		( F =< 0.45, changeNode(NewPlacement) );
+		( F > 0.45, F =< 0.90, changeLink(AllocBW));
+		( F > 0.90 )
+	),
 	retractall(D), unload_file(AppSpec).
 
 p(AppSpec, NewPlacement, InferencesNoCR, TimeNoCR) :-
@@ -55,8 +59,8 @@ random_range(L, U, N, [R|Ls]) :-
     random_range(L,U,NewN,Ls).
 
 fb(NewPlacement) :-
-	application(AppId,_), deployment(AppId, Placement, Alloc, Context),
-	reasoningStep(AppId, Placement, Alloc, Context, NewPlacement).
+	application(AppId,_), deployment(AppId, Placement, _, Context),
+	reasoningStep(AppId, Placement, Context, NewPlacement).
 fb(Placement) :-
 	application(AppId,_), \+deployment(AppId,_,_,_),
 	placement(AppId, Placement).
