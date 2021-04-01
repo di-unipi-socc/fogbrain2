@@ -8,9 +8,9 @@ import time
 rnd.seed(481183)
 
 PATH = "./experiments/commits/"
-RUNS = 50
+RUNS = 10
 EPOCHS = 70
-NODENUMBERS = [512, 1024, 2048, 4096, 8192]
+NODENUMBERS = [500, 600, 700, 800, 900, 1000, 1100]
 
 
 def main():
@@ -119,10 +119,16 @@ def simulation(nodes, commits):
                 
             except StopIteration:
                 faults += 1
-                #print("StopIteration! Ooopsieee")
-                infra=builder.change_graph_infrastructure(infra)
+                print("StopIteration! Ooopsieee")
+                infra=builder.change_graph_infrastructure(infra)#.change_graph_infrastructure(infra)
+                print("1")
+
                 builder.print_graph_infrastructure(infra)
+                print("2")
+
                 my_query('loadInfra.', prolog)
+
+                print("3")
                
     return cr_inferences, nocr_inferences, ratios, faults
 
