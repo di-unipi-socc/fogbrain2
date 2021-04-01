@@ -23,8 +23,8 @@ cr(AppSpec, NewPlacement, InferencesCR, TimeCR):-
 	D=deployment(_, _, (_, AllocBW), _), random(F), %writeln(F),
 	(
 		( F =< 0.1, changeNode(NewPlacement) );
-		( F > 0.1, F =< 0.20, changeLink(AllocBW));
-		( F > 0.20 )
+		( F > 0.1, F =< 0.2, changeLink(AllocBW));
+		( F > 0.2 )
 	),
 	retractall(D), unload_file(AppSpec).
 

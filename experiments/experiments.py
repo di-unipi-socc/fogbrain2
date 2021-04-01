@@ -8,9 +8,9 @@ import time
 rnd.seed(481183)
 
 PATH = "./experiments/commits/"
-RUNS = 5
+RUNS = 50
 EPOCHS = 70
-NODENUMBERS = [10, 20, 50, 100, 200]
+NODENUMBERS = [10, 20, 50, 100, 200, 300, 400, 500, 1000, 2000]
 
 
 def main():
@@ -38,7 +38,7 @@ def main():
         print()
         print(faults)
         
-        file = './results/nodes'+str(nodes)+'.txt'
+        file = './results/experiments_nodes'+str(nodes)+'.txt'
         with open(file, 'a') as f:
             f.write(str(c1))
             f.write(str(c2))  
