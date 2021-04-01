@@ -1,3 +1,5 @@
+:-dynamic deployment/4.
+
 set_random(seed(481183)).
 
 del:- retract(deployment(vrApp,_,_,_)).
@@ -20,9 +22,9 @@ cr(AppSpec, NewPlacement, InferencesCR, TimeCR):-
 	findall(deployment(A, P, All, C), deployment(A, P, All, C),[D]), writeDeployment(D), 
 	D=deployment(_, _, (_, AllocBW), _), random(F), %writeln(F),
 	(
-		( F =< 0.45, changeNode(NewPlacement) );
-		( F > 0.45, F =< 0.90, changeLink(AllocBW));
-		( F > 0.90 )
+		( F =< 0.1, changeNode(NewPlacement) );
+		( F > 0.1, F =< 0.20, changeLink(AllocBW));
+		( F > 0.20 )
 	),
 	retractall(D), unload_file(AppSpec).
 

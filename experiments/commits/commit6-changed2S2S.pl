@@ -13,6 +13,6 @@ s2s(sceneSelector, videoStorage, 150, 0.5).
 s2s(sceneSelector, vrDriver, 20, 8).
 s2s(vrDriver, sceneSelector, 20, 1).
 s2s(userProfiler, sceneSelector, 50, 2).
-s2s(userProfiler, videoStorage, 60, 2).
-s2s(videoStorage, userProfiler, 60, 1).
+s2s(userProfiler, videoStorage, 150, 2).
+s2s(videoStorage, userProfiler, 150, 1).
 

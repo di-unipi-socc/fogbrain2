@@ -134,10 +134,6 @@ cleanPlacement([on(S,_)|P],Services,PPlacement) :-
 cleanPlacement([on(S,N)|P],Services,[on(S,N)|PPlacement]) :-
     \+member(S,Services), cleanPlacement(P,Services,PPlacement).
 
-cleanResourceAllocation(PartialPlacement, (A,B)) :-
-	allocatedHWPP(PartialPlacement, A),
-	allocatedBW(PartialPlacement, B).
-
 sumHWDiffs(N, HWDiffs, HWUpdate) :-
     findall(HW, member(diff(_,N,(_,HW,_)), HWDiffs), L),
     sum_list(L, HWUpdate).
@@ -152,6 +148,10 @@ assembleDiff(S1, N1, HWDiff, [diff(S1,N1,(SWReq,OldHWDiff,TReq))|HWDiffs], [diff
 assembleDiff(S1, N1, HWDiff, [diff(S2,N2,Diff)|HWDiffs], [diff(S2,N2,Diff)|NewHWDiffs]) :-
     (dif(S1,S2); dif(N1,N2)), assembleDiff(S1, N1, HWDiff, HWDiffs, NewHWDiffs).
 
+cleanResourceAllocation(PartialPlacement, (A,B)) :-
+	allocatedHWPP(PartialPlacement, A),
+	allocatedBW(PartialPlacement, B).
+
 allocatedHWPP(PP,A) :-	
 	findall((N,HWReqs), (member(on(S,N),PP), service(S,_,HWReqs,_)), Nodes),
     msort(Nodes,SNodes),
@@ -160,18 +160,18 @@ allocatedHWPP(PP,A) :-
 countHWReqs([],[]).
 countHWReqs([X|L],Res) :- countHWReqs(X,L,Res).
 
-countHWReqs(X,[],X).
+countHWReqs(X,[],[X]).
 countHWReqs((N1,HW1),[(N1,HW2)|L],Res) :- HW12 is HW1+HW2, countHWReqs((N1,HW12),L,Res).
 countHWReqs((N1,HW1),[(N2,HW2)|L],[(N1,HW1)|Res]) :- dif(N1,N2), countHWReqs((N2,HW2),L,Res).
 
 allocatedBW(PP, B) :-
-	findall(n2n(N1, N2, ReqBW), (member(on(S1,N1), PP), member(on(S2,N2), PP), dif(N1,N2), s2s(S1, S2, _, ReqBW)), N2Ns),
-	msort(N2Ns,N2Nsorted),
-	allocatedBW(N2Nsorted,[],B).
+    findall((N1, N2, ReqBW), (member(on(S1,N1), PP), s2s(S1, S2, _, ReqBW), member(on(S2,N2), PP), dif(N1,N2)), N2Ns),
+    msort(N2Ns,N2Nsorted),
+    countBWReqs(N2Nsorted,B).
 
-allocatedBW([],[]).
-allocatedBW([X|L],Res) :- allocatedBW(X,L,Res). 
+countBWReqs([],[]).
+countBWReqs([X|L],Res) :- countBWReqs(X,L,Res). 
 
-allocatedBW(X,[],X).
-allocatedBW(n2n(N1,N2,R1),[n2n(N1, N2, R2)|L],Res) :- R12 is R1+R2, allocatedBW(n2n(N1,N2,R12),L,Res).
-allocatedBW(n2n(N1,N2,R1),[n2n(N3, N4, R2)|L],[n2n(N1,N2,R1)|Res]) :- (dif(N1,N3);dif(N2,N4)), allocatedBW(n2n(N3, N4, R2),L,Res).
+countBWReqs(X,[],[X]).
+countBWReqs((N1,N2,R1),[(N1, N2, R2)|L],Res) :- R12 is R1+R2, countBWReqs((N1,N2,R12),L,Res).
+countBWReqs((N1,N2,R1),[(N3, N4, R2)|L],[(N1,N2,R1)|Res]) :- (dif(N1,N3);dif(N2,N4)), countBWReqs((N3, N4, R2),L,Res).

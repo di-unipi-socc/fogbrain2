@@ -19,6 +19,7 @@ def printLinks(list1, list2, qos, f):
 def builder(nodesnumber, path="infra.pl"):
 
     f = open(path, "w+")
+    f.write(":-dynamic link/4.\n:-dynamic node/4.\n\n")
 
     CLOUDS = nodesnumber
     ISPS = nodesnumber

@@ -10,7 +10,7 @@ rnd.seed(481183)
 PATH = "./experiments/commits/"
 RUNS = 5
 EPOCHS = 70
-NODENUMBERS = [400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000]
+NODENUMBERS = [10, 20, 50, 100, 200]
 
 
 def main():
@@ -85,11 +85,12 @@ def simulation(nodes, commits):
         app_spec = ""
         current_commit = 0
 
-        infra = builder.generate_graph_infrastructure(nodes, math.log2(nodes))
-        builder.print_graph_infrastructure(infra)
-
+        #infra = builder.generate_graph_infrastructure(nodes, math.log2(nodes))
+        #builder.print_graph_infrastructure(infra)
+        builder.builder(nodes)
         
         my_query('loadInfra.', prolog)
+        print("loaded")
 
         i = 0
 
@@ -105,7 +106,6 @@ def simulation(nodes, commits):
 
                 query_no_cr = "p('" + PATH + app_spec + "', P, InferencesNoCR, TimeNoCR)"
                 no_cr = my_query(query_no_cr, prolog)
-
                 
                 
                 (cr_inferences[current_commit]).append(cr["InferencesCR"])
@@ -117,14 +117,18 @@ def simulation(nodes, commits):
                 i = i + 1
                 #print(result["InferencesCR"],"-",result["InferencesNoCR"])
                 if i % 10 == 0:  
-                    #print("commit:", current_commit)    
+                    print("completed commit:", current_commit)    
                     current_commit = (current_commit + 1) % len(commits)
                 
             except StopIteration:
                 faults += 1
-                infra=builder.change_graph_infrastructure(infra)#.change_graph_infrastructure(infra)
-                builder.print_graph_infrastructure(infra)
+                print("fault")
+                builder.builder(nodes)
+                #infra=builder.change_graph_infrastructure(infra)#.change_graph_infrastructure(infra)
+                #builder.print_graph_infrastructure(infra)
                 my_query('loadInfra.', prolog)
+                print('loaded1')
+                
                
     return cr_inferences, nocr_inferences, ratios, faults
 

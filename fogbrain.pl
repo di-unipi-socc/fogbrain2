@@ -16,7 +16,7 @@ bwTh(0.2).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fogBrain(AppSpec, NewPlacement) :-
-	consult('vrInfra.pl'), consult(AppSpec),
+	consult('infra.pl'), consult(AppSpec),
 	application(AppId,_), deployment(AppId, Placement, _, Context),
 	time(reasoningStep(AppId, Placement, Context, NewPlacement)),
 	unload_file(AppSpec).
