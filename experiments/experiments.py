@@ -8,10 +8,9 @@ import time
 rnd.seed(481183)
 
 PATH = "./experiments/commits/"
-RUNS = 20
+RUNS = 30
 EPOCHS = 70
 
-# 10, 20, 40, 80, 160, 320, 640, 1280
 NODENUMBERS = [2, 4, 8, 16, 32, 64, 128, 256, 512]
 
 
