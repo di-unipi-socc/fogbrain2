@@ -30,7 +30,7 @@ cr(AppSpec, NewPlacement, InferencesCR, TimeCR):-
 	retractall(D), unload_file(AppSpec).
 
 p(AppSpec, NewPlacement, InferencesNoCR, TimeNoCR) :-
-	consult(AppSpec), application(AppId,_), consult('infra.pl'),
+	consult(AppSpec), application(AppId,_), %consult('infra.pl'),
 	statistics(inferences, Before2),
 		statistics(cputime, T1),
 			placement(AppId, NewPlacement), 
