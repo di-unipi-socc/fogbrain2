@@ -3,12 +3,13 @@ import builder
 import math
 import random as rnd
 import os
+import sys
 import time
 
-rnd.seed(481183)
+#rnd.seed(553516)
 
 PATH = "./experiments/commits/"
-RUNS = 30
+RUNS = 10
 EPOCHS = 70
 
 NODENUMBERS = [2, 4, 8, 16, 32, 64, 128, 256, 512]
@@ -21,9 +22,9 @@ def main():
 
     commits = get_commits()
     for nodes in NODENUMBERS:
-        print("Starting with", nodes, "nodes.")
+        print("Starting with", str(5*nodes), "nodes.")
         cr_inferences, nocr_inferences, ratios_infs, cr_time, nocr_time, ratios_time = simulation(nodes, commits)
-
+        #sum(cr_infs_avg)/sum(nicr_inf_avg)
         avg_nocr_infs = avg_list(nocr_inferences)
         avg_nocr_time = avg_list(nocr_time)
         avg_cr_infs = avg_list(cr_inferences)
@@ -90,6 +91,7 @@ def simulation(nodes, commits):
 
     prolog = p.Prolog()
     prolog.consult('fogbrain.pl')  
+    my_query('set_seed', prolog)
 
     for j in range(RUNS):
         app_spec = ""
@@ -100,7 +102,7 @@ def simulation(nodes, commits):
         builder.builder(nodes)
         #print("built infra")
         
-        my_query('loadInfra.', prolog)
+        my_query('load_infra.', prolog)
         #print("loaded")
 
         i = 0
@@ -121,6 +123,8 @@ def simulation(nodes, commits):
                 inferences_cr = cr["Infs"]
                 inferences_nocr = no_cr["Infs"]
                 time_cr = cr["Time"]
+                if (time_cr == 0):
+                    time_cr = sys.float_info.min
                 time_nocr = no_cr["Time"]
                                 
                 cr_inferences[current_commit].append(inferences_cr)
@@ -146,7 +150,7 @@ def simulation(nodes, commits):
                 builder.builder(nodes)
                 #infra=builder.change_graph_infrastructure(infra)#.change_graph_infrastructure(infra)
                 #builder.print_graph_infrastructure(infra)
-                my_query('loadInfra.', prolog)
+                my_query('load_infra.', prolog)
                 print('loaded1')
                 
                
