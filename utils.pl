@@ -1,6 +1,5 @@
 :-dynamic deployment/4.
 
-set_random(seed(481183)).
 
 del:- retract(deployment(vrApp,_,_,_)).
 
@@ -13,7 +12,7 @@ deployment() :-
 	write('Context: '), writeln((Services, S2Ss)).
 
 cr(AppSpec, NewPlacement, InferencesCR, TimeCR):-
-	consult(AppSpec), consult('deployment.pl'),
+	consult(AppSpec), consult('deployment.pl'), set_random(seed(481183)),
 	statistics(inferences, Before1),
 		statistics(cputime, T1),
 			fb(NewPlacement),
@@ -22,9 +21,9 @@ cr(AppSpec, NewPlacement, InferencesCR, TimeCR):-
 	findall(deployment(A, P, All, C), deployment(A, P, All, C),[D]), writeDeployment(D), 
 	D=deployment(_, _, (_, AllocBW), _), random(F), %writeln(F),
 	(
-		( F =< 0.125, changeNode(NewPlacement) );
-		( F > 0.125, F =< 0.25, changeLink(AllocBW));
-		( F > 0.25 )
+		( F =< 0.15, changeNode(NewPlacement) );
+		( F > 0.15, F =< 0.30, changeLink(AllocBW));
+		( F > 0.30 )
 	),
 	retractall(D), unload_file(AppSpec).
 
@@ -40,17 +39,17 @@ p(AppSpec, NewPlacement, InferencesNoCR, TimeNoCR) :-
 changeNode(P) :- 
 	random_member(on(_,TargetNode), P), 
 	retract(node(TargetNode,SW,HW,T)), 
-	( (dif(HW, inf), HWMax is HW + 1); HWMax = 100 ),
-	random_range(0.001, HWMax, 20, L), random_member(NewHW, L),
+	( (dif(HW, inf), HWMax is 1.3*HW); HWMax = 100 ),
+	random_range(0.1, HWMax, 10, L), random_member(NewHW, L),
 	assert(node(TargetNode,SW,NewHW,T)).
 
 changeLink(AllocBW) :- 
 	random_member((N1,N2,_), AllocBW), 
 	retract(link(N1,N2,Lat,BW)), 
-	( (dif(BW, inf), BWMax is BW + 10); BWMax = 100 ),
-	random_range(0.001, BWMax, 20, L1), random_member(NewBW, L1),
+	( (dif(BW, inf), BWMax is 1.3*BW ); BWMax = 100 ),
+	random_range(0.1, BWMax, 10, L1), random_member(NewBW, L1),
 	MaxLat is Lat + 1,
-	random_range(1, MaxLat, 20, L2), random_member(NewLat, L2),
+	random_range(1, MaxLat, 10, L2), random_member(NewLat, L2),
 	assert(link(N1,N2,NewLat,NewBW)).
 
 random_range(_,_,0,[]).

@@ -98,10 +98,10 @@ def simulation(nodes, commits):
         #infra = builder.generate_graph_infrastructure(nodes, math.log2(nodes))
         #builder.print_graph_infrastructure(infra)
         builder.builder(nodes)
-        print("built infra")
+        #print("built infra")
         
         my_query('loadInfra.', prolog)
-        print("loaded")
+        #print("loaded")
 
         i = 0
 
