@@ -114,11 +114,11 @@ def simulation(nodes, commits):
 
             try:
 
-                query_cr = "cr('" + PATH + app_spec + "', P, Infs, Time)"
-                cr = my_query(query_cr, prolog)
-
                 query_no_cr = "p('" + PATH + app_spec + "', P, Infs, Time)"
                 no_cr = my_query(query_no_cr, prolog)
+
+                query_cr = "cr('" + PATH + app_spec + "', P, Infs, Time)"
+                cr = my_query(query_cr, prolog)
 
                 inferences_cr = cr["Infs"]
                 inferences_nocr = no_cr["Infs"]
