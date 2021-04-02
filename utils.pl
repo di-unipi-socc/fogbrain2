@@ -1,6 +1,6 @@
 :-dynamic deployment/4.
 
-set_seed :- set_random(seed(481180)).
+set_seed :- set_random(seed(040598)).
 
 del:- retract(deployment(vrApp,_,_,_)).
 
