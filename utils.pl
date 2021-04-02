@@ -60,8 +60,8 @@ random_range(L, U, N, [R|Ls]) :-
     random_range(L,U,NewN,Ls).
 
 fb(NewPlacement) :-
-	application(AppId,_), deployment(AppId, Placement, A, Context),
-	reasoningStep(AppId, Placement,A, Context, NewPlacement).
+	application(AppId,_), deployment(AppId, Placement, _, Context),
+	reasoningStep(AppId, Placement, Context, NewPlacement).
 fb(Placement) :-
 	application(AppId,_), \+deployment(AppId,_,_,_),
 	placement(AppId, Placement).
