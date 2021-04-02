@@ -21,7 +21,7 @@ cr(AppSpec, NewPlacement, InferencesCR, TimeCR):-
 	statistics(inferences, After1), InferencesCR is After1 - Before1 - 5, TimeCR is T2 - T1,
 	findall(deployment(A, P, All, C), deployment(A, P, All, C),[D]), writeDeployment(D), 
 	D=deployment(_, _, (_, AllocBW), _), random(F), %writeln(F),
-	L is 0.5, H is L*2.0,
+	L is 0.05, H is L*2.0,
 	(
 		( F =< L, changeNode(NewPlacement) );
 		( F > L, F =< H, changeLink(AllocBW));
@@ -41,14 +41,14 @@ p(AppSpec, NewPlacement, InferencesNoCR, TimeNoCR) :-
 changeNode(P) :- 
 	random_member(on(_,TargetNode), P), 
 	retract(node(TargetNode,SW,HW,T)), 
-	( (dif(HW, inf), HWMax is 1.5*HW); HWMax = 100 ),
+	( (dif(HW, inf), HWMax is 1.7*HW); HWMax = 100 ),
 	random_range(0.1, HWMax, 10, L), random_member(NewHW, L),
 	assert(node(TargetNode,SW,NewHW,T)).
 
 changeLink(AllocBW) :- 
 	random_member((N1,N2,_), AllocBW), 
 	retract(link(N1,N2,Lat,BW)), 
-	( (dif(BW, inf), BWMax is 1.5*BW ); BWMax = 100 ),
+	( (dif(BW, inf), BWMax is 1.7*BW ); BWMax = 100 ),
 	random_range(0.1, BWMax, 10, L1), random_member(NewBW, L1),
 	MaxLat is Lat + 1,
 	random_range(1, MaxLat, 10, L2), random_member(NewLat, L2),
