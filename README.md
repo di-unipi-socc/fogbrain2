@@ -28,24 +28,24 @@ To try **FogBrain**:
    ```prolog
    :- fogBrain('vrApp.pl', P).
    ``` 
-   The output will be a first placement for the application described in `app.pl` onto the infrastructure described in `infra.pl`. 
+   The output will be a first placement for the application described in `vrApp.pl` onto the infrastructure described in `infra.pl`. 
    E.g.
    ```prolog
-   %7,955 inferences, 0.000 CPU in 0.006 seconds (0% CPU, Infinite Lips)
-   P = [on(vrDriver, accesspoint9), on(sceneSelector, cabinetserver0), on(videoStorage, cloud0)]
+   % 18,253 inferences, 0.000 CPU in 0.004 seconds (0% CPU, Infinite Lips)
+   P = [on(vrDriver, accesspoint0), on(sceneSelector, cabinetserver0), on(videoStorage, cloud0)]
    ```
 
 4. Open the file `infra.pl` and change some of the links or nodes involved in the placement output at step 3. 
    E.g.
    ```prolog
-	node(cloud0,[ubuntu, mySQL, gcc, make], inf, []). --> node(cloud0,[], inf, []).
+	node(cloud0, [ubuntu, mySQL, gcc, make], inf, []). --> node(cloud0, [], inf, []).
    ```
 
 5. Repeat step 3. The output will only compute a new placement for suffering services (i.e. mapped onto overloaded nodes, or relying upon saturated end-to-end links for interacting with other services) and require many less inferences with respect to computing the initial placement. E.g.
 	```prolog
 	2 ?- fogBrain('vrApp.pl',P).
-	% 387 inferences, 0.000 CPU in 0.000 seconds (0% CPU, Infinite Lips)  
-	P = [on(videoStorage, cloud1), on(vrDriver, accesspoint9), on(sceneSelector, cabinetserver0)] 
+	% 713 inferences, 0.000 CPU in 0.001 seconds (0% CPU, Infinite Lips)
+   P = [on(videoStorage, cloud1), on(vrDriver, accesspoint0), on(sceneSelector, cabinetserver0)]
 	```
-In this example the new placement is computed by saving around 95% of inferences with respect to the first deployment.
+In this example the new placement is computed by saving around 96% of inferences with respect to the first deployment.
 
