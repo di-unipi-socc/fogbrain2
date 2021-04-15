@@ -1,16 +1,8 @@
-<p><img align="left"  src="http://pages.di.unipi.it/forti/fogbrain/img/logo.png" width="100"> <h1>FogBrain</h1></p>
+<p><img align="left"  src="http://pages.di.unipi.it/forti/fogbrain/img/logo.png" width="100"> <h1>FogBrain2</h1></p>
 
 _continuous reasoning for managing next-gen distributed applications_
 
 <br></br>
-
-FogBrain methodology is fully described in the following article:
-
-> [Stefano Forti](http://pages.di.unipi.it/forti), [Antonio Brogi](http://pages.di.unipi.it/brogi)<br>
-> [**Continuous Reasoning for Managing Next-Gen Distributed Applications**](https://doi.org/10.4204/EPTCS.325.22), <br>	
-> ICLP 2020 (Technical Communications), EPTCS, vol. 325, pp. 164–177, 2020. 
-
-If you wish to reuse source code in this repo, please consider citing it.
 
 ## Background & Prerequisites
 
@@ -24,19 +16,7 @@ stating that `a` holds when `b1` and ... and `bn` holds, where `n =< 0` and `a`,
 
 Before using **FogBrain** you need to install the latest stable release of [SWI-Prolog](https://www.swi-prolog.org/download/stable).
 
-## QuickStart & Interactive Docs
-
-All information on FogBrain can be found [here](http://pages.di.unipi.it/forti/fogbrain/index.html), along with a [quickstart example](http://pages.di.unipi.it/forti/fogbrain/quickstart.html) and [interactive documentation](http://pages.di.unipi.it/forti/fogbrain/docs.html) on the current release.
-
-FogBrain is described in the following article:
-
-> [Stefano Forti](http://pages.di.unipi.it/forti) and [Antonio Brogi](http://pages.di.unipi.it/brogi)<br>
-> [**Continuous Reasoning for Managing Next-Gen Distributed Applications**](http://eptcs.web.cse.unsw.edu.au/paper.cgi?ICLP2020.22.pdf), <br>	
-> ICLP Technical Communications, EPTCS, vol. 325, pp. 164-177, 2020. 
-
-If you wish to reuse source code in this repo, please consider citing the above mentioned article.
-
-## Tutorial
+## QuickStart 
 
 To try **FogBrain**:
 
