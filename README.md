@@ -26,7 +26,7 @@ To try **FogBrain**:
 
 3. Inside the running program either run the query
    ```prolog
-   :- fogBrain(vrApp, P).
+   :- fogBrain('vrApp.pl', P).
    ``` 
    The output will be a first placement for the application described in `app.pl` onto the infrastructure described in `infra.pl`. 
    E.g.
@@ -43,7 +43,7 @@ To try **FogBrain**:
 
 5. Repeat step 3. The output will only compute a new placement for suffering services (i.e. mapped onto overloaded nodes, or relying upon saturated end-to-end links for interacting with other services) and require many less inferences with respect to computing the initial placement. E.g.
 	```prolog
-	2 ?- fogBrain(vrApp,P).
+	2 ?- fogBrain('vrApp.pl',P).
 	% 387 inferences, 0.000 CPU in 0.000 seconds (0% CPU, Infinite Lips)  
 	P = [on(videoStorage, cloud1), on(vrDriver, accesspoint9), on(sceneSelector, cabinetserver0)] 
 	```
